@@ -7,6 +7,31 @@ const BrowserWindow = electron.BrowserWindow;  // Module to create native browse
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+var prefs = {
+    mainwin_width: 600,
+    mainwin_height: 800
+};
+
+const fs = require('fs');
+const path = require('path');
+var prefspath = path.join(app.getPath('userData'), 'quixe-prefs.json');
+
+try {
+    var prefsstr = fs.readFileSync(prefspath, { encoding:'utf8' });
+    var obj = JSON.parse(prefsstr);
+    for (var key in obj) {
+        prefs[key] = obj[key];
+    }
+}
+catch (ex) {
+}
+
+function write_prefs() {
+    /*### Not async-safe actually */
+    var prefsstr = JSON.stringify(prefs);
+    fs.writeFile(prefspath, prefsstr, { encoding:'utf8' }, function(err) {});
+}
+
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
   app.quit();
@@ -67,6 +92,12 @@ var template = [
             focusedWindow.toggleDevTools();
         }
       },
+      {
+        label: 'Debug Command',
+        click: function(item) {
+              console.log(app.getPath('userData'));
+          }
+      }
     ]
   }
 ];
@@ -125,13 +156,18 @@ app.on('ready', function() {
   electron.Menu.setApplicationMenu(menu);
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600});
+  mainWindow = new BrowserWindow({width: prefs.mainwin_width, height: prefs.mainwin_height});
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/play.html');
 
-  // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     mainWindow = null;
+  });
+
+  mainWindow.on('resize', function() {
+      prefs.mainwin_width = mainWindow.getSize()[0];
+      prefs.mainwin_height = mainWindow.getSize()[1];
+      write_prefs();
   });
 });
