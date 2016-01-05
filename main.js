@@ -41,8 +41,8 @@ function note_prefs_dirty() {
     prefstimer = setTimeout(handle_write_prefs, 5000);
 }
 
+/* Callback for prefs-dirty timer. */
 function handle_write_prefs() {
-    console.log('### handle_write_prefs');
     prefstimer = null;
     /* If prefswriting is true, a writeFile call is in flight. Yes, this
        is an annoying corner case. We have new data to write but we have
@@ -56,9 +56,19 @@ function handle_write_prefs() {
     prefswriting = true;
     var prefsstr = JSON.stringify(prefs);
     fs.writeFile(prefspath, prefsstr, { encoding:'utf8' }, function(err) {
-            console.log('### handle_write_prefs done');
             prefswriting = false;
         });
+}
+
+/* Called when the app is shutting down. Write out the prefs if they're dirty.
+*/
+function write_prefs_now() {
+    if (prefstimer !== null) {
+        clearTimeout(prefstimer);
+        prefstimer = null;
+        var prefsstr = JSON.stringify(prefs);
+        fs.writeFileSync(prefspath, prefsstr, { encoding:'utf8' });
+    }
 }
 
 function setup_app_menu() {
@@ -178,13 +188,20 @@ function setup_app_menu() {
 }
 
 /* Called when the last window is closed; we shut down.
- */
+*/
 app.on('window-all-closed', function() {
     app.quit();
 });
 
+/* Called when the app is going to quit, either because the last window
+   closed or the user hit cmd-Q. 
+*/
+app.on('will-quit', function() {
+    write_prefs_now();
+});
+
 /* Called when Electron is initialized and ready to run. 
- */
+*/
 app.on('ready', function() {
     load_prefs();
     setup_app_menu();
