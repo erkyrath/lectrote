@@ -1,11 +1,10 @@
 'use strict';
 const electron = require('electron');
 const app = electron.app;  // Module to control application life.
-const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainwin = null;
 
 var prefs = {
     mainwin_width: 600,
@@ -156,18 +155,18 @@ app.on('ready', function() {
   electron.Menu.setApplicationMenu(menu);
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: prefs.mainwin_width, height: prefs.mainwin_height});
+  mainwin = new electron.BrowserWindow({width: prefs.mainwin_width, height: prefs.mainwin_height});
 
   // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/play.html');
+  mainwin.loadURL('file://' + __dirname + '/play.html');
 
-  mainWindow.on('closed', function() {
-    mainWindow = null;
+  mainwin.on('closed', function() {
+    mainwin = null;
   });
 
-  mainWindow.on('resize', function() {
-      prefs.mainwin_width = mainWindow.getSize()[0];
-      prefs.mainwin_height = mainWindow.getSize()[1];
+  mainwin.on('resize', function() {
+      prefs.mainwin_width = mainwin.getSize()[0];
+      prefs.mainwin_height = mainwin.getSize()[1];
       write_prefs();
   });
 });
