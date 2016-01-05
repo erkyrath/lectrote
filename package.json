@@ -1,5 +1,6 @@
 {
   "name": "quixe-test",
+  "productName": "Quixe",
   "version": "1.0.0",
   "description": "Electron shell for Quixe IF interpreter",
   "main": "main.js",
