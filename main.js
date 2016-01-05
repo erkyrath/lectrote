@@ -33,7 +33,7 @@ function write_prefs() {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-  app.quit();
+    app.quit();
 });
 
 var template = [
@@ -151,22 +151,22 @@ if (process.platform == 'darwin') {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
-  var menu = electron.Menu.buildFromTemplate(template);
-  electron.Menu.setApplicationMenu(menu);
+    var menu = electron.Menu.buildFromTemplate(template);
+    electron.Menu.setApplicationMenu(menu);
 
-  // Create the browser window.
-  mainwin = new electron.BrowserWindow({width: prefs.mainwin_width, height: prefs.mainwin_height});
+    // Create the browser window.
+    mainwin = new electron.BrowserWindow({width: prefs.mainwin_width, height: prefs.mainwin_height});
 
-  // and load the index.html of the app.
-  mainwin.loadURL('file://' + __dirname + '/play.html');
+    // and load the index.html of the app.
+    mainwin.loadURL('file://' + __dirname + '/play.html');
+    
+    mainwin.on('closed', function() {
+        mainwin = null;
+    });
 
-  mainwin.on('closed', function() {
-    mainwin = null;
-  });
-
-  mainwin.on('resize', function() {
-      prefs.mainwin_width = mainwin.getSize()[0];
-      prefs.mainwin_height = mainwin.getSize()[1];
-      write_prefs();
-  });
+    mainwin.on('resize', function() {
+        prefs.mainwin_width = mainwin.getSize()[0];
+        prefs.mainwin_height = mainwin.getSize()[1];
+        write_prefs();
+    });
 });
