@@ -31,11 +31,6 @@ function write_prefs() {
     fs.writeFile(prefspath, prefsstr, { encoding:'utf8' }, function(err) {});
 }
 
-// Quit when all windows are closed.
-app.on('window-all-closed', function() {
-    app.quit();
-});
-
 function setup_app_menu() {
     var template = [
     {
@@ -152,8 +147,14 @@ function setup_app_menu() {
     electron.Menu.setApplicationMenu(menu);
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
+/* Called when the last window is closed; we shut down.
+ */
+app.on('window-all-closed', function() {
+    app.quit();
+});
+
+/* Called when Electron is initialized and ready to run. 
+ */
 app.on('ready', function() {
     setup_app_menu();
 
@@ -164,9 +165,7 @@ app.on('ready', function() {
         winopts.y = prefs.mainwin_y;
     mainwin = new electron.BrowserWindow(winopts);
 
-    // and load the index.html of the app.
-    mainwin.loadURL('file://' + __dirname + '/play.html');
-    
+    /* Main window callbacks */    
     mainwin.on('closed', function() {
         mainwin = null;
     });
@@ -181,4 +180,7 @@ app.on('ready', function() {
         prefs.mainwin_y = mainwin.getPosition()[1];
         write_prefs();
     });
+
+    /* Load the game UI and go. */
+    mainwin.loadURL('file://' + __dirname + '/play.html');
 });
