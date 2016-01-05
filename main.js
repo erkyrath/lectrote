@@ -15,14 +15,17 @@ const fs = require('fs');
 const path = require('path');
 var prefspath = path.join(app.getPath('userData'), 'quixe-prefs.json');
 
-try {
-    var prefsstr = fs.readFileSync(prefspath, { encoding:'utf8' });
-    var obj = JSON.parse(prefsstr);
-    for (var key in obj) {
-        prefs[key] = obj[key];
+function load_prefs() {
+    try {
+        var prefsstr = fs.readFileSync(prefspath, { encoding:'utf8' });
+        var obj = JSON.parse(prefsstr);
+        for (var key in obj) {
+            prefs[key] = obj[key];
+        }
     }
-}
-catch (ex) {
+    catch (ex) {
+        console.error('load_prefs: unable to load preferences: %s: %s', prefspath, ex);
+    }
 }
 
 function write_prefs() {
@@ -156,6 +159,7 @@ app.on('window-all-closed', function() {
 /* Called when Electron is initialized and ready to run. 
  */
 app.on('ready', function() {
+    load_prefs();
     setup_app_menu();
 
     var winopts = { width: prefs.mainwin_width, height: prefs.mainwin_height };
