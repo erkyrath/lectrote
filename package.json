@@ -1,0 +1,26 @@
+{
+  "name": "quixe-test",
+  "version": "1.0.0",
+  "description": "Electron shell for Quixe IF interpreter",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atom/electron-quick-start.git"
+  },
+  "keywords": [
+    "quixe",
+    "glulx"
+  ],
+  "author": "Andrew Plotkin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/atom/electron-quick-start/issues"
+  },
+  "homepage": "https://github.com/atom/electron-quick-start#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.0"
+  }
+}
