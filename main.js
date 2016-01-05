@@ -10,11 +10,14 @@ var prefs = {
     mainwin_width: 600,
     mainwin_height: 800
 };
+var prefstimer = null;
+var prefswriting = false;
 
 const fs = require('fs');
 const path = require('path');
 var prefspath = path.join(app.getPath('userData'), 'quixe-prefs.json');
 
+/* Called only at app startup. */
 function load_prefs() {
     try {
         var prefsstr = fs.readFileSync(prefspath, { encoding:'utf8' });
@@ -28,10 +31,34 @@ function load_prefs() {
     }
 }
 
-function write_prefs() {
-    /*### Not async-safe actually */
+/* Called whenever we update the prefs object. This waits five seconds 
+   (to consolidate writes) and then launches an async file-write.
+*/
+function note_prefs_dirty() {
+    /* If a timer is in flight, we're covered. */
+    if (prefstimer !== null)
+        return;
+    prefstimer = setTimeout(handle_write_prefs, 5000);
+}
+
+function handle_write_prefs() {
+    console.log('### handle_write_prefs');
+    prefstimer = null;
+    /* If prefswriting is true, a writeFile call is in flight. Yes, this
+       is an annoying corner case. We have new data to write but we have
+       to wait for the writeFile to finish. We do this by punting for
+       another five seconds! */
+    if (prefswriting) {
+        note_prefs_dirty();
+        return;
+    }
+
+    prefswriting = true;
     var prefsstr = JSON.stringify(prefs);
-    fs.writeFile(prefspath, prefsstr, { encoding:'utf8' }, function(err) {});
+    fs.writeFile(prefspath, prefsstr, { encoding:'utf8' }, function(err) {
+            console.log('### handle_write_prefs done');
+            prefswriting = false;
+        });
 }
 
 function setup_app_menu() {
@@ -177,12 +204,12 @@ app.on('ready', function() {
     mainwin.on('resize', function() {
         prefs.mainwin_width = mainwin.getSize()[0];
         prefs.mainwin_height = mainwin.getSize()[1];
-        write_prefs();
+        note_prefs_dirty();
     });
     mainwin.on('move', function() {
         prefs.mainwin_x = mainwin.getPosition()[0];
         prefs.mainwin_y = mainwin.getPosition()[1];
-        write_prefs();
+        note_prefs_dirty();
     });
 
     /* Load the game UI and go. */
