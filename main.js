@@ -154,8 +154,12 @@ app.on('ready', function() {
     var menu = electron.Menu.buildFromTemplate(template);
     electron.Menu.setApplicationMenu(menu);
 
-    // Create the browser window.
-    mainwin = new electron.BrowserWindow({width: prefs.mainwin_width, height: prefs.mainwin_height});
+    var winopts = { width: prefs.mainwin_width, height: prefs.mainwin_height };
+    if (prefs.mainwin_x !== undefined)
+        winopts.x = prefs.mainwin_x;
+    if (prefs.mainwin_y !== undefined)
+        winopts.y = prefs.mainwin_y;
+    mainwin = new electron.BrowserWindow(winopts);
 
     // and load the index.html of the app.
     mainwin.loadURL('file://' + __dirname + '/play.html');
@@ -167,6 +171,11 @@ app.on('ready', function() {
     mainwin.on('resize', function() {
         prefs.mainwin_width = mainwin.getSize()[0];
         prefs.mainwin_height = mainwin.getSize()[1];
+        write_prefs();
+    });
+    mainwin.on('move', function() {
+        prefs.mainwin_x = mainwin.getPosition()[0];
+        prefs.mainwin_y = mainwin.getPosition()[1];
         write_prefs();
     });
 });
