@@ -230,5 +230,5 @@ app.on('ready', function() {
     });
 
     /* Load the game UI and go. */
-    mainwin.loadURL('file://' + __dirname + '/play-full.html');
+    mainwin.loadURL('file://' + __dirname + '/play.html');
 });
