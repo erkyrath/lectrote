@@ -5,8 +5,8 @@
 
 <meta name="viewport" content="width=device-width, user-scalable=no">
 
-<link rel="stylesheet" href="media/glkote.css" type="text/css">
-<link rel="stylesheet" href="media/dialog.css" type="text/css">
+<link rel="stylesheet" href="quixe/media/glkote.css" type="text/css">
+<link rel="stylesheet" href="quixe/media/dialog.css" type="text/css">
 
 <style type="text/css">
 
@@ -33,9 +33,9 @@ game_options = {
   set_page_title: true
 };
 
-window.$ = window.jQuery = require('./lib/jquery-1.11.2.min.js');
-require('./lib/glkote.min.js');
-require('./lib/quixe.min.js');
+window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
+require('./quixe/lib/glkote.min.js');
+require('./quixe/lib/quixe.min.js');
 require('./stories/Advent.ulx.js');
 
 </script>
@@ -51,7 +51,7 @@ require('./stories/Advent.ulx.js');
 <hr></noscript>
 </div>
 <div id="loadingpane">
-<img src="media/waiting.gif" alt="LOADING"><br>
+<img src="quixe/media/waiting.gif" alt="LOADING"><br>
 <em>&nbsp;&nbsp;&nbsp;Loading...</em>
 </div>
 <div id="errorpane" style="display:none;"><div id="errorcontent">...</div></div>
