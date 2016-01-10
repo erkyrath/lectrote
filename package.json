@@ -1,26 +1,28 @@
 {
-  "name": "quixe-test",
-  "productName": "Quixe",
-  "version": "1.0.0",
-  "description": "Electron shell for Quixe IF interpreter",
+  "name": "lectrote",
+  "productName": "Lectrote",
+  "version": "0.1.0",
+  "description": "The Quixe/GlkOte IF interpreter in an Electron shell",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atom/electron-quick-start.git"
+    "url": "git+https://github.com/erkyrath/lectrote.git"
   },
   "keywords": [
+    "interactive fiction",
     "quixe",
+    "glkote",
     "glulx"
   ],
   "author": "Andrew Plotkin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/atom/electron-quick-start/issues"
+    "url": "https://github.com/erkyrath/lectrote/issues"
   },
-  "homepage": "https://github.com/atom/electron-quick-start#readme",
+  "homepage": "https://github.com/erkyrath/lectrote",
   "devDependencies": {
     "electron-prebuilt": "^0.36.0"
   }
