@@ -115,6 +115,26 @@ function setup_app_menu() {
         label: 'View',
         submenu: [
         {
+            label: 'Zoom In',
+            accelerator: 'CmdOrCtrl+=',
+            click: function(item, win) {
+                win.webContents.executeJavaScript('zoom_level_change(+1)');
+            }
+        },
+        {
+            label: 'Zoom Out',
+            accelerator: 'CmdOrCtrl+-',
+            click: function(item, win) {
+                win.webContents.executeJavaScript('zoom_level_change(-1)');
+            }
+        },
+        {
+            label: 'Zoom Normal',
+            click: function(item, win) {
+                win.webContents.executeJavaScript('zoom_level_change(0)');
+            }
+        },
+        {
             label: 'Toggle Developer Tools',
             accelerator: (function() {
                 if (process.platform == 'darwin')
