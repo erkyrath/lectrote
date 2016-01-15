@@ -1,21 +1,14 @@
 
 AppHooks = function() {
 
-function zoom_level_change(dir) 
+function set_zoom_factor(val) 
 {
     var webFrame = require('electron').webFrame;
-    var val = webFrame.getZoomLevel();
-    if (dir < 0)
-        val = val - 0.5;
-    else if (dir > 0)
-        val = val + 0.5;
-    else
-        val = 0;
-    webFrame.setZoomLevel(val);
+    webFrame.setZoomFactor(val);
 }
 
 return {
-    zoom_level_change : zoom_level_change
+    set_zoom_factor : set_zoom_factor
 };
 
 }();

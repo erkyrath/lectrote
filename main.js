@@ -1,6 +1,6 @@
 'use strict';
 const electron = require('electron');
-const app = electron.app;  // Module to control application life.
+const app = electron.app;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -8,7 +8,8 @@ let mainwin = null;
 
 var prefs = {
     mainwin_width: 600,
-    mainwin_height: 800
+    mainwin_height: 800,
+    mainwin_zoomlevel: 0
 };
 var prefstimer = null;
 var prefswriting = false;
@@ -29,6 +30,16 @@ function load_prefs() {
     catch (ex) {
         console.error('load_prefs: unable to load preferences: %s: %s', prefspath, ex);
     }
+}
+
+/* We can't rely on the web-frame algorithm for this, because we have
+   to include it when creating the browser window. So we have our
+   own bit of code: basically 10% larger/smaller per unit.
+*/
+function zoom_factor_for_level(val) {
+    if (!val)
+        return 1;
+    return Math.exp(val * 0.09531017980432493);
 }
 
 /* Called whenever we update the prefs object. This waits five seconds 
@@ -118,20 +129,29 @@ function setup_app_menu() {
             label: 'Zoom In',
             accelerator: 'CmdOrCtrl+=',
             click: function(item, win) {
-                win.webContents.executeJavaScript('AppHooks.zoom_level_change(+1)');
+                prefs.mainwin_zoomlevel += 1;
+                note_prefs_dirty();
+                var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
+                win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
             }
         },
         {
             label: 'Zoom Out',
             accelerator: 'CmdOrCtrl+-',
             click: function(item, win) {
-                win.webContents.executeJavaScript('AppHooks.zoom_level_change(-1)');
+                prefs.mainwin_zoomlevel -= 1;
+                note_prefs_dirty();
+                var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
+                win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
             }
         },
         {
             label: 'Zoom Normal',
             click: function(item, win) {
-                win.webContents.executeJavaScript('AppHooks.zoom_level_change(0)');
+                prefs.mainwin_zoomlevel = 0;
+                note_prefs_dirty();
+                var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
+                win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
             }
         },
         {
@@ -226,7 +246,10 @@ app.on('ready', function() {
     load_prefs();
     setup_app_menu();
 
-    var winopts = { width: prefs.mainwin_width, height: prefs.mainwin_height };
+    var winopts = { 
+        width: prefs.mainwin_width, height: prefs.mainwin_height,
+        zoomFactor: zoom_factor_for_level(prefs.mainwin_zoomlevel)
+    };
     if (prefs.mainwin_x !== undefined)
         winopts.x = prefs.mainwin_x;
     if (prefs.mainwin_y !== undefined)
