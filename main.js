@@ -136,19 +136,19 @@ function setup_app_menu() {
             }
         },
         {
-            label: 'Zoom Out',
-            accelerator: 'CmdOrCtrl+-',
+            label: 'Zoom Normal',
             click: function(item, win) {
-                prefs.mainwin_zoomlevel -= 1;
+                prefs.mainwin_zoomlevel = 0;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
                 win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
             }
         },
         {
-            label: 'Zoom Normal',
+            label: 'Zoom Out',
+            accelerator: 'CmdOrCtrl+-',
             click: function(item, win) {
-                prefs.mainwin_zoomlevel = 0;
+                prefs.mainwin_zoomlevel -= 1;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
                 win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
