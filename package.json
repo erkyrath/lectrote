@@ -9,15 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/erkyrath/lectrote.git"
+    "url": "https://github.com/erkyrath/lectrote.git"
   },
   "keywords": [
     "interactive fiction",
+    "interpreter",
     "quixe",
     "glkote",
     "glulx"
   ],
-  "author": "Andrew Plotkin",
+  "author": "Andrew Plotkin <erkyrath@eblong.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/erkyrath/lectrote/issues"
