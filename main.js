@@ -165,7 +165,8 @@ function setup_app_menu() {
                 if (!cardwin) {
                     var winopts = { 
                         width: 810, height: 620,
-                        maxWidth: 810, maxHeight: 620
+                        maxWidth: 810, maxHeight: 620,
+                        javascript: false
                     };
                     if (prefs.cardwin_x !== undefined)
                         winopts.x = prefs.cardwin_x;
@@ -179,6 +180,10 @@ function setup_app_menu() {
                             prefs.cardwin_x = cardwin.getPosition()[0];
                             prefs.cardwin_y = cardwin.getPosition()[1];
                             note_prefs_dirty();
+                        });
+                    cardwin.webContents.on('will-navigate', function(ev, url) {
+                            require('electron').shell.openExternal(url);
+                            ev.preventDefault();
                         });
                     cardwin.loadURL('file://' + __dirname + '/if-card.html');
                 }
