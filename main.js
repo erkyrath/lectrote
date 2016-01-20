@@ -2,9 +2,8 @@
 const electron = require('electron');
 const app = electron.app;
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainwin = null;
+var mainwin = null;
+var cardwin = null;
 
 var prefs = {
     mainwin_width: 600,
@@ -129,6 +128,8 @@ function setup_app_menu() {
             label: 'Zoom In',
             accelerator: 'CmdOrCtrl+=',
             click: function(item, win) {
+                if (win != mainwin)
+                    return;
                 prefs.mainwin_zoomlevel += 1;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
@@ -138,6 +139,8 @@ function setup_app_menu() {
         {
             label: 'Zoom Normal',
             click: function(item, win) {
+                if (win != mainwin)
+                    return;
                 prefs.mainwin_zoomlevel = 0;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
@@ -148,10 +151,40 @@ function setup_app_menu() {
             label: 'Zoom Out',
             accelerator: 'CmdOrCtrl+-',
             click: function(item, win) {
+                if (win != mainwin)
+                    return;
                 prefs.mainwin_zoomlevel -= 1;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
                 win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
+            }
+        },
+        {
+            label: 'IF Reference Card',
+            click: function(item, win) {
+                if (!cardwin) {
+                    var winopts = { 
+                        width: 810, height: 620,
+                        maxWidth: 810, maxHeight: 620
+                    };
+                    if (prefs.cardwin_x !== undefined)
+                        winopts.x = prefs.cardwin_x;
+                    if (prefs.cardwin_y !== undefined)
+                        winopts.y = prefs.cardwin_y;
+                    cardwin = new electron.BrowserWindow(winopts);
+                    cardwin.on('closed', function() {
+                            cardwin = null;
+                        });
+                    cardwin.on('move', function() {
+                            prefs.cardwin_x = cardwin.getPosition()[0];
+                            prefs.cardwin_y = cardwin.getPosition()[1];
+                            note_prefs_dirty();
+                        });
+                    cardwin.loadURL('file://' + __dirname + '/if-card.html');
+                }
+                else {
+                    cardwin.show();
+                }
             }
         },
         {
@@ -246,7 +279,7 @@ app.on('ready', function() {
     load_prefs();
     setup_app_menu();
 
-    var winopts = { 
+    var winopts = {
         width: prefs.mainwin_width, height: prefs.mainwin_height,
         zoomFactor: zoom_factor_for_level(prefs.mainwin_zoomlevel)
     };
@@ -256,7 +289,8 @@ app.on('ready', function() {
         winopts.y = prefs.mainwin_y;
     mainwin = new electron.BrowserWindow(winopts);
 
-    /* Main window callbacks */    
+    /* Main window callbacks */
+    
     mainwin.on('closed', function() {
         mainwin = null;
     });
