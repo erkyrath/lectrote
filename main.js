@@ -8,6 +8,7 @@ var cardwin = null;
 var prefs = {
     mainwin_width: 600,
     mainwin_height: 800,
+    mainwin_marginlevel: 1,
     mainwin_zoomlevel: 0
 };
 var prefstimer = null;
@@ -172,6 +173,30 @@ function setup_app_menu() {
             }
         },
         {
+            label: 'Margins Wider',
+            click: function(item, win) {
+                if (win != mainwin)
+                    return;
+                prefs.mainwin_marginlevel += 1;
+                if (prefs.mainwin_marginlevel > 5)
+                    prefs.mainwin_marginlevel = 5;
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_margin_level', prefs.mainwin_marginlevel);
+            }
+        },
+        {
+            label: 'Margins Narrower',
+            click: function(item, win) {
+                if (win != mainwin)
+                    return;
+                prefs.mainwin_marginlevel -= 1;
+                if (prefs.mainwin_marginlevel < 0)
+                    prefs.mainwin_marginlevel = 0;
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_margin_level', prefs.mainwin_marginlevel);
+            }
+        },
+        {
             label: 'IF Reference Card',
             click: function(item, win) {
                 if (!cardwin) {
@@ -298,6 +323,7 @@ app.on('ready', function() {
 
     var winopts = {
         width: prefs.mainwin_width, height: prefs.mainwin_height,
+        minWidth: 400, minHeight: 400,
         zoomFactor: zoom_factor_for_level(prefs.mainwin_zoomlevel)
     };
     if (prefs.mainwin_x !== undefined)
@@ -313,6 +339,7 @@ app.on('ready', function() {
     });
 
     mainwin.webContents.on('dom-ready', function() {
+        invoke_app_hook(mainwin, 'set_margin_level', prefs.mainwin_marginlevel);
         invoke_app_hook(mainwin, 'load_named_game', path.join(__dirname, 'stories', 'Advent.ulx'));
     });
 

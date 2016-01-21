@@ -19,9 +19,16 @@ function set_zoom_factor(val)
     webFrame.setZoomFactor(val);
 }
 
+function set_margin_level(val)
+{
+    var str = '0px ' + (5*val) + '%';
+    $('#gameport').css({'margin':str});
+}
+
 return {
     load_named_game : load_named_game,
-    set_zoom_factor : set_zoom_factor
+    set_zoom_factor : set_zoom_factor,
+    set_margin_level : set_margin_level
 };
 
 }();
