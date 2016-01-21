@@ -6,6 +6,22 @@
  * with it.
  */
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+  border: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #F0F0E8;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+}
+
 #windowport {
   width: 100%;
   height: 100%;
@@ -53,7 +69,7 @@
 }
 
 .GridWindow {
-  background: #EEDDBB;
+  background: #EEEBDD;
   color: #864;
   overflow: hidden;
   font-family: monaco, andale mono, lucidatypewriter, courier, courier new, monospace; /* necessary! */
