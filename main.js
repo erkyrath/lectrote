@@ -81,6 +81,18 @@ function write_prefs_now() {
     }
 }
 
+/* Call one of the functions in apphooks.js (in the game renderer process).
+   The argument is passed as a JSON string.
+*/
+function invoke_app_hook(win, func, arg)
+{
+    var argval = '';
+    if (arg !== undefined)
+        argval = JSON.stringify(arg);
+
+    win.webContents.executeJavaScript('AppHooks.'+func+'('+argval+')');
+}
+
 function setup_app_menu() {
     var template = [
     {
@@ -133,7 +145,7 @@ function setup_app_menu() {
                 prefs.mainwin_zoomlevel += 1;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
-                win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
+                invoke_app_hook(win, 'set_zoom_factor', val);
             }
         },
         {
@@ -144,7 +156,7 @@ function setup_app_menu() {
                 prefs.mainwin_zoomlevel = 0;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
-                win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
+                invoke_app_hook(win, 'set_zoom_factor', val);
             }
         },
         {
@@ -156,7 +168,7 @@ function setup_app_menu() {
                 prefs.mainwin_zoomlevel -= 1;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
-                win.webContents.executeJavaScript('AppHooks.set_zoom_factor('+val+')');
+                invoke_app_hook(win, 'set_zoom_factor', val);
             }
         },
         {
@@ -298,6 +310,10 @@ app.on('ready', function() {
     
     mainwin.on('closed', function() {
         mainwin = null;
+    });
+
+    mainwin.webContents.on('dom-ready', function() {
+        invoke_app_hook(mainwin, 'load_named_game', path.join(__dirname, 'stories', 'Advent.ulx'));
     });
 
     mainwin.on('resize', function() {
