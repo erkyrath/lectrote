@@ -5,7 +5,7 @@ const fs = require('fs');
 const path_mod = require('path');
 
 var gamewins = {}; /* maps window ID to a game structure */
-var cardwin = null;
+var cardwin = null; /* the postcard window, if active */
 
 var prefs = {
     gamewin_width: 600,
@@ -13,14 +13,42 @@ var prefs = {
     gamewin_marginlevel: 1,
     gamewin_zoomlevel: 0
 };
+var prefspath = path_mod.join(app.getPath('userData'), 'quixe-prefs.json');
 var prefstimer = null;
 var prefswriting = false;
-
-var prefspath = path_mod.join(app.getPath('userData'), 'quixe-prefs.json');
 
 function game_for_window(win)
 {
     return gamewins[win.id];
+}
+
+/* If you create two windows in a row, the second should be offset. But
+   if you create a window, close it, and create a new window, the second
+   should not be offset. Sorry, it's messy to describe and messy to
+   implement.
+   The effect is to pick the lowest offset value not used by any window.
+*/
+function pick_window_offset()
+{
+    /* Create a list of all offsets currently in use. */
+    var offsets = [];
+    for (var id in gamewins) {
+        var offset = gamewins[id].offset;
+        if (offset !== undefined)
+            offsets[offset] = true;
+    }
+
+    for (var ix=0; true; ix++) {
+        if (!offsets[ix])
+            return ix;
+    }
+}
+
+function clear_window_offsets()
+{
+    for (var id in gamewins) {
+        delete gamewins[id].offset;
+    }
 }
 
 /* Called only at app startup. */
@@ -160,16 +188,22 @@ function launch_game(path)
         minWidth: 400, minHeight: 400,
         zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
     };
+
+    /* BUG: The offsetting only applies if you have a window location
+       preference. For a brand-new user this will not be true. */
+    var offset = pick_window_offset();
     if (prefs.gamewin_x !== undefined)
-        winopts.x = prefs.gamewin_x;
+        winopts.x = prefs.gamewin_x + 20 * offset;
     if (prefs.gamewin_y !== undefined)
-        winopts.y = prefs.gamewin_y;
+        winopts.y = prefs.gamewin_y + 20 * offset;
+
     win = new electron.BrowserWindow(winopts);
     if (!win)
         return;
 
     game.win = win;
     game.id = win.id;
+    game.offset = offset;
     gamewins[game.id] = game;
 
     /* Game window callbacks */
@@ -194,6 +228,13 @@ function launch_game(path)
         prefs.gamewin_x = win.getPosition()[0];
         prefs.gamewin_y = win.getPosition()[1];
         note_prefs_dirty();
+
+        /* We're starting with a new position, so erase the history of
+           what windows go here. */
+        clear_window_offsets();
+        var game = game_for_window(win);
+        if (game)
+            game.offset = 0;
     });
 
     /* Load the game UI and go. */
