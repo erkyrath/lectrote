@@ -25,7 +25,8 @@ function game_for_window(win)
 }
 
 /* Called only at app startup. */
-function load_prefs() {
+function load_prefs()
+{
     try {
         var prefsstr = fs.readFileSync(prefspath, { encoding:'utf8' });
         var obj = JSON.parse(prefsstr);
@@ -42,7 +43,8 @@ function load_prefs() {
    to include it when creating the browser window. So we have our
    own bit of code: basically 10% larger/smaller per unit.
 */
-function zoom_factor_for_level(val) {
+function zoom_factor_for_level(val)
+{
     if (!val)
         return 1;
     return Math.exp(val * 0.09531017980432493);
@@ -51,7 +53,8 @@ function zoom_factor_for_level(val) {
 /* Called whenever we update the prefs object. This waits five seconds 
    (to consolidate writes) and then launches an async file-write.
 */
-function note_prefs_dirty() {
+function note_prefs_dirty()
+{
     /* If a timer is in flight, we're covered. */
     if (prefstimer !== null)
         return;
@@ -59,7 +62,8 @@ function note_prefs_dirty() {
 }
 
 /* Callback for prefs-dirty timer. */
-function handle_write_prefs() {
+function handle_write_prefs()
+{
     prefstimer = null;
     /* If prefswriting is true, a writeFile call is in flight. Yes, this
        is an annoying corner case. We have new data to write but we have
@@ -79,7 +83,8 @@ function handle_write_prefs() {
 
 /* Called when the app is shutting down. Write out the prefs if they're dirty.
 */
-function write_prefs_now() {
+function write_prefs_now()
+{
     if (prefstimer !== null) {
         clearTimeout(prefstimer);
         prefstimer = null;
@@ -199,7 +204,8 @@ function launch_game(path)
     win.loadURL('file://' + __dirname + '/play.html');
 }
 
-function setup_app_menu() {
+function setup_app_menu()
+{
     var template = [
     {
         label: 'File',
