@@ -118,19 +118,30 @@ function select_load_game(initial)
         var winopts = {
             width: 600, height: 100
         };
+        if (prefs.initwin_x !== undefined)
+            winopts.x = prefs.initwin_x;
+        if (prefs.initwin_y !== undefined)
+            winopts.y = prefs.initwin_y;
+
         win = new electron.BrowserWindow(winopts);
+
+        win.on('move', function() {
+            prefs.initwin_x = win.getPosition()[0];
+            prefs.initwin_y = win.getPosition()[1];
+            note_prefs_dirty();
+        });
     }
 
     electron.dialog.showOpenDialog(win, opts, function(ls) {
-            if (win) {
-                /* Dispose of the temporary window. This needs a time delay
-                   for some annoying internal reason. */
-                setTimeout( function() { win.close(); }, 50);
-            }
-
-            if (!ls || !ls.length)
-                return;
-            launch_game(ls[0]);
+        if (win) {
+            /* Dispose of the temporary window. This needs a time delay
+               for some annoying internal reason. */
+            setTimeout( function() { win.close(); }, 50);
+        }
+        
+        if (!ls || !ls.length)
+            return;
+        launch_game(ls[0]);
     });
 }
 
@@ -163,9 +174,9 @@ function launch_game(path)
     /* Game window callbacks */
     
     win.on('closed', function() {
-            delete gamewins[game.id];
-            game = null;
-            win = null;
+        delete gamewins[game.id];
+        game = null;
+        win = null;
     });
 
     win.webContents.on('dom-ready', function() {
