@@ -98,11 +98,7 @@ function write_prefs_now()
 */
 function invoke_app_hook(win, func, arg)
 {
-    var argval = '';
-    if (arg !== undefined)
-        argval = JSON.stringify(arg);
-
-    win.webContents.executeJavaScript('AppHooks.'+func+'('+argval+')');
+    win.webContents.send(func, arg);
 }
 
 /* Bring up the select-a-game dialog. 
