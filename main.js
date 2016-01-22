@@ -101,14 +101,33 @@ function invoke_app_hook(win, func, arg)
 }
 
 /* Bring up the select-a-game dialog. 
+
+   If we're doing this at launch time, we need to attach it to a
+   browser window. This is silly, but it's the only way to get focus.
 */
-function select_load_game()
+function select_load_game(initial)
 {
     var opts = {
+        title: 'Select a Glulx game file',
         properties: ['openFile'],
         filters: [ { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'gblorb'] } ]
     };
-    electron.dialog.showOpenDialog(null, opts, function(ls) {
+
+    var win = null;
+    if (initial) {
+        var winopts = {
+            width: 600, height: 100
+        };
+        win = new electron.BrowserWindow(winopts);
+    }
+
+    electron.dialog.showOpenDialog(win, opts, function(ls) {
+            if (win) {
+                /* Dispose of the temporary window. This needs a time delay
+                   for some annoying internal reason. */
+                setTimeout( function() { win.close(); }, 50);
+            }
+
             if (!ls || !ls.length)
                 return;
             launch_game(ls[0]);
@@ -408,5 +427,5 @@ app.on('ready', function() {
     load_prefs();
     setup_app_menu();
 
-    select_load_game();
+    select_load_game(true);
 });
