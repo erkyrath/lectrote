@@ -11,6 +11,12 @@ This version acts as a general Glulx interpreter. When launched, it prompts you 
 
 Because this relies on the Quixe interpreter, sound is not supported. It's also not as fast as a native interpreter.
 
+## But what about packaged games?
+
+The goal of this project is to let authors make Mac, Windows, and Linux apps out of their Inform games.
+
+I do not yet have all the pieces in place. In particular, a packaged game absolutely has to support auto-save. If the player quits the app and then launches it again, they should be back where they left off. Quixe does not yet support this feature, but I plan to add it.
+
 ## For developers
 
 If you've just downloaded the source code for this puppy, it's easy to make a runnable version.
