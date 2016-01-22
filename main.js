@@ -401,12 +401,6 @@ function setup_app_menu()
                 if (focusedWindow)
                     focusedWindow.toggleDevTools();
             }
-        },
-        {
-            label: 'Debug Command',
-            click: function(item) {
-                console.log(app.getPath('userData'));
-            }
         }
         ]
     },
