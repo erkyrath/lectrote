@@ -453,6 +453,15 @@ app.on('will-quit', function() {
     write_prefs_now();
 });
 
+/* Called at applicationWillFinishLaunching time (or before ready).
+   Docs recommend setting up the open-file handler here.
+*/
+app.on('will-finish-launching', function() {
+    app.on('open-file', function(ev, path) {
+        launch_game(path);
+    });
+});
+
 /* Called when Electron is initialized and ready to run. 
 */
 app.on('ready', function() {
