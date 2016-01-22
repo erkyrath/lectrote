@@ -115,8 +115,6 @@ function select_load_game()
 
 function launch_game(path)
 {
-    console.log(path); /*###*/
-
     var win = null;
     var game = {
         path: path
@@ -143,6 +141,8 @@ function launch_game(path)
     
     win.on('closed', function() {
             delete gamewins[game.id];
+            game = null;
+            win = null;
     });
 
     win.webContents.on('dom-ready', function() {
