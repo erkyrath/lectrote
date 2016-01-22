@@ -1,10 +1,13 @@
 
 AppHooks = function() {
 
+const path_mod = require('path');
 const fs = require('fs');
 
 function load_named_game(path)
 {
+    game_options.default_page_title = path_mod.basename(path);
+
     var buf = fs.readFileSync(path);
     /* Convert to a generic Array of byte values. */
     var arr = new Array(buf.length);

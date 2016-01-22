@@ -1,6 +1,8 @@
 'use strict';
 const electron = require('electron');
 const app = electron.app;
+const fs = require('fs');
+const path_mod = require('path');
 
 var gamewins = {}; /* maps window ID to a game structure */
 var cardwin = null;
@@ -13,9 +15,6 @@ var prefs = {
 };
 var prefstimer = null;
 var prefswriting = false;
-
-const fs = require('fs');
-const path_mod = require('path');
 
 var prefspath = path_mod.join(app.getPath('userData'), 'quixe-prefs.json');
 
