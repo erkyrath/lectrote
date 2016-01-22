@@ -241,6 +241,36 @@ function launch_game(path)
     win.loadURL('file://' + __dirname + '/play.html');
 }
 
+function open_card_window()
+{
+    var winopts = { 
+        width: 810, height: 620,
+        maxWidth: 810, maxHeight: 620,
+        javascript: false
+    };
+    if (prefs.cardwin_x !== undefined)
+        winopts.x = prefs.cardwin_x;
+    if (prefs.cardwin_y !== undefined)
+        winopts.y = prefs.cardwin_y;
+
+    cardwin = new electron.BrowserWindow(winopts);
+
+    cardwin.on('closed', function() {
+            cardwin = null;
+        });
+    cardwin.on('move', function() {
+            prefs.cardwin_x = cardwin.getPosition()[0];
+            prefs.cardwin_y = cardwin.getPosition()[1];
+            note_prefs_dirty();
+        });
+    cardwin.webContents.on('will-navigate', function(ev, url) {
+            require('electron').shell.openExternal(url);
+            ev.preventDefault();
+        });
+
+    cardwin.loadURL('file://' + __dirname + '/if-card.html');
+}
+
 function setup_app_menu()
 {
     var template = [
@@ -357,37 +387,7 @@ function setup_app_menu()
             }
         },
         {
-            label: 'IF Reference Card',
-            click: function(item, win) {
-                if (!cardwin) {
-                    var winopts = { 
-                        width: 810, height: 620,
-                        maxWidth: 810, maxHeight: 620,
-                        javascript: false
-                    };
-                    if (prefs.cardwin_x !== undefined)
-                        winopts.x = prefs.cardwin_x;
-                    if (prefs.cardwin_y !== undefined)
-                        winopts.y = prefs.cardwin_y;
-                    cardwin = new electron.BrowserWindow(winopts);
-                    cardwin.on('closed', function() {
-                            cardwin = null;
-                        });
-                    cardwin.on('move', function() {
-                            prefs.cardwin_x = cardwin.getPosition()[0];
-                            prefs.cardwin_y = cardwin.getPosition()[1];
-                            note_prefs_dirty();
-                        });
-                    cardwin.webContents.on('will-navigate', function(ev, url) {
-                            require('electron').shell.openExternal(url);
-                            ev.preventDefault();
-                        });
-                    cardwin.loadURL('file://' + __dirname + '/if-card.html');
-                }
-                else {
-                    cardwin.show();
-                }
-            }
+            type: 'separator'
         },
         {
             label: 'Toggle Developer Tools',
@@ -415,6 +415,21 @@ function setup_app_menu()
         },
         {
             type: 'separator'
+        }
+        ]
+    },
+    {
+        label: 'Help',
+        role: 'help',
+        submenu: [
+        {
+            label: 'IF Reference Card',
+            click: function(item, win) {
+                if (!cardwin)
+                    open_card_window();
+                else
+                    cardwin.show();
+            }
         }
         ]
     }
