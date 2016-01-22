@@ -146,6 +146,7 @@ function select_load_game(initial)
         
         if (!ls || !ls.length)
             return;
+        app.addRecentDocument(ls[0]);
         launch_game(ls[0]);
     });
 }
@@ -370,6 +371,20 @@ function setup_app_menu()
             click: function(item) {
                 console.log(app.getPath('userData'));
             }
+        }
+        ]
+    },
+    {
+        label: 'Window',
+        role: 'window',
+        submenu: [
+        {
+            label: 'Minimize',
+            accelerator: 'CmdOrCtrl+M',
+            role: 'minimize'
+        },
+        {
+            type: 'separator'
         }
         ]
     }
