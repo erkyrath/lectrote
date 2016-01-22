@@ -100,6 +100,8 @@ function invoke_app_hook(win, func, arg)
     win.webContents.executeJavaScript('AppHooks.'+func+'('+argval+')');
 }
 
+/* Bring up the select-a-game dialog. 
+*/
 function select_load_game()
 {
     var opts = {
@@ -113,6 +115,8 @@ function select_load_game()
     });
 }
 
+/* Open a game window for a given game file.
+*/
 function launch_game(path)
 {
     var win = null;
