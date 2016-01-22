@@ -283,6 +283,11 @@ function setup_app_menu()
             click: function() {
                 select_load_game();
             }
+        },
+        {
+            label: 'Close Window',
+            accelerator: 'CmdOrCtrl+W',
+            role: 'close'
         }
         ]
     },
