@@ -2,21 +2,27 @@
 const electron = require('electron');
 const app = electron.app;
 
-var mainwin = null;
+var gamewins = {}; /* maps window ID to a game structure */
 var cardwin = null;
 
 var prefs = {
-    mainwin_width: 600,
-    mainwin_height: 800,
-    mainwin_marginlevel: 1,
-    mainwin_zoomlevel: 0
+    gamewin_width: 600,
+    gamewin_height: 800,
+    gamewin_marginlevel: 1,
+    gamewin_zoomlevel: 0
 };
 var prefstimer = null;
 var prefswriting = false;
 
 const fs = require('fs');
-const path = require('path');
-var prefspath = path.join(app.getPath('userData'), 'quixe-prefs.json');
+const path_mod = require('path');
+
+var prefspath = path_mod.join(app.getPath('userData'), 'quixe-prefs.json');
+
+function game_for_window(win)
+{
+    return gamewins[win.id];
+}
 
 /* Called only at app startup. */
 function load_prefs() {
@@ -94,8 +100,85 @@ function invoke_app_hook(win, func, arg)
     win.webContents.executeJavaScript('AppHooks.'+func+'('+argval+')');
 }
 
+function select_load_game()
+{
+    var opts = {
+        properties: ['openFile'],
+        filters: [ { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'gblorb'] } ]
+    };
+    electron.dialog.showOpenDialog(null, opts, function(ls) {
+            if (!ls || !ls.length)
+                return;
+            launch_game(ls[0]);
+    });
+}
+
+function launch_game(path)
+{
+    console.log(path); /*###*/
+
+    var win = null;
+    var game = {
+        path: path
+    };
+
+    var winopts = {
+        width: prefs.gamewin_width, height: prefs.gamewin_height,
+        minWidth: 400, minHeight: 400,
+        zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
+    };
+    if (prefs.gamewin_x !== undefined)
+        winopts.x = prefs.gamewin_x;
+    if (prefs.gamewin_y !== undefined)
+        winopts.y = prefs.gamewin_y;
+    win = new electron.BrowserWindow(winopts);
+    if (!win)
+        return;
+
+    game.win = win;
+    game.id = win.id;
+    gamewins[game.id] = game;
+
+    /* Game window callbacks */
+    
+    win.on('closed', function() {
+            delete gamewins[game.id];
+    });
+
+    win.webContents.on('dom-ready', function() {
+        invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
+        invoke_app_hook(win, 'load_named_game', game.path);
+    });
+
+    win.on('resize', function() {
+        prefs.gamewin_width = win.getSize()[0];
+        prefs.gamewin_height = win.getSize()[1];
+        note_prefs_dirty();
+    });
+    win.on('move', function() {
+        prefs.gamewin_x = win.getPosition()[0];
+        prefs.gamewin_y = win.getPosition()[1];
+        note_prefs_dirty();
+    });
+
+    /* Load the game UI and go. */
+    win.loadURL('file://' + __dirname + '/play.html');
+}
+
 function setup_app_menu() {
     var template = [
+    {
+        label: 'File',
+        submenu: [
+        {
+            label: 'Open Game...',
+            accelerator: 'CmdOrCtrl+O',
+            click: function() {
+                select_load_game();
+            }
+        }
+        ]
+    },
     {
         label: 'Edit',
         submenu: [
@@ -131,7 +214,7 @@ function setup_app_menu() {
             label: 'Select All',
             accelerator: 'CmdOrCtrl+A',
             role: 'selectall'
-        },
+        }
         ]
     },
     {
@@ -141,22 +224,22 @@ function setup_app_menu() {
             label: 'Zoom In',
             accelerator: 'CmdOrCtrl+=',
             click: function(item, win) {
-                if (win != mainwin)
+                if (!game_for_window(win))
                     return;
-                prefs.mainwin_zoomlevel += 1;
+                prefs.gamewin_zoomlevel += 1;
                 note_prefs_dirty();
-                var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
+                var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
                 invoke_app_hook(win, 'set_zoom_factor', val);
             }
         },
         {
             label: 'Zoom Normal',
             click: function(item, win) {
-                if (win != mainwin)
+                if (!game_for_window(win))
                     return;
-                prefs.mainwin_zoomlevel = 0;
+                prefs.gamewin_zoomlevel = 0;
                 note_prefs_dirty();
-                var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
+                var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
                 invoke_app_hook(win, 'set_zoom_factor', val);
             }
         },
@@ -164,36 +247,36 @@ function setup_app_menu() {
             label: 'Zoom Out',
             accelerator: 'CmdOrCtrl+-',
             click: function(item, win) {
-                if (win != mainwin)
+                if (!game_for_window(win))
                     return;
-                prefs.mainwin_zoomlevel -= 1;
+                prefs.gamewin_zoomlevel -= 1;
                 note_prefs_dirty();
-                var val = zoom_factor_for_level(prefs.mainwin_zoomlevel);
+                var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
                 invoke_app_hook(win, 'set_zoom_factor', val);
             }
         },
         {
             label: 'Margins Wider',
             click: function(item, win) {
-                if (win != mainwin)
+                if (!game_for_window(win))
                     return;
-                prefs.mainwin_marginlevel += 1;
-                if (prefs.mainwin_marginlevel > 5)
-                    prefs.mainwin_marginlevel = 5;
+                prefs.gamewin_marginlevel += 1;
+                if (prefs.gamewin_marginlevel > 5)
+                    prefs.gamewin_marginlevel = 5;
                 note_prefs_dirty();
-                invoke_app_hook(win, 'set_margin_level', prefs.mainwin_marginlevel);
+                invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
             }
         },
         {
             label: 'Margins Narrower',
             click: function(item, win) {
-                if (win != mainwin)
+                if (!game_for_window(win))
                     return;
-                prefs.mainwin_marginlevel -= 1;
-                if (prefs.mainwin_marginlevel < 0)
-                    prefs.mainwin_marginlevel = 0;
+                prefs.gamewin_marginlevel -= 1;
+                if (prefs.gamewin_marginlevel < 0)
+                    prefs.gamewin_marginlevel = 0;
                 note_prefs_dirty();
-                invoke_app_hook(win, 'set_margin_level', prefs.mainwin_marginlevel);
+                invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
             }
         },
         {
@@ -321,39 +404,5 @@ app.on('ready', function() {
     load_prefs();
     setup_app_menu();
 
-    var winopts = {
-        width: prefs.mainwin_width, height: prefs.mainwin_height,
-        minWidth: 400, minHeight: 400,
-        zoomFactor: zoom_factor_for_level(prefs.mainwin_zoomlevel)
-    };
-    if (prefs.mainwin_x !== undefined)
-        winopts.x = prefs.mainwin_x;
-    if (prefs.mainwin_y !== undefined)
-        winopts.y = prefs.mainwin_y;
-    mainwin = new electron.BrowserWindow(winopts);
-
-    /* Main window callbacks */
-    
-    mainwin.on('closed', function() {
-        mainwin = null;
-    });
-
-    mainwin.webContents.on('dom-ready', function() {
-        invoke_app_hook(mainwin, 'set_margin_level', prefs.mainwin_marginlevel);
-        invoke_app_hook(mainwin, 'load_named_game', path.join(__dirname, 'stories', 'Advent.ulx'));
-    });
-
-    mainwin.on('resize', function() {
-        prefs.mainwin_width = mainwin.getSize()[0];
-        prefs.mainwin_height = mainwin.getSize()[1];
-        note_prefs_dirty();
-    });
-    mainwin.on('move', function() {
-        prefs.mainwin_x = mainwin.getPosition()[0];
-        prefs.mainwin_y = mainwin.getPosition()[1];
-        note_prefs_dirty();
-    });
-
-    /* Load the game UI and go. */
-    mainwin.loadURL('file://' + __dirname + '/play.html');
+    select_load_game();
 });
