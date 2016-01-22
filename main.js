@@ -103,8 +103,8 @@ function invoke_app_hook(win, func, arg)
 
 /* Bring up the select-a-game dialog. 
 
-   If we're doing this at launch time, we need to attach it to a
-   browser window. This is silly, but it's the only way to get focus.
+   If we're doing this at launch time, we need to attach it to a temporary
+   (blank) browser window. This is silly, but it's the only way to get focus.
 */
 function select_load_game(initial)
 {
@@ -453,6 +453,10 @@ app.on('will-quit', function() {
    Docs recommend setting up the open-file handler here.
 */
 app.on('will-finish-launching', function() {
+    /* open-file events can come from the dock/taskbar, or (on MacOS)
+       from the Finder handing us a double-clicked file. See 
+       Lectrote.app/Contents/Info.plist for the definition of what
+       file types the Finder will hand us. */
     app.on('open-file', function(ev, path) {
         launch_game(path);
     });
