@@ -144,6 +144,7 @@ function select_load_game(initial)
     var win = null;
     if (initial) {
         var winopts = {
+            title: 'Lectrote',
             width: 600, height: 100
         };
         if (prefs.initwin_x !== undefined)
