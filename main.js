@@ -13,7 +13,7 @@ var prefs = {
     gamewin_marginlevel: 1,
     gamewin_zoomlevel: 0
 };
-var prefspath = path_mod.join(app.getPath('userData'), 'quixe-prefs.json');
+var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
 var prefstimer = null;
 var prefswriting = false;
 
