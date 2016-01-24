@@ -17,6 +17,9 @@ var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
 var prefstimer = null;
 var prefswriting = false;
 
+var app_ready = false; /* true once the ready event occurred */
+var launch_paths = []; /* game files passed in before app_ready */
+
 function game_for_window(win)
 {
     return gamewins[win.id];
@@ -511,17 +514,37 @@ app.on('will-finish-launching', function() {
     /* open-file events can come from the dock/taskbar, or (on MacOS)
        from the Finder handing us a double-clicked file. See 
        Lectrote.app/Contents/Info.plist for the definition of what
-       file types the Finder will hand us. */
+       file types the Finder will hand us. 
+
+       This event can be received before ready time. If it is, then
+       we have to stash the path for later use.
+    */
     app.on('open-file', function(ev, path) {
-        launch_game(path);
+        if (!app_ready)
+            launch_paths.push(path);
+        else
+            launch_game(path);
     });
 });
 
 /* Called when Electron is initialized and ready to run. 
 */
 app.on('ready', function() {
+    app_ready = true;
+
     load_prefs();
     setup_app_menu();
 
-    select_load_game(true);
+    /* If any paths have been received, launch them. If not, open an
+       initial load dialog. */
+    if (!launch_paths.length) {
+        select_load_game(true);
+    }
+    else {
+        for (var ix=0; ix<launch_paths.length; ix++)
+            launch_game(launch_paths[ix]);
+    }
+
+    /* Won't need this any more */
+    launch_paths = null;
 });
