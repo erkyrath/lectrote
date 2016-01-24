@@ -25,6 +25,15 @@ function game_for_window(win)
     return gamewins[win.id];
 }
 
+/* Add a game to the recently-opened list. 
+*/
+function add_recent_game(path)
+{
+    /* The system recent list is easy -- it handles its own ordering
+       and uniqueness. This list shows up on the Dock icon on MacOS. */
+    app.addRecentDocument(path);
+}
+
 /* If you create two windows in a row, the second should be offset. But
    if you create a window, close it, and create a new window, the second
    should not be offset. Sorry, it's messy to describe and messy to
@@ -173,7 +182,7 @@ function select_load_game(initial)
         
         if (!ls || !ls.length)
             return;
-        app.addRecentDocument(ls[0]);
+        add_recent_game(ls[0]);
         launch_game(ls[0]);
     });
 }
