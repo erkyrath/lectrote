@@ -32,6 +32,29 @@ function add_recent_game(path)
     /* The system recent list is easy -- it handles its own ordering
        and uniqueness. This list shows up on the Dock icon on MacOS. */
     app.addRecentDocument(path);
+
+    var recents = prefs.recent_games;
+    if (recents === undefined) {
+        recents = [];
+        prefs.recent_games = recents;
+    }
+
+    /* Remove any duplicate so we can move this game to the top. */
+    for (var ix=0; ix<recents.length; ix++) {
+        if (recents[ix] == path) {
+            recents.splice(ix, 1);
+            break;
+        }
+    }
+
+    /* Push onto beginning. */
+    recents.unshift(path);
+
+    /* Keep no more than 8. */
+    if (recents.length > 8)
+        recents.length = 8;
+
+    note_prefs_dirty();
 }
 
 /* If you create two windows in a row, the second should be offset. But
@@ -182,7 +205,6 @@ function select_load_game(initial)
         
         if (!ls || !ls.length)
             return;
-        add_recent_game(ls[0]);
         launch_game(ls[0]);
     });
 }
@@ -191,6 +213,8 @@ function select_load_game(initial)
 */
 function launch_game(path)
 {
+    add_recent_game(path);
+
     var win = null;
     var game = {
         path: path
