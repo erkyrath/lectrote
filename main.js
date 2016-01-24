@@ -25,7 +25,36 @@ function game_for_window(win)
     return gamewins[win.id];
 }
 
-/* Add a game to the recently-opened list. 
+function construct_recent_game_menu()
+{
+    var res = [];
+
+    /* This requires a utility function because of Javascript's lousy 
+       closures. */
+    var add = function(path) {
+        var opts = {
+            label: path_mod.basename(path),
+            click: function() {
+                launch_game(path);
+            }
+        };
+        res.push(opts);
+    };
+    
+    var recents = prefs.recent_games;
+    if (recents && recents.length) {
+        for (var ix=0; ix<recents.length; ix++) {
+            add(recents[ix]);
+        }
+    }
+
+    return res;
+}
+
+/* Add a game to the recently-opened list. Note that this does *not* affect
+   the "File / Open Recent" submenu! This is an Electron limitation:
+       https://github.com/atom/electron/issues/527
+   The submenu will be filled in next time the app launches.
 */
 function add_recent_game(path)
 {
@@ -320,6 +349,11 @@ function setup_app_menu()
             click: function() {
                 select_load_game();
             }
+        },
+        {
+            label: 'Open Recent',
+            type: 'submenu',
+            submenu: construct_recent_game_menu()
         },
         {
             label: 'Close Window',
