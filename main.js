@@ -20,6 +20,7 @@ var prefswriting = false;
 
 var app_ready = false; /* true once the ready event occurred */
 var launch_paths = []; /* game files passed in before app_ready */
+var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
 
 function game_for_window(win)
 {
@@ -214,6 +215,12 @@ function select_load_game()
 */
 function launch_game(path)
 {
+    if (aboutwin && aboutwin_initial) {
+        /* Dispose of the (temporary) splash window. This needs a time delay
+           for some annoying internal reason. */
+        setTimeout( function() { if (aboutwin) aboutwin.close(); }, 50);
+    }
+
     add_recent_game(path);
 
     var win = null;
@@ -524,6 +531,7 @@ function setup_app_menu()
                         open_about_window();
                     else
                         aboutwin.show();
+                    aboutwin_initial = false;
                 }
             },
             {
@@ -616,6 +624,7 @@ app.on('ready', function() {
        initial splash window. */
     if (!launch_paths.length) {
         open_about_window();
+        aboutwin_initial = true;
     }
     else {
         for (var ix=0; ix<launch_paths.length; ix++)
