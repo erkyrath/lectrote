@@ -580,6 +580,10 @@ app.on('will-quit', function() {
     write_prefs_now();
 });
 
+electron.ipcMain.on('select_load_game', function() {
+    select_load_game();
+});
+
 /* Called at applicationWillFinishLaunching time (or before ready).
    Docs recommend setting up the open-file handler here.
 */

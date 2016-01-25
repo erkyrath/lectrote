@@ -27,6 +27,12 @@ h3 {
   margin: 0.2em;
 }
 
+.Go {
+  font-size: 1.33em;
+  padding: 1em;
+  background: white;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -66,6 +72,12 @@ function onready()
   }
 }
 
+function opengame()
+{
+  var ipcRenderer = require('electron').ipcRenderer;
+  ipcRenderer.send('select_load_game');
+}
+
 </script>
 
 </head>
@@ -86,6 +98,11 @@ Quixe version <span id="quixe_version">???</span>;
 Electron version <span id="electron_version">???</span>
 (Node <span id="node_version">???</span>,
 Chrome <span id="chrome_version">???</span>)
+</p>
+
+<p class="Go">
+Select <a href="javascript:opengame()">Open Game</a>
+to begin playing a Glulx game file!
 </p>
 
 </div>
