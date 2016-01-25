@@ -60,15 +60,28 @@ function onready()
   if (!window.require)
     return;
 
-  require('./quixe/lib/quixe.min.js');
-  if (window.Quixe) {
-    update('quixe_version', Quixe.version);
-  }
+  var fs = require('fs');
+  var path_mod = require('path');
 
   if (window.process) {
     update('electron_version', process.versions.electron);
     update('chrome_version', process.versions.chrome);
     update('node_version', process.versions.node);
+  }
+
+  if (window.__dirname) {
+    try {
+      var path = path_mod.join(__dirname, 'package.json');
+      var val = fs.readFileSync(path, { encoding:'utf8' });
+      var package = JSON.parse(val);
+      update('lectrote_version', package.version);
+    }
+    catch (ex) { }
+  }
+
+  require('./quixe/lib/quixe.min.js');
+  if (window.Quixe) {
+    update('quixe_version', Quixe.version);
   }
 }
 
@@ -89,7 +102,7 @@ function opengame()
 <img src="icon-128.png" alt="Lectrote icon">
 </p>
 
-<h1>Lectrote <a href="https://github.com/erkyrath/lectrote">???</a></h1>
+<h1>Lectrote <a id="lectrote_version" href="https://github.com/erkyrath/lectrote">???</a></h1>
 <h3>A portable Glulx interpreter app</h3>
 <h3>Constructed by Andrew Plotkin</h3>
 
