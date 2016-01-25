@@ -5,6 +5,7 @@ const fs = require('fs');
 const path_mod = require('path');
 
 var gamewins = {}; /* maps window ID to a game structure */
+var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
 
 var prefs = {
@@ -193,11 +194,8 @@ function invoke_app_hook(win, func, arg)
 }
 
 /* Bring up the select-a-game dialog. 
-
-   If we're doing this at launch time, we need to attach it to a temporary
-   (blank) browser window. This is silly, but it's the only way to get focus.
 */
-function select_load_game(initial)
+function select_load_game()
 {
     var opts = {
         title: 'Select a Glulx game file',
@@ -205,33 +203,7 @@ function select_load_game(initial)
         filters: [ { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'gblorb'] } ]
     };
 
-    var win = null;
-    if (initial) {
-        var winopts = {
-            title: 'Lectrote',
-            width: 600, height: 100
-        };
-        if (prefs.initwin_x !== undefined)
-            winopts.x = prefs.initwin_x;
-        if (prefs.initwin_y !== undefined)
-            winopts.y = prefs.initwin_y;
-
-        win = new electron.BrowserWindow(winopts);
-
-        win.on('move', function() {
-            prefs.initwin_x = win.getPosition()[0];
-            prefs.initwin_y = win.getPosition()[1];
-            note_prefs_dirty();
-        });
-    }
-
-    electron.dialog.showOpenDialog(win, opts, function(ls) {
-        if (win) {
-            /* Dispose of the temporary window. This needs a time delay
-               for some annoying internal reason. */
-            setTimeout( function() { win.close(); }, 50);
-        }
-        
+    electron.dialog.showOpenDialog(null, opts, function(ls) {
         if (!ls || !ls.length)
             return;
         launch_game(ls[0]);
@@ -305,6 +277,35 @@ function launch_game(path)
 
     /* Load the game UI and go. */
     win.loadURL('file://' + __dirname + '/play.html');
+}
+
+function open_about_window()
+{
+    var winopts = { 
+        width: 600, height: 400,
+        resizable: false
+    };
+    if (prefs.aboutwin_x !== undefined)
+        winopts.x = prefs.aboutwin_x;
+    if (prefs.aboutwin_y !== undefined)
+        winopts.y = prefs.aboutwin_y;
+
+    aboutwin = new electron.BrowserWindow(winopts);
+
+    aboutwin.on('closed', function() {
+            aboutwin = null;
+        });
+    aboutwin.on('move', function() {
+            prefs.aboutwin_x = aboutwin.getPosition()[0];
+            prefs.aboutwin_y = aboutwin.getPosition()[1];
+            note_prefs_dirty();
+        });
+    aboutwin.webContents.on('will-navigate', function(ev, url) {
+            require('electron').shell.openExternal(url);
+            ev.preventDefault();
+        });
+
+    aboutwin.loadURL('file://' + __dirname + '/about.html');
 }
 
 function open_card_window()
@@ -518,7 +519,12 @@ function setup_app_menu()
             submenu: [
             {
                 label: 'About ' + name,
-                role: 'about'
+                click: function(item, win) {
+                    if (!aboutwin)
+                        open_about_window();
+                    else
+                        aboutwin.show();
+                }
             },
             {
                 type: 'separator'
@@ -603,9 +609,9 @@ app.on('ready', function() {
     setup_app_menu();
 
     /* If any paths have been received, launch them. If not, open an
-       initial load dialog. */
+       initial splash window. */
     if (!launch_paths.length) {
-        select_load_game(true);
+        open_about_window();
     }
     else {
         for (var ix=0; ix<launch_paths.length; ix++)
