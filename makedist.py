@@ -26,6 +26,8 @@ files = [
 ]
 
 def install(resourcedir):
+    if not os.path.isdir(resourcedir):
+        raise Exception('path does not exist: ' + resourcedir)
     appdir = os.path.join(resourcedir, 'app')
     print('Installing to: ' + appdir)
     
@@ -40,5 +42,7 @@ def install(resourcedir):
         
 
 install('dist/electron-v0.36.5-darwin-x64/Lectrote.app/Contents/Resources')
+install('dist/electron-v0.36.5-linux-ia32/resources')
+install('dist/electron-v0.36.5-linux-x64/resources')
 install('dist/electron-v0.36.5-win32-ia32/resources')
 install('dist/electron-v0.36.5-win32-x64/resources')
