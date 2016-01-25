@@ -8,18 +8,87 @@
 body {
   background: #EEE;
   font-family: Palatino, Georgia, serif;
+  margin: 20px;
+  font-size: 0.85em;
+}
+
+#content {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.33em;
+}
+
+h3 {
+  font-size: 1.0em;
+  margin: 0.2em;
 }
 
 </style>
 
+<script type="text/javascript">
+
+function update(id, text)
+{
+  var el = document.getElementById(id);
+  if (el) {
+    remove_children(el);
+    el.appendChild(document.createTextNode(text));
+  }
+}
+
+function remove_children(parent) {
+  var obj, ls;
+  ls = parent.childNodes;
+  while (ls.length > 0) {
+    obj = ls.item(0);
+    parent.removeChild(obj);
+  }
+}
+
+function onready()
+{
+  require('./quixe/lib/quixe.min.js');
+  if (window.Quixe) {
+    update('quixe_version', Quixe.version);
+  }
+
+  if (window.process) {
+    update('electron_version', process.versions.electron);
+    update('chrome_version', process.versions.chrome);
+    update('node_version', process.versions.node);
+  }
+}
+
+</script>
+
 </head>
 
 <body>
+<div id="content">
 
-<h1>Lectrote</h1>
+<p>
+<img src="icon-128.png" alt="Lectrote icon">
+</p>
+
+<h1>Lectrote <a href="https://github.com/erkyrath/lectrote">???</a></h1>
 <h3>A portable Glulx interpreter app</h3>
+<h3>Constructed by Andrew Plotkin</h3>
 
-<img src="icon.png" alt="Lectrote icon">
+<p>
+Quixe version <span id="quixe_version">???</span>;
+Electron version <span id="electron_version">???</span>
+(Node <span id="node_version">???</span>,
+Chrome <span id="chrome_version">???</span>)
+</p>
 
+</div>
 </body>
+
+<script type="text/javascript">
+onready();
+</script>
 </html>
