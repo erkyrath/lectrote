@@ -51,6 +51,9 @@ function remove_children(parent) {
 
 function onready()
 {
+  if (!window.require)
+    return;
+
   require('./quixe/lib/quixe.min.js');
   if (window.Quixe) {
     update('quixe_version', Quixe.version);
