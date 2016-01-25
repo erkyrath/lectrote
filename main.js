@@ -7,6 +7,7 @@ const path_mod = require('path');
 var gamewins = {}; /* maps window ID to a game structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
+var gamedialog = false; /* track whether the game-open dialog is visible */
 
 var prefs = {
     gamewin_width: 600,
@@ -198,13 +199,21 @@ function invoke_app_hook(win, func, arg)
 */
 function select_load_game()
 {
+    if (gamedialog) {
+        /* The dialog is already up. I'd focus it if I had a way to do that,
+           but I don't. */
+        return;
+    }
+
     var opts = {
         title: 'Select a Glulx game file',
         properties: ['openFile'],
         filters: [ { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'gblorb'] } ]
     };
 
+    gamedialog = true;
     electron.dialog.showOpenDialog(null, opts, function(ls) {
+        gamedialog = false;
         if (!ls || !ls.length)
             return;
         launch_game(ls[0]);
