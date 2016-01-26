@@ -356,6 +356,17 @@ function open_card_window()
 
 function setup_app_menu()
 {
+    var name = require('electron').app.getName();
+
+    function find_in_template(key) {
+        for (var ix=0; ix<template.length; ix++) {
+            var stanza = template[ix];
+            if (stanza.label == key)
+                return stanza;
+        }
+        return null;
+    };
+
     var template = [
     {
         label: 'File',
@@ -505,9 +516,6 @@ function setup_app_menu()
             label: 'Minimize',
             accelerator: 'CmdOrCtrl+M',
             role: 'minimize'
-        },
-        {
-            type: 'separator'
         }
         ]
     },
@@ -529,7 +537,13 @@ function setup_app_menu()
     ];
     
     if (process.platform == 'darwin') {
-        var name = require('electron').app.getName();
+        var stanza = find_in_template('Window');
+        if (stanza) {
+            stanza.submenu.push({
+                type: 'separator'
+            });
+        }
+
         template.unshift({
             label: name,
             submenu: [
@@ -578,6 +592,21 @@ function setup_app_menu()
             },
             ]
         });
+    }
+    else {
+        var stanza = find_in_template('Help');
+        if (stanza) {
+            stanza.submenu.push({
+                label: 'About ' + name,
+                click: function(item, win) {
+                    if (!aboutwin)
+                        open_about_window();
+                    else
+                        aboutwin.show();
+                    aboutwin_initial = false;
+                }
+            });
+        }
     }
 
     var menu = electron.Menu.buildFromTemplate(template);
