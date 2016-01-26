@@ -247,7 +247,7 @@ function launch_game(path)
         fs.accessSync(path, fs.R_OK);
     }
     catch (ex) {
-        electron.dialog.showErrorBox('The game file could not be found.', path);
+        electron.dialog.showErrorBox('The game file could not be read.', ''+ex);
         return;
     }
 
