@@ -1,3 +1,5 @@
+<img style="float:right;" src="icon-128.png" alt="Lectrote logo: purple compass">
+
 # Lectrote
 ## The [Quixe][]/GlkOte IF interpreter in an [Electron][] shell
 
