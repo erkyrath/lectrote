@@ -298,7 +298,7 @@ function launch_game(path)
 function open_about_window()
 {
     var winopts = { 
-        width: 600, height: 400,
+        width: 600, height: 420,
         resizable: false
     };
     if (prefs.aboutwin_x !== undefined)
@@ -327,8 +327,8 @@ function open_about_window()
 function open_card_window()
 {
     var winopts = { 
-        width: 810, height: 620,
-        maxWidth: 810, maxHeight: 620,
+        width: 840, height: 660,
+        maxWidth: 840, maxHeight: 660,
         javascript: false
     };
     if (prefs.cardwin_x !== undefined)
