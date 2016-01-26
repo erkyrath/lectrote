@@ -138,7 +138,7 @@ function load_prefs()
         var ls = [];
         for (var ix=0; ix<recents.length; ix++) {
             try {
-                fs.accessSync(recents[ix]);
+                fs.accessSync(recents[ix], fs.R_OK);
                 ls.push(recents[ix]);
             }
             catch (ex) {}
@@ -241,6 +241,16 @@ function select_load_game()
 */
 function launch_game(path)
 {
+    /* Make sure the file is readable before we pass it over to the
+       renderer window. */
+    try {
+        fs.accessSync(path, fs.R_OK);
+    }
+    catch (ex) {
+        electron.dialog.showErrorBox('The game file could not be found.', path);
+        return;
+    }
+
     if (aboutwin && aboutwin_initial) {
         /* Dispose of the (temporary) splash window. This needs a time delay
            for some annoying internal reason. */
