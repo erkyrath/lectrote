@@ -45,6 +45,7 @@ def install(resourcedir):
 def makezip(dir):
     prefix = 'electron-v0.36.5-'
     val = os.path.split(dir)[-1]
+    val = val.replace('darwin', 'macos')
     if not val.startswith(prefix):
         raise Exception('path does not have the prefix')
     zipfile = 'lectrote-0.1.0-' + val[len(prefix):]
