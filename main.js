@@ -131,6 +131,23 @@ function load_prefs()
     catch (ex) {
         console.error('load_prefs: unable to load preferences: %s: %s', prefspath, ex);
     }
+
+    /* Check to make sure the recent files still exist. */
+    var recents = prefs.recent_games;
+    if (recents && recents.length) {
+        var ls = [];
+        for (var ix=0; ix<recents.length; ix++) {
+            try {
+                fs.accessSync(recents[ix]);
+                ls.push(recents[ix]);
+            }
+            catch (ex) {}
+        }
+        if (ls.length < recents.length) {
+            prefs.recent_games = ls;
+            note_prefs_dirty();
+        }
+    }
 }
 
 /* We can't rely on the web-frame algorithm for this, because we have
