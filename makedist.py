@@ -7,8 +7,10 @@
 #    https://github.com/atom/electron/releases
 # and unzip them into a "dist" directory.
 
+import sys
 import os, os.path
 import shutil
+import subprocess
 
 files = [
     './package.json',
@@ -39,10 +41,26 @@ def install(resourcedir):
     
     for filename in files:
         shutil.copyfile(filename, os.path.join(appdir, filename))
-        
+
+def makezip(dir):
+    prefix = 'electron-v0.36.5-'
+    val = os.path.split(dir)[-1]
+    if not val.startswith(prefix):
+        raise Exception('path does not have the prefix')
+    zipfile = 'lectrote-0.1.0-' + val[len(prefix):]
+    print('Zipping up: ' + dir + ' to ' + zipfile)
+    subprocess.call('cd %s; rm -f ../%s.zip; zip -r ../%s.zip *' % (dir, zipfile, zipfile),
+                    shell=True)
 
 install('dist/electron-v0.36.5-darwin-x64/Lectrote.app/Contents/Resources')
 install('dist/electron-v0.36.5-linux-ia32/resources')
 install('dist/electron-v0.36.5-linux-x64/resources')
 install('dist/electron-v0.36.5-win32-ia32/resources')
 install('dist/electron-v0.36.5-win32-x64/resources')
+
+if '-z' in sys.argv:
+    makezip('dist/electron-v0.36.5-darwin-x64')
+    makezip('dist/electron-v0.36.5-linux-ia32')
+    makezip('dist/electron-v0.36.5-linux-x64')
+    makezip('dist/electron-v0.36.5-win32-ia32')
+    makezip('dist/electron-v0.36.5-win32-x64')
