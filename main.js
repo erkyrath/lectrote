@@ -675,6 +675,14 @@ app.on('will-finish-launching', function() {
         else
             launch_game(path);
     });
+
+    /* On the Mac, argv[1] is just "main.js". On Win/Linux it is the
+       game we were launched with. */
+    if (process.platform != 'darwin') {
+        for (var ix=1; ix<process.argv.length; ix++) {
+            launch_paths.push(process.argv[ix]);
+        }
+    }
 });
 
 /* Called when Electron is initialized and ready to run. 
