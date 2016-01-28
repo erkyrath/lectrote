@@ -12,6 +12,8 @@ import os, os.path
 import shutil
 import subprocess
 
+lectrote_version = '0.1.1'
+
 files = [
     './package.json',
     './main.js',
@@ -42,26 +44,32 @@ def install(resourcedir):
     for filename in files:
         shutil.copyfile(filename, os.path.join(appdir, filename))
 
-def makezip(dir):
-    prefix = 'electron-v0.36.5-'
+def makezip(dir, unwrapped=False):
+    prefix = 'lectrote-'
     val = os.path.split(dir)[-1]
-    val = val.replace('darwin', 'macos')
     if not val.startswith(prefix):
         raise Exception('path does not have the prefix')
-    zipfile = 'lectrote-0.1.0-' + val[len(prefix):]
+    zipfile = 'lectrote-' + lectrote_version + '-' + val[len(prefix):]
     print('Zipping up: ' + dir + ' to ' + zipfile)
-    subprocess.call('cd %s; rm -f ../%s.zip; zip -r ../%s.zip *' % (dir, zipfile, zipfile),
-                    shell=True)
+    if unwrapped:
+        subprocess.call('cd %s; rm -f ../%s.zip; zip -r ../%s.zip *' % (dir, zipfile, zipfile),
+                        shell=True)
+    else:
+        dirls = os.path.split(dir)
+        subdir = dirls[-1]
+        topdir = os.path.join(*os.path.split(dir)[0:-1])
+        subprocess.call('cd %s; rm -f %s.zip; zip -r %s.zip %s' % (topdir, zipfile, zipfile, subdir),
+                        shell=True)
 
-install('dist/electron-v0.36.5-darwin-x64/Lectrote.app/Contents/Resources')
-install('dist/electron-v0.36.5-linux-ia32/resources')
-install('dist/electron-v0.36.5-linux-x64/resources')
-install('dist/electron-v0.36.5-win32-ia32/resources')
-install('dist/electron-v0.36.5-win32-x64/resources')
+install('dist/lectrote-macos-x64/Lectrote.app/Contents/Resources')
+install('dist/lectrote-linux-ia32/resources')
+install('dist/lectrote-linux-x64/resources')
+install('dist/lectrote-win32-ia32/resources')
+install('dist/lectrote-win32-x64/resources')
 
 if '-z' in sys.argv:
-    makezip('dist/electron-v0.36.5-darwin-x64')
-    makezip('dist/electron-v0.36.5-linux-ia32')
-    makezip('dist/electron-v0.36.5-linux-x64')
-    makezip('dist/electron-v0.36.5-win32-ia32')
-    makezip('dist/electron-v0.36.5-win32-x64')
+    makezip('dist/lectrote-macos-x64')
+    makezip('dist/lectrote-linux-ia32')
+    makezip('dist/lectrote-linux-x64')
+    makezip('dist/lectrote-win32-ia32', True)
+    makezip('dist/lectrote-win32-x64', True)
