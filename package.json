@@ -4,8 +4,18 @@
   "version": "0.1.1",
   "description": "The Quixe/GlkOte IF interpreter in an Electron shell",
   "main": "main.js",
+  "config": {
+    "electronVersion": "0.36.5"
+  },
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "clean:dist": "rimraf dist",
+    "clean:tmp": "rimraf .tmp*",
+    "makeicns": "svg2png icon.svg --output=.tmp-icon-1024.png --width=1024 --height=1024 && nicns --in .tmp-icon-1024.png --out assets/osx/lectrote.icns && npm run clean:tmp",
+    "makepng": "svg2png icon.svg --output=icon-128.png --width=128 --height=128",
+    "package:osx:app": "electron-packager . Lectrote --arch=x64 --platform=darwin --version=$npm_package_config_electronVersion --out dist --prune --icon=assets/osx/lectrote.icns --overwrite --ignore='(dist|assets|icon.svg)'",
+    "package:osx:dmg": "rimraf dist/lectrote.dmg && appdmg assets/osx/osx-dmg-spec.json dist/lectrote.dmg",
+    "package:osx": "npm run clean:tmp && npm run clean:dist && npm run package:osx:app && npm run package:osx:dmg"
   },
   "repository": {
     "type": "git",
@@ -25,6 +35,11 @@
   },
   "homepage": "https://github.com/erkyrath/lectrote",
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
+    "appdmg": "^0.3.5",
+    "electron-packager": "^5.2.1",
+    "electron-prebuilt": "^0.36.0",
+    "node-icns": "0.0.2",
+    "rimraf": "^2.5.1",
+    "svg2png": "^3.0.0"
   }
 }
