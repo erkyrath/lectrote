@@ -31,14 +31,29 @@
   position: absolute;
   top: 0px;
   width: 100%;
-  background: #FF4040;
-  padding-bottom: 3px;
+  background: #FFA0A0;
+  border-bottom: 3px solid #FF4040;
+}
+
+#errorpane.WarningPane {
+  background: #B0B0FF;
+  border-bottom: 3px solid #6060FF;
+}
+
+#errorpane:hover {
+  background: rgba(255, 160, 160, 0.5);
+  border-bottom: 3px solid rgba(255, 64, 64, 0.3);
+}
+
+#errorpane.WarningPane:hover {
+  background: rgba(176, 176, 255, 0.5);
+  border-bottom: 3px solid rgba(96, 96, 255, 0.3);
 }
 
 #errorcontent {
-  padding: 8px;
+  font-size: 1.1em;
+  padding: 1em;
   text-align: center;
-  background: #FFA0A0;
 }
 
 #loadingpane {
