@@ -405,6 +405,16 @@ function find_in_template(template, key)
     return null;
 };
 
+function index_in_template(template, key)
+{
+    for (var ix=0; ix<template.length; ix++) {
+        var stanza = template[ix];
+        if (stanza.label == key)
+            return ix;
+    }
+    return -1;
+};
+
 function construct_menu_template(special)
 {
     var name = require('electron').app.getName();
@@ -635,6 +645,13 @@ function construct_menu_template(special)
                     aboutwin_initial = false;
                 }
             });
+        }
+
+        if (special) {
+            var pos = index_in_template(template, 'View');
+            if (pos >= 0) {
+                template.splice(pos, 1);
+            }
         }
     }
 
