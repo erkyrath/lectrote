@@ -423,19 +423,6 @@ function setup_app_menu()
         label: 'Edit',
         submenu: [
         {
-            label: 'Undo',
-            accelerator: 'CmdOrCtrl+Z',
-            role: 'undo'
-        },
-        {
-            label: 'Redo',
-            accelerator: 'Shift+CmdOrCtrl+Z',
-            role: 'redo'
-        },
-        {
-            type: 'separator'
-        },
-        {
             label: 'Cut',
             accelerator: 'CmdOrCtrl+X',
             role: 'cut'
