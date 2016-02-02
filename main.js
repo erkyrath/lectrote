@@ -448,6 +448,7 @@ function construct_menu_template(special)
         {
             label: 'Cut',
             accelerator: 'CmdOrCtrl+X',
+            enabled: (!special),
             role: 'cut'
         },
         {
@@ -458,6 +459,7 @@ function construct_menu_template(special)
         {
             label: 'Paste',
             accelerator: 'CmdOrCtrl+V',
+            enabled: (!special),
             role: 'paste'
         },
         {
