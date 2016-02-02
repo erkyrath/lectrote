@@ -519,8 +519,16 @@ function construct_menu_template(special)
                 invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
             }
         },
+        ]
+    },
+    {
+        label: 'Window',
+        role: 'window',
+        submenu: [
         {
-            type: 'separator'
+            label: 'Minimize',
+            accelerator: 'CmdOrCtrl+M',
+            role: 'minimize'
         },
         {
             label: 'Toggle Developer Tools',
@@ -534,17 +542,6 @@ function construct_menu_template(special)
                 if (focusedWindow)
                     focusedWindow.toggleDevTools();
             }
-        }
-        ]
-    },
-    {
-        label: 'Window',
-        role: 'window',
-        submenu: [
-        {
-            label: 'Minimize',
-            accelerator: 'CmdOrCtrl+M',
-            role: 'minimize'
         }
         ]
     },
