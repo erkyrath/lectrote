@@ -288,7 +288,7 @@ function launch_game(path)
     gamewins[game.id] = game;
 
     /* Game window callbacks */
-    
+
     win.on('closed', function() {
         delete gamewins[game.id];
         game = null;
@@ -336,6 +336,12 @@ function open_about_window()
 
     aboutwin = new electron.BrowserWindow(winopts);
 
+    if (process.platform != 'darwin') {
+        var template = construct_menu_template('about');
+        var menu = electron.Menu.buildFromTemplate(template);
+        aboutwin.setMenu(menu);
+    }
+    
     aboutwin.on('closed', function() {
             aboutwin = null;
         });
@@ -367,6 +373,12 @@ function open_card_window()
 
     cardwin = new electron.BrowserWindow(winopts);
 
+    if (process.platform != 'darwin') {
+        var template = construct_menu_template('card');
+        var menu = electron.Menu.buildFromTemplate(template);
+        cardwin.setMenu(menu);
+    }
+    
     cardwin.on('closed', function() {
             cardwin = null;
         });
@@ -383,18 +395,19 @@ function open_card_window()
     cardwin.loadURL('file://' + __dirname + '/if-card.html');
 }
 
-function setup_app_menu()
+function find_in_template(template, key)
+{
+    for (var ix=0; ix<template.length; ix++) {
+        var stanza = template[ix];
+        if (stanza.label == key)
+            return stanza;
+    }
+    return null;
+};
+
+function construct_menu_template(special)
 {
     var name = require('electron').app.getName();
-
-    function find_in_template(key) {
-        for (var ix=0; ix<template.length; ix++) {
-            var stanza = template[ix];
-            if (stanza.label == key)
-                return stanza;
-        }
-        return null;
-    };
 
     var template = [
     {
@@ -541,6 +554,7 @@ function setup_app_menu()
         submenu: [
         {
             label: 'IF Reference Card',
+            enabled: (special != 'card'),
             click: function(item, win) {
                 if (!cardwin)
                     open_card_window();
@@ -553,7 +567,7 @@ function setup_app_menu()
     ];
     
     if (process.platform == 'darwin') {
-        var stanza = find_in_template('Window');
+        var stanza = find_in_template(template, 'Window');
         if (stanza) {
             stanza.submenu.push({
                 type: 'separator'
@@ -565,6 +579,7 @@ function setup_app_menu()
             submenu: [
             {
                 label: 'About ' + name,
+                enabled: (special != 'about'),
                 click: function(item, win) {
                     if (!aboutwin)
                         open_about_window();
@@ -610,10 +625,11 @@ function setup_app_menu()
         });
     }
     else {
-        var stanza = find_in_template('Help');
+        var stanza = find_in_template(template, 'Help');
         if (stanza) {
             stanza.submenu.push({
                 label: 'About ' + name,
+                enabled: (special != 'about'),
                 click: function(item, win) {
                     if (!aboutwin)
                         open_about_window();
@@ -625,8 +641,7 @@ function setup_app_menu()
         }
     }
 
-    var menu = electron.Menu.buildFromTemplate(template);
-    electron.Menu.setApplicationMenu(menu);
+    return template;
 }
 
 /* Called when the last window is closed; we shut down.
@@ -680,7 +695,10 @@ app.on('ready', function() {
     app_ready = true;
 
     load_prefs();
-    setup_app_menu();
+    
+    var template = construct_menu_template();
+    var menu = electron.Menu.buildFromTemplate(template);
+    electron.Menu.setApplicationMenu(menu);
 
     /* If any paths have been received, launch them. If not, open an
        initial splash window. */
