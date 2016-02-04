@@ -45,3 +45,17 @@ Now just type
 ...to launch the app.
 
 When run this way, the app will show up named as "Electron", not "Lectrote".
+
+### Packaging
+
+There are NPM run scripts for packaging Lectrote for distribution.
+
+`npm run package:osx` builds the OSX app and packages it in .DMG file.  It goes into `dist/lectrote.dmg`.
+
+NOTE: I did OSX first because that's the machine I have access to today.  Windows & Linux later.
+
+There are also some utility scripts for recreating the image assets based on `icon.svg`.
+
+`npm run makeicns` rebuilds the `lectrote.icns` file from icon.svg.  This is required for the OSX build.
+
+`npm run makepng` rebuilds the `icon-128.png` file from icon.svg.  This is used in the UI.
