@@ -110,12 +110,14 @@ install('tempapp')
 
 os.makedirs('dist', exist_ok=True)
 
-if opts.makedist:
+doall = not (opts.makedist or opts.makezip)
+
+if doall or opts.makedist:
     for pack in packages:
         dest = 'dist/Lectrote-%s' % (pack,)
         builddir(dest, pack)
 
-if opts.makezip:
+if doall or opts.makezip:
     for pack in packages:
         dest = 'dist/Lectrote-%s' % (pack,)
         makezip(dest, unwrapped=('win32' in pack))
