@@ -105,7 +105,10 @@ else:
 if not packages:
     raise Exception('no packages selected')
 
+os.makedirs('tempapp', exist_ok=True)
 install('tempapp')
+
+os.makedirs('dist', exist_ok=True)
 
 if opts.makedist:
     for pack in packages:
