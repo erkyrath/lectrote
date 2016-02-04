@@ -9,10 +9,31 @@
 
 import sys
 import os, os.path
+import optparse
 import shutil
 import subprocess
 
 lectrote_version = '0.1.2'
+
+all_packages = [
+    'darwin-x64',
+    'linux-ia32',
+    'linux-x64',
+    'win32-ia32',
+    'win32-x64',
+]
+
+popt = optparse.OptionParser()
+
+popt.add_option('-b', '--build',
+                action='store_true', dest='makedist',
+                help='build dist directories')
+popt.add_option('-z', '--zip',
+                action='store_true', dest='makezip',
+                help='turn dist directories into zip files')
+
+(opts, args) = popt.parse_args()
+
 
 files = [
     './package.json',
@@ -50,7 +71,7 @@ def makezip(dir, unwrapped=False):
     if not val.startswith(prefix):
         raise Exception('path does not have the prefix')
     zipfile = 'Lectrote-' + lectrote_version + '-' + val[len(prefix):]
-    print('Zipping up: ' + dir + ' to ' + zipfile)
+    print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
     if unwrapped:
         subprocess.call('cd %s; rm -f ../%s.zip; zip -q -r ../%s.zip *' % (dir, zipfile, zipfile),
                         shell=True)
@@ -61,18 +82,29 @@ def makezip(dir, unwrapped=False):
         subprocess.call('cd %s; rm -f %s.zip; zip -q -r %s.zip %s' % (topdir, zipfile, zipfile, subdir),
                         shell=True)
 
+print('Lectrote version: %s' % (lectrote_version,))
+
+packages = []
+if not args:
+    packages = all_packages
+else:
+    for pack in all_packages:
+        for arg in args:
+            if arg in pack:
+                packages.append(pack)
+                break
+
+if not packages:
+    raise Exception('no packages selected')
+
 install('tempapp')
 
-if '-b' in sys.argv:
-    subprocess.call('npm run package-darwin-x64', shell=True)
-    subprocess.call('npm run package-linux-ia32', shell=True)
-    subprocess.call('npm run package-linux-x64', shell=True)
-    subprocess.call('npm run package-win32-ia32', shell=True)
-    subprocess.call('npm run package-win32-x64', shell=True)
+if opts.makedist:
+    for pack in packages:
+        cmd = 'npm run package-%s' % (pack,)
+        subprocess.call(cmd, shell=True)
 
-if '-z' in sys.argv:
-    makezip('dist/Lectrote-darwin-x64')
-    makezip('dist/Lectrote-linux-ia32')
-    makezip('dist/Lectrote-linux-x64')
-    makezip('dist/Lectrote-win32-ia32', True)
-    makezip('dist/Lectrote-win32-x64', True)
+if opts.makezip:
+    for pack in packages:
+        dest = 'dist/Lectrote-%s' % (pack,)
+        makezip(dest, unwrapped=('win32' in pack))
