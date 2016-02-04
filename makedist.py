@@ -78,6 +78,7 @@ def makezip(dir, unwrapped=False):
     if not val.startswith(prefix):
         raise Exception('path does not have the prefix')
     zipfile = 'Lectrote-' + lectrote_version + '-' + val[len(prefix):]
+    zipfile = zipfile.replace('darwin', 'macos')
     print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
     if unwrapped:
         subprocess.call('cd %s; rm -f ../%s.zip; zip -q -r ../%s.zip *' % (dir, zipfile, zipfile),
