@@ -5,7 +5,11 @@
   "description": "The Quixe/GlkOte IF interpreter in an Electron shell",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "package-linux-ia32": "electron-packager tempapp Lectrote --app-version 0.1.2 --build-version 1 --arch=ia32 --platform=linux --out dist --overwrite",
+    "package-linux-x64": "electron-packager tempapp Lectrote --app-version 0.1.2 --build-version 1 --arch=x64 --platform=linux --out dist --overwrite",
+    "package-win32-ia32": "electron-packager tempapp Lectrote --app-version 0.1.2 --build-version 1 --arch=ia32 --platform=win32 --out dist --version-string.CompanyName='Zarfhome Software' --version-string.LegalCopyright='Copyright 2016 by Andrew Plotkin' --version-string.InternalName='Lectrote.exe' --version-string.ProductName='Lectrote' --version-string.OriginalFilename='Lectrote.exe' --version-string.FileDescription='Interactive Fiction Interpreter' --icon=appicon-win.ico --overwrite",
+    "package-win32-x64": "electron-packager tempapp Lectrote --app-version 0.1.2 --build-version 1 --arch=x64 --platform=win32 --out dist --version-string.CompanyName='Zarfhome Software' --version-string.LegalCopyright='Copyright 2016 by Andrew Plotkin' --version-string.InternalName='Lectrote.exe' --version-string.ProductName='Lectrote' --version-string.OriginalFilename='Lectrote.exe' --version-string.FileDescription='Interactive Fiction Interpreter' --icon=appicon-win.ico --overwrite"
   },
   "repository": {
     "type": "git",
@@ -25,6 +29,7 @@
   },
   "homepage": "https://github.com/erkyrath/lectrote",
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
+    "electron-prebuilt": "^0.36.0",
+    "electron-packager": "^5.2.1"
   }
 }
