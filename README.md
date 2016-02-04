@@ -45,3 +45,20 @@ Now just type
 ...to launch the app.
 
 When run this way, the app will show up named as "Electron", not "Lectrote".
+
+### Packaging Lectrote
+
+The `makedist.py` script builds the zip files which you see on the [release page][release].
+
+[release]: https://github.com/erkyrath/lectrote/releases
+
+    python3 makedist.py
+
+This creates build directories and then zip files in a "dist" directory. Add `-b` to *only* generate the build dirs; `-z` to transform existing build dirs into zip files.
+
+You can add arguments to narrow down the platforms you are building, e.g.:
+
+    python3 makedist.py darwin
+    python3 makedist.py win32
+    python3 makedist.py linux
+    python3 makedist.py win32-x64
