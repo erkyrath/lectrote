@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Glulx Story File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.glulx</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Blorbed Glulx Story File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.blorb.glulx</string>
+			</array>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.glulx</string>
+			<key>UTTypeDescription</key>
+			<string>Glulx Story File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://eblong.com/zarf/glulx/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>ulx</string>
+				<key>public.mime-type</key>
+				<string>application/x-glulx</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.blorb.glulx</string>
+			<key>UTTypeDescription</key>
+			<string>Blorbed Glulx Story File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://eblong.com/zarf/blorb/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>gblorb</string>
+				<key>public.mime-type</key>
+				<string>application/x-blorb;profile=&quot;glulx&quot;</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
