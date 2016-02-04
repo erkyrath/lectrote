@@ -65,6 +65,13 @@ def install(resourcedir):
     for filename in files:
         shutil.copyfile(filename, os.path.join(appdir, filename))
 
+def builddir(dir, pack):
+    cmd = 'npm run package-%s' % (pack,)
+    subprocess.call(cmd, shell=True)
+
+    shutil.copyfile('LICENSE', os.path.join(dir, 'LICENSE'))
+    os.unlink(os.path.join(dir, 'version'))
+    
 def makezip(dir, unwrapped=False):
     prefix = 'Lectrote-'
     val = os.path.split(dir)[-1]
@@ -101,8 +108,8 @@ install('tempapp')
 
 if opts.makedist:
     for pack in packages:
-        cmd = 'npm run package-%s' % (pack,)
-        subprocess.call(cmd, shell=True)
+        dest = 'dist/Lectrote-%s' % (pack,)
+        builddir(dest, pack)
 
 if opts.makezip:
     for pack in packages:
