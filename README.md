@@ -48,7 +48,7 @@ When run this way, the app will show up named as "Electron", not "Lectrote".
 
 ### Packaging Lectrote
 
-The `makedist.py` script builds the zip files which you see on the [release page][release].
+The `makedist.py` script builds the zip files which you see on the [release page][release]. (Yes, it is silly to use a Python packaging script in a Node.js package. Maybe I'll rewrite it into Javascript. Later.) 
 
 [release]: https://github.com/erkyrath/lectrote/releases
 
@@ -62,3 +62,4 @@ You can add arguments to narrow down the platforms you are building, e.g.:
     python3 makedist.py win32
     python3 makedist.py linux
     python3 makedist.py win32-x64
+
