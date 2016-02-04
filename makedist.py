@@ -64,13 +64,14 @@ def makezip(dir, unwrapped=False):
 install('tempapp')
 
 if '-b' in sys.argv:
+    subprocess.call('npm run package-darwin-x64', shell=True)
     subprocess.call('npm run package-linux-ia32', shell=True)
     subprocess.call('npm run package-linux-x64', shell=True)
     subprocess.call('npm run package-win32-ia32', shell=True)
     subprocess.call('npm run package-win32-x64', shell=True)
 
 if '-z' in sys.argv:
-    #makezip('dist/Lectrote-macos-x64')
+    makezip('dist/Lectrote-darwin-x64')
     makezip('dist/Lectrote-linux-ia32')
     makezip('dist/Lectrote-linux-x64')
     makezip('dist/Lectrote-win32-ia32', True)
