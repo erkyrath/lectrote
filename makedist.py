@@ -11,9 +11,8 @@ import sys
 import os, os.path
 import optparse
 import shutil
+import json
 import subprocess
-
-lectrote_version = '0.1.2'
 
 all_packages = [
     'darwin-x64',
@@ -31,6 +30,9 @@ popt.add_option('-b', '--build',
 popt.add_option('-z', '--zip',
                 action='store_true', dest='makezip',
                 help='turn dist directories into zip files')
+popt.add_option('-n', '--none',
+                action='store_true', dest='makenothing',
+                help='do nothing except look at the arguments')
 
 (opts, args) = popt.parse_args()
 
@@ -90,7 +92,17 @@ def makezip(dir, unwrapped=False):
         subprocess.call('cd %s; rm -f %s.zip; zip -q -r %s.zip %s' % (topdir, zipfile, zipfile, subdir),
                         shell=True)
 
+# Start work! First, read the version string out of package.json.
+
+fl = open('package.json')
+pkg = json.load(fl)
+fl.close()
+
+lectrote_version = pkg['version']
 print('Lectrote version: %s' % (lectrote_version,))
+
+# Decide what distributions we're working on. ("packages" is a bit overloaded,
+# sorry.)
 
 packages = []
 if not args:
@@ -110,7 +122,7 @@ install('tempapp')
 
 os.makedirs('dist', exist_ok=True)
 
-doall = not (opts.makedist or opts.makezip)
+doall = not (opts.makedist or opts.makezip or opts.makenothing)
 
 if doall or opts.makedist:
     for pack in packages:
