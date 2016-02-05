@@ -660,6 +660,47 @@ function construct_menu_template(special)
     return template;
 }
 
+/* --------------------------------------------------------------------
+   Begin app setup.
+ */
+
+/* Ensure that only one Lectrote process exists at a time. */
+
+var secondary = app.makeSingleInstance(function(argv, cwd) {
+    /* This callback arrives when a second process tries to launch.
+       Its arguments are sent here. */
+    var count = 0;
+    for (var ix=1; ix<argv.length; ix++) {
+        if (argv[ix] == 'main.js')
+            continue;
+        if (!app_ready)
+            launch_paths.push(argv[ix]);
+        else
+            launch_game(argv[ix]);
+        count++;
+    }
+
+    if (!count) {
+        /* The app was launched with no game arguments. To show willing,
+           we'll pop up the about window. */
+        if (!aboutwin) {
+            open_about_window();
+            aboutwin_initial = true;
+        }
+        else {
+            aboutwin.show();
+        }
+    }
+});
+if (secondary) {
+    /* Another process already exists. Our arguments have been sent
+       to it. */
+    app.quit();
+    return;
+}
+
+/* Set up handlers. */
+
 /* Called when the last window is closed; we shut down.
 */
 app.on('window-all-closed', function() {
