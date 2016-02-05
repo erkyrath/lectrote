@@ -696,12 +696,14 @@ app.on('will-finish-launching', function() {
             launch_game(path);
     });
 
-    /* On the Mac, argv[1] is just "main.js". On Win/Linux it is the
-       game we were launched with. */
-    if (process.platform != 'darwin') {
-        for (var ix=1; ix<process.argv.length; ix++) {
-            launch_paths.push(process.argv[ix]);
-        }
+    /* If we were launched with "npm start game.ulx" then "game.ulx" is
+       in process.argv. Unfortunately, the first argument may be "main.js"
+       or not, depending on how we were launched. I don't know a way to
+       distinguish this other than just special-casing "main.js". */
+    for (var ix=1; ix<process.argv.length; ix++) {
+        if (process.argv[ix] == 'main.js')
+            continue;
+        launch_paths.push(process.argv[ix]);
     }
 });
 
