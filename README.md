@@ -63,4 +63,7 @@ You can add arguments to narrow down the platforms you are building, e.g.:
     python3 makedist.py linux
     python3 makedist.py win32-x64
 
-**Note:** This currently requires a custom version of the `electron-packager`, because the Mac package requires features not in the main release. I have submitted a patch.
+**Note:** This currently requires a custom version of the `electron-packager`, because the Mac package requires features not in the main release. I have submitted a patch. For the moment, use [the zarf branch of this repository][packagerzarf].
+
+[packagerzarf]: https://github.com/erkyrath/electron-packager/tree/zarf
+
