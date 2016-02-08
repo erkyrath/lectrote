@@ -75,6 +75,50 @@
 			<key>UTTypeIconFile</key>
 			<string>icon-gblorb.icns</string>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.glksave</string>
+			<key>UTTypeDescription</key>
+			<string>Glk Save File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://eblong.com/zarf/glk/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>glksave</string>
+				<key>public.mime-type</key>
+				<string>application/x-glksave</string>
+			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-glksave.icns</string>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.glkdata</string>
+			<key>UTTypeDescription</key>
+			<string>Glk Data File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://eblong.com/zarf/glk/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>glkdata</string>
+				<key>public.mime-type</key>
+				<string>application/x-glkdata</string>
+			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-glkdata.icns</string>
+		</dict>
 	</array>
 </dict>
 </plist>
