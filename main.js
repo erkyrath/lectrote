@@ -291,6 +291,10 @@ function launch_game(path)
     game.offset = offset;
     gamewins[game.id] = game;
 
+    if (process.platform == 'darwin') {
+        win.setRepresentedFilename(game.path);
+    }
+
     /* Game window callbacks */
 
     win.on('closed', function() {
