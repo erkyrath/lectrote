@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "electron main.js",
+    "preinstall": "git submodule init; git submodule update",
     "package-darwin-x64": "electron-packager tempapp Lectrote --app-version $npm_package_version --build-version 1 --arch=x64 --platform=darwin --out dist --app-bundle-id=com.eblong.lectrote --app-category-type=public.app-category.games --icon=resources/appicon-mac.icns --extend-info resources/Add-Info.plist --overwrite",
     "package-linux-ia32": "electron-packager tempapp Lectrote --app-version $npm_package_version --build-version 1 --arch=ia32 --platform=linux --out dist --overwrite",
     "package-linux-x64": "electron-packager tempapp Lectrote --app-version $npm_package_version --build-version 1 --arch=x64 --platform=linux --out dist --overwrite",
