@@ -4,6 +4,9 @@
   "version": "0.1.3",
   "description": "The Quixe/GlkOte IF interpreter in an Electron shell",
   "main": "main.js",
+  "bin": {
+    "lectrote" : "./cli.sh"
+  },
   "scripts": {
     "start": "electron main.js",
     "package-darwin-x64": "electron-packager tempapp Lectrote --app-version $npm_package_version --build-version 1 --arch=x64 --platform=darwin --out dist --app-bundle-id=com.eblong.lectrote --app-category-type=public.app-category.games --icon=resources/appicon-mac.icns --extend-info resources/Add-Info.plist --overwrite",
@@ -29,8 +32,10 @@
     "url": "https://github.com/erkyrath/lectrote/issues"
   },
   "homepage": "https://github.com/erkyrath/lectrote",
+  "dependencies": {
+    "electron-prebuilt": "^0.36.0"
+  },
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0",
     "electron-packager": "^5.2.1"
   }
 }
