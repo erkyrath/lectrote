@@ -270,6 +270,10 @@ function launch_game(path)
         zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
     };
 
+    if (process.platform == 'win32') {
+        winopts.icon = path_mod.join(__dirname, 'docicon-64.ico');
+    }
+
     /* BUG: The offsetting only applies if you have a window location
        preference. For a brand-new user this will not be true. */
     var offset = pick_window_offset();
