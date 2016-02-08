@@ -33,10 +33,7 @@ To fetch all the necessary Node packages and place them in a `node_modules` dire
 
     npm install
 
-You must also fetch the Quixe engine (which will live in the `quixe` directory):
-
-    git submodule init
-    git submodule update
+This command also fetches the Quixe submodule (which will live in the `quixe` directory). You must have `git` installed for this to work.
 
 Now just type
 
