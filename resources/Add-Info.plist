@@ -13,6 +13,8 @@
 			<array>
 				<string>public.glulx</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-glulx.icns</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
@@ -23,6 +25,8 @@
 			<array>
 				<string>public.blorb.glulx</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-gblorb.icns</string>
 		</dict>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
@@ -46,6 +50,8 @@
 				<key>public.mime-type</key>
 				<string>application/x-glulx</string>
 			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-glulx.icns</string>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
@@ -66,6 +72,8 @@
 				<key>public.mime-type</key>
 				<string>application/x-blorb;profile=&quot;glulx&quot;</string>
 			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-gblorb.icns</string>
 		</dict>
 	</array>
 </dict>
