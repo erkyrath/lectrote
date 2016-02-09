@@ -81,16 +81,19 @@ def makezip(dir, unwrapped=False):
     if not val.startswith(prefix):
         raise Exception('path does not have the prefix')
     zipfile = 'Lectrote-' + lectrote_version + '-' + val[len(prefix):]
-    zipfile = zipfile.replace('darwin', 'macos')
+    zipargs = '-q'
+    if 'darwin' in zipfile:
+        zipfile = zipfile.replace('darwin', 'macos')
+        zipargs += ' --symlinks'
     print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
     if unwrapped:
-        subprocess.call('cd %s; rm -f ../%s.zip; zip -q -r ../%s.zip *' % (dir, zipfile, zipfile),
+        subprocess.call('cd %s; rm -f ../%s.zip; zip %s -r ../%s.zip *' % (dir, zipfile, zipargs, zipfile),
                         shell=True)
     else:
         dirls = os.path.split(dir)
         subdir = dirls[-1]
         topdir = os.path.join(*os.path.split(dir)[0:-1])
-        subprocess.call('cd %s; rm -f %s.zip; zip -q -r %s.zip %s' % (topdir, zipfile, zipfile, subdir),
+        subprocess.call('cd %s; rm -f %s.zip; zip %s -r %s.zip %s' % (topdir, zipfile, zipargs, zipfile, subdir),
                         shell=True)
 
 # Start work! First, read the version string out of package.json.
