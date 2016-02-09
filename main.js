@@ -225,7 +225,7 @@ function select_load_game()
     var opts = {
         title: 'Select a Glulx game file',
         properties: ['openFile'],
-        filters: [ { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'gblorb'] } ]
+        filters: [ { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'blb', 'gblorb', 'glb'] } ]
     };
 
     gamedialog = true;
