@@ -679,12 +679,13 @@ var secondary = app.makeSingleInstance(function(argv, cwd) {
        Its arguments are sent here. */
     var count = 0;
     for (var ix=1; ix<argv.length; ix++) {
-        if (path_mod.basename(argv[ix]) == 'main.js')
+        var path = argv[ix];
+        if (path_mod.basename(path) == 'main.js')
             continue;
         if (!app_ready)
-            launch_paths.push(argv[ix]);
+            launch_paths.push(path);
         else
-            launch_game(argv[ix]);
+            launch_game(path);
         count++;
     }
 
@@ -750,9 +751,10 @@ app.on('will-finish-launching', function() {
        or not, depending on how we were launched. I don't know a way to
        distinguish this other than just special-casing "main.js". */
     for (var ix=1; ix<process.argv.length; ix++) {
-        if (path_mod.basename(process.argv[ix]) == 'main.js')
+        var path = process.argv[ix];
+        if (path_mod.basename(path) == 'main.js')
             continue;
-        launch_paths.push(process.argv[ix]);
+        launch_paths.push(path);
     }
 });
 
