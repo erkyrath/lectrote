@@ -682,6 +682,8 @@ var secondary = app.makeSingleInstance(function(argv, cwd) {
         var path = argv[ix];
         if (path_mod.basename(path) == 'main.js')
             continue;
+        if (process.platform == 'darwin' && path.startsWith('-psn'))
+            continue;
         if (!app_ready)
             launch_paths.push(path);
         else
@@ -749,10 +751,14 @@ app.on('will-finish-launching', function() {
     /* If we were launched with "npm start game.ulx" then "game.ulx" is
        in process.argv. Unfortunately, the first argument may be "main.js"
        or not, depending on how we were launched. I don't know a way to
-       distinguish this other than just special-casing "main.js". */
+       distinguish this other than just special-casing "main.js".
+       We also special-case the "-psn..." argument which MacOS sometimes
+       throws in. */
     for (var ix=1; ix<process.argv.length; ix++) {
         var path = process.argv[ix];
         if (path_mod.basename(path) == 'main.js')
+            continue;
+        if (process.platform == 'darwin' && path.startsWith('-psn'))
             continue;
         launch_paths.push(path);
     }
