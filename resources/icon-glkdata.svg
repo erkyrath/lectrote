@@ -196,17 +196,17 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710678"
-     inkscape:cx="350.94455"
-     inkscape:cy="643.30424"
+     inkscape:cx="563.62098"
+     inkscape:cy="512"
      inkscape:document-units="px"
-     inkscape:current-layer="g3500"
+     inkscape:current-layer="layer9"
      showgrid="false"
      units="px"
      borderlayer="true"
-     inkscape:window-width="1274"
-     inkscape:window-height="1069"
-     inkscape:window-x="166"
-     inkscape:window-y="113"
+     inkscape:window-width="867"
+     inkscape:window-height="848"
+     inkscape:window-x="409"
+     inkscape:window-y="64"
      inkscape:window-maximized="0"
      inkscape:snap-center="true"
      inkscape:snap-global="true"
@@ -365,14 +365,13 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="Paper-Corner"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <path
        sodipodi:nodetypes="cccccccccccc"
        inkscape:connector-curvature="0"
        id="path4409"
        d="m 577.67578,96.02148 -0.002,0.0078 c 0.1239,0.116849 0.25368,0.228284 0.37695,0.345703 z m 0.5586,0.525391 C 616.61953,133.29165 624,197.72552 624,272 c 72.78911,0 147.08547,7.62795 193.34375,50.07617 L 960,464 1008,416 560,-32 496,16 Z"
-       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#000000;fill-opacity:0.53393668;fill-rule:nonzero;stroke:none;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter4415);color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#000000;fill-opacity:0.31221721;fill-rule:nonzero;stroke:none;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter4415);color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        clip-path="url(#clipPath4421)" />
     <path
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#linearGradient4434);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
@@ -390,12 +389,12 @@
     <image
        sodipodi:absref="/Users/zarf/src/lectrote/resources/tempicon.png"
        xlink:href="tempicon.png"
-       style="opacity:1"
-       width="853.02728"
-       height="1027"
-       preserveAspectRatio="none"
-       id="image4353"
+       y="4.5"
        x="78.469948"
-       y="4.5" />
+       id="image4353"
+       preserveAspectRatio="none"
+       height="1027"
+       width="853.02728"
+       style="opacity:1" />
   </g>
 </svg>
