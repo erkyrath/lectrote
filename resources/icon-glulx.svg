@@ -461,10 +461,11 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="Text"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:144.11250114px;line-height:125%;font-family:'San Francisco Display';-inkscape-font-specification:'San Francisco Display, Medium';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:144.11250305px;line-height:125%;font-family:'San Francisco Display';-inkscape-font-specification:'San Francisco Display, Medium';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="508.37616"
        y="908.29773"
        id="text4369"
