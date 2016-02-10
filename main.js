@@ -271,7 +271,7 @@ function launch_game(path)
     };
 
     if (process.platform == 'win32') {
-        winopts.icon = path_mod.join(__dirname, 'docicon-64.ico');
+        winopts.icon = path_mod.join(__dirname, 'docicon.ico');
     }
 
     /* BUG: The offsetting only applies if you have a window location
