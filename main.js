@@ -487,6 +487,8 @@ function construct_menu_template(special)
                 if (!game_for_window(win))
                     return;
                 prefs.gamewin_zoomlevel += 1;
+                if (prefs.gamewin_zoomlevel > 6)
+                    prefs.gamewin_zoomlevel = 6;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
                 invoke_app_hook(win, 'set_zoom_factor', val);
@@ -511,6 +513,8 @@ function construct_menu_template(special)
                 if (!game_for_window(win))
                     return;
                 prefs.gamewin_zoomlevel -= 1;
+                if (prefs.gamewin_zoomlevel < -6)
+                    prefs.gamewin_zoomlevel = -6;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
                 invoke_app_hook(win, 'set_zoom_factor', val);
