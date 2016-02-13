@@ -494,6 +494,7 @@ function construct_menu_template(special)
         },
         {
             label: 'Zoom Normal',
+            accelerator: 'CmdOrCtrl+0',
             click: function(item, win) {
                 if (!game_for_window(win))
                     return;
