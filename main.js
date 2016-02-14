@@ -266,6 +266,7 @@ function launch_game(path)
     };
 
     var winopts = {
+        title: require('electron').app.getName(),
         width: prefs.gamewin_width, height: prefs.gamewin_height,
         minWidth: 400, minHeight: 400,
         zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
