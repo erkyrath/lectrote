@@ -131,6 +131,7 @@
   outline-style: none;
   background: none;
   font-weight: bold;
+  color: #060;
 }
 
 .BufferWindow .Input {
@@ -214,7 +215,7 @@
 
 .Style_input {
   font-weight: bold;
-  color: #300000;
+  color: #060;
 }
 
 .Style_user1 {
