@@ -176,6 +176,10 @@
   background-color: white;
 }
 
+a {
+  color: #00E;
+}
+
 /* The following are the standard Glk styles. */
 
 .Style_normal {
@@ -187,6 +191,10 @@
 
 .Style_preformatted {
   font-family: monaco, andale mono, lucidatypewriter, courier, courier new, monospace;
+}
+
+.BufferWindow .Style_preformatted {
+  font-size: 0.9em;
 }
 
 .Style_header {
