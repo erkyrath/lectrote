@@ -13,6 +13,7 @@ var prefs = {
     gamewin_width: 600,
     gamewin_height: 800,
     gamewin_marginlevel: 1,
+    gamewin_colortheme: 'light',
     gamewin_zoomlevel: 0
 };
 var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
@@ -305,6 +306,7 @@ function launch_game(path)
 
     win.webContents.on('dom-ready', function() {
         invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
+        invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
         invoke_app_hook(win, 'load_named_game', game.path);
     });
 
@@ -542,6 +544,26 @@ function construct_menu_template(special)
                     prefs.gamewin_marginlevel = 0;
                 note_prefs_dirty();
                 invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
+            }
+        },
+        {
+            label: 'Light Color Theme',
+            click: function(item, win) {
+                if (!game_for_window(win))
+                    return;
+                prefs.gamewin_colortheme = 'light';
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
+            }
+        },
+        {
+            label: 'Dark Color Theme',
+            click: function(item, win) {
+                if (!game_for_window(win))
+                    return;
+                prefs.gamewin_colortheme = 'dark';
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
             }
         },
         ]
