@@ -22,8 +22,25 @@
   -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
 }
 
+.DarkTheme ::-webkit-scrollbar-thumb {
+  background: #303010;
+  -webkit-box-shadow: inset 0 0 4px rgba(255,255,255,0.2);
+}
+
 ::-webkit-scrollbar-track:hover {
   background: #F8F8F0;
+}
+
+.DarkTheme ::-webkit-scrollbar-track:hover {
+  background: #202010;
+}
+
+body.DarkTheme {
+  background: black;
+}
+
+.DarkTheme #content {
+  background: black;
 }
 
 #windowport {
@@ -75,6 +92,11 @@
   background: white;
 }
 
+.DarkTheme .WindowFrame {
+  background: black;
+  color: #FFF4EE;
+}
+
 .BufferWindow {
   overflow: scroll;   /* vertical scrollbar is mandatory */
   overflow-x: hidden; /* but horizontal scrollbar is forbidden */
@@ -94,6 +116,11 @@
   font-family: monaco, andale mono, lucidatypewriter, courier, courier new, monospace; /* necessary! */
   font-size: 14px;
   padding: 6px 20px;
+}
+
+.DarkTheme .GridWindow {
+  background: #432;
+  color: #DDDACC;
 }
 
 .GridLine {
@@ -121,6 +148,11 @@
   -moz-border-radius: 4px;
 }
 
+.DarkTheme .MorePrompt {
+  background: #FDA;
+  color: #420;
+}
+
 .Input {
   /* This class mimicks the Style_input class. It also eliminates the 
      usual decoration of an <input> field, as much as possible. */
@@ -132,6 +164,10 @@
   background: none;
   font-weight: bold;
   color: #060;
+}
+
+.DarkTheme .Input {
+  color: #CFC;
 }
 
 .BufferWindow .Input {
@@ -180,6 +216,10 @@ a {
   color: #00E;
 }
 
+.DarkTheme a {
+  color: #AAF;
+}
+
 /* The following are the standard Glk styles. */
 
 .Style_normal {
@@ -221,9 +261,17 @@ a {
   background: #FFF0C0;
 }
 
+.DarkTheme .Style_blockquote {
+  background: #404010;
+}
+
 .Style_input {
   font-weight: bold;
   color: #060;
+}
+
+.DarkTheme .Style_input {
+  color: #CFC;
 }
 
 .Style_user1 {
