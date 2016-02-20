@@ -100,7 +100,7 @@ body.DarkTheme {
 .BufferWindow {
   overflow: scroll;   /* vertical scrollbar is mandatory */
   overflow-x: hidden; /* but horizontal scrollbar is forbidden */
-  font-family: Palatino, Georgia, serif;
+  font-family: "Libre Baskerville", Georgia, serif;
   font-size: 15px;
   line-height: 1.4;
   padding: 10px 20px;
@@ -171,7 +171,7 @@ body.DarkTheme {
 }
 
 .BufferWindow .Input {
-  font-family: Palatino, Georgia, serif;
+  font-family: "Libre Baskerville", Georgia, serif;
   font-size: 15px;
 }
 

@@ -1,0 +1,24 @@
+/* Libre Baskerville by Pablo Impallari and Rodrigo Fuenzalida
+   http://www.impallari.com/projects/overview/libre-baskerville
+   SIL Open Font License 1.1
+*/
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: normal;
+  src: url("./font/LibreBaskerville-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: italic;
+  src: url("./font/LibreBaskerville-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-weight: bold;
+  font-style: normal;
+  src: url("./font/LibreBaskerville-Bold.ttf") format("truetype");
+}
+

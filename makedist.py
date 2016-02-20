@@ -44,6 +44,7 @@ files = [
     './play.html',
     './about.html',
     './if-card.html',
+    './fonts.css',
     './el-glkote.css',
     './icon-128.png',
     './docicon.ico',
