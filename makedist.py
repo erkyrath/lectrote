@@ -52,6 +52,7 @@ files = [
     './quixe/lib/jquery-1.11.2.min.js',
     './quixe/lib/quixe.min.js',
     './quixe/media/waiting.gif',
+    './font',  # all files
 ]
 
 def install(resourcedir):
@@ -67,7 +68,14 @@ def install(resourcedir):
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
     
     for filename in files:
-        shutil.copyfile(filename, os.path.join(appdir, filename))
+        if not os.path.isdir(filename):
+            shutil.copyfile(filename, os.path.join(appdir, filename))
+        else:
+            subdirname = os.path.join(appdir, filename)
+            os.makedirs(subdirname, exist_ok=True)
+            for subfile in os.listdir(filename):
+                shutil.copyfile(os.path.join(filename, subfile), os.path.join(subdirname, subfile))
+            
 
 def builddir(dir, pack):
     cmd = 'npm run package-%s' % (pack,)
