@@ -26,6 +26,8 @@ var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
 
 function game_for_window(win)
 {
+    if (!win)
+        return undefined;
     return gamewins[win.id];
 }
 
@@ -333,6 +335,30 @@ function launch_game(path)
     win.loadURL('file://' + __dirname + '/play.html');
 }
 
+function reset_game(game)
+{
+    if (!game.win)
+        return;
+
+    var winopts = {
+        type: 'question',
+        message: 'Are you sure you want to reset the game to the beginning? This will discard all your progress since your last SAVE command.',
+        buttons: ['Reset', 'Cancel'],
+        cancelId: 0
+    };
+    /* We use a synchronous showMessageBox call, which blocks (is modal for)
+       the entire app. The async call would only block the game window, but
+       that causes weird results (e.g., cmd-Q fails to shut down the blocked
+       game window). */
+    var res = electron.dialog.showMessageBox(game.win, winopts);
+    if (res == winopts.cancelId) {
+        var win = game.win;
+        /* ### do something to inhibit autorestore! But not autosave. */
+        /* Load the game UI and go. */
+        win.loadURL('file://' + __dirname + '/play.html');
+    }
+}
+
 function open_about_window()
 {
     var winopts = { 
@@ -446,6 +472,18 @@ function construct_menu_template(special)
             type: 'submenu',
             submenu: construct_recent_game_menu()
         },
+        { type: 'separator' },
+        {
+            label: 'Reset Game...',
+            accelerator: 'CmdOrCtrl+R',
+            click: function(item, win) {
+                var game = game_for_window(win);
+                if (!game)
+                    return;
+                reset_game(game);
+            }
+        },
+        { type: 'separator' },
         {
             label: 'Close Window',
             accelerator: 'CmdOrCtrl+W',
@@ -633,17 +671,13 @@ function construct_menu_template(special)
                     aboutwin_initial = false;
                 }
             },
-            {
-                type: 'separator'
-            },
+            { type: 'separator' },
             {
                 label: 'Services',
                 role: 'services',
                 submenu: []
             },
-            {
-                type: 'separator'
-            },
+            { type: 'separator' },
             {
                 label: 'Hide ' + name,
                 accelerator: 'Command+H',
@@ -658,9 +692,7 @@ function construct_menu_template(special)
                 label: 'Show All',
                 role: 'unhide'
             },
-            {
-                type: 'separator'
-            },
+            { type: 'separator' },
             {
                 label: 'Quit',
                 accelerator: 'Command+Q',
