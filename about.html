@@ -93,6 +93,12 @@ function opengame()
   ipcRenderer.send('select_load_game');
 }
 
+function openrecent()
+{
+  var ipcRenderer = require('electron').ipcRenderer;
+  ipcRenderer.send('select_load_recent');
+}
+
 </script>
 
 </head>
@@ -118,6 +124,7 @@ Chrome <span id="chrome_version">???</span>)
 <p class="Go">
 Select <a href="javascript:opengame()">Open Game</a>
 to begin playing a Glulx game file!
+Or select a <a href="javascript:openrecent()">recently played game</a>.
 </p>
 
 </div>

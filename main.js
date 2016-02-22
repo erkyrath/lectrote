@@ -789,6 +789,12 @@ electron.ipcMain.on('select_load_game', function() {
     select_load_game();
 });
 
+electron.ipcMain.on('select_load_recent', function() {
+    var template = construct_recent_game_menu();
+    var menu = electron.Menu.buildFromTemplate(template);
+    menu.popup(aboutwin);
+});
+
 /* Called at applicationWillFinishLaunching time (or before ready).
    Docs recommend setting up the open-file handler here.
 */
