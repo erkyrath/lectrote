@@ -310,6 +310,7 @@ function launch_game(path)
     win.webContents.on('dom-ready', function() {
         invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
         invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
+        invoke_app_hook(win, 'set_font', prefs.gamewin_font);
         invoke_app_hook(win, 'load_named_game', game.path);
     });
 
@@ -605,6 +606,26 @@ function construct_menu_template(special)
                 invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
             }
         },
+        {
+            label: 'Font: Lora',
+            click: function(item, win) {
+                if (!game_for_window(win))
+                    return;
+                prefs.gamewin_font = 'lora';
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_font', prefs.gamewin_font);
+            }
+        },
+        {
+            label: 'Font: Baskerville Libre',
+            click: function(item, win) {
+                if (!game_for_window(win))
+                    return;
+                prefs.gamewin_font = 'baskerville';
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_font', prefs.gamewin_font);
+            }
+        }
         ]
     },
     {
