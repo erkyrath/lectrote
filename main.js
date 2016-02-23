@@ -628,6 +628,26 @@ function construct_menu_template(special)
             }
         },
         {
+            label: 'Font: Georgia',
+            click: function(item, win) {
+                if (!game_for_window(win))
+                    return;
+                prefs.gamewin_font = 'georgia';
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_font', prefs.gamewin_font);
+            }
+        },
+        {
+            label: 'Font: Helvetica',
+            click: function(item, win) {
+                if (!game_for_window(win))
+                    return;
+                prefs.gamewin_font = 'helvetica';
+                note_prefs_dirty();
+                invoke_app_hook(win, 'set_font', prefs.gamewin_font);
+            }
+        },
+        {
             label: 'Font: Libre Baskerville',
             click: function(item, win) {
                 if (!game_for_window(win))

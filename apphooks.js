@@ -46,6 +46,12 @@ function set_font(val)
     var fontline = null;
 
     switch (val) {
+    case 'georgia':
+        fontline = 'Georgia, serif';
+        break;
+    case 'helvetica':
+        fontline = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+        break;
     case 'gentium':
         fontline = '"Gentium Book Basic", Georgia, serif';
         break;
