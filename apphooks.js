@@ -46,6 +46,9 @@ function set_font(val)
     var fontline = null;
 
     switch (val) {
+    case 'gentium':
+        fontline = '"Gentium Book Basic", Georgia, serif';
+        break;
     case 'baskerville':
         fontline = '"Libre Baskerville", Palatino, Georgia, serif';
         break;

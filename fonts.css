@@ -1,3 +1,34 @@
+/* Gentium Book Basic by Victor Gaultney et al
+   http://software.sil.org/gentium/
+   SIL Open Font License 1.1   
+*/
+
+@font-face {
+  font-family: "Gentium Book Basic";
+  font-style: normal;
+  src: url("./font/GenBkBasR.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Gentium Book Basic";
+  font-style: italic;
+  src: url("./font/GenBkBasI.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Gentium Book Basic";
+  font-weight: bold;
+  font-style: normal;
+  src: url("./font/GenBkBasB.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Gentium Book Basic";
+  font-weight: bold;
+  font-style: italic;
+  src: url("./font/GenBkBasBI.ttf") format("truetype");
+}
+
 /* Lora by Olga Karpushina and Alexei Vanyashin
    http://www.cyreal.org/2012/07/lora/
    SIL Open Font License 1.1   
