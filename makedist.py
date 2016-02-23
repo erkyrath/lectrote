@@ -55,6 +55,11 @@ files = [
     './font',  # all files
 ]
 
+rootfiles = [
+    './LICENSE',    
+    './LICENSES-FONTS.txt',
+]
+
 def install(resourcedir):
     if not os.path.isdir(resourcedir):
         raise Exception('path does not exist: ' + resourcedir)
@@ -81,7 +86,8 @@ def builddir(dir, pack):
     cmd = 'npm run package-%s' % (pack,)
     subprocess.call(cmd, shell=True)
 
-    shutil.copyfile('LICENSE', os.path.join(dir, 'LICENSE'))
+    for filename in rootfiles:
+        shutil.copyfile(filename, os.path.join(dir, filename))
     os.unlink(os.path.join(dir, 'version'))
     
 def makezip(dir, unwrapped=False):
