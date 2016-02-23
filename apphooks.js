@@ -47,7 +47,7 @@ function set_font(val)
 
     switch (val) {
     case 'baskerville':
-        fontline = '"Baskerville Libre", Palatino, Georgia, serif';
+        fontline = '"Libre Baskerville", Palatino, Georgia, serif';
         break;
     case 'lora':
     default:

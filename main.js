@@ -618,7 +618,7 @@ function construct_menu_template(special)
             }
         },
         {
-            label: 'Font: Baskerville Libre',
+            label: 'Font: Libre Baskerville',
             click: function(item, win) {
                 if (!game_for_window(win))
                     return;
