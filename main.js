@@ -32,6 +32,18 @@ function game_for_window(win)
     return gamewins[win.id];
 }
 
+function game_for_webcontents(webcontents)
+{
+    if (!webcontents)
+        return undefined;
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        if (game.win && game.win.webContents === webcontents)
+            return game;
+    }    
+    return undefined;
+}
+
 function construct_recent_game_menu()
 {
     var res = [];
@@ -265,7 +277,9 @@ function launch_game(path)
 
     var win = null;
     var game = {
-        path: path
+        path: path,
+        title: null,
+        signature: null
     };
 
     var winopts = {
@@ -850,6 +864,16 @@ electron.ipcMain.on('select_load_recent', function() {
     var template = construct_recent_game_menu();
     var menu = electron.Menu.buildFromTemplate(template);
     menu.popup(aboutwin);
+});
+
+electron.ipcMain.on('game_metadata', function(ev, arg) {
+    var game = game_for_webcontents(ev.sender);
+    if (game) {
+        if (arg.title)
+            game.title = arg.title;
+        if (arg.signature)
+            game.signature = arg.signature;
+    }
 });
 
 /* Called at applicationWillFinishLaunching time (or before ready).

@@ -14,6 +14,18 @@ function load_named_game(path)
     for (var ix=0; ix<buf.length; ix++)
         arr[ix] = buf[ix];
     GiLoad.load_run(null, arr, 'array');
+
+    /* Pass some metadata back to the app */
+    var obj = {
+        title: path_mod.basename(path),
+        signature: Quixe.get_signature()
+    };
+
+    var title = GiLoad.get_metadata('title');
+    if (title)
+        obj.title = title;
+    
+    require('electron').ipcRenderer.send('game_metadata', obj);
 }
 
 function set_zoom_factor(val) 
