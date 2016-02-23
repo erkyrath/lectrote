@@ -35,6 +35,10 @@ h3 {
   background: white;
 }
 
+.Hidden {
+  display: none;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -57,6 +61,15 @@ function remove_children(parent) {
   }
 }
 
+function unhide(id)
+{
+  var el = document.getElementById(id);
+  if (el) {
+    if (el.className == 'Hidden')
+      el.className = null;
+  }
+}
+
 function onready()
 {
   if (!window.require)
@@ -64,6 +77,12 @@ function onready()
 
   var fs = require('fs');
   var path_mod = require('path');
+
+  require('electron').ipcRenderer.on('recent-count', function(ev, arg) {
+    if (arg)
+      unhide('open_recent');
+  });
+
 
   if (window.process) {
     update('electron_version', process.versions.electron);
@@ -124,7 +143,7 @@ Chrome <span id="chrome_version">???</span>)
 <p class="Go">
 Select <a href="javascript:opengame()">Open Game</a>
 to begin playing a Glulx game file!
-Or select a <a href="javascript:openrecent()">recently played game</a>.
+<span id="open_recent" class="Hidden">Or select a <a href="javascript:openrecent()">recently played game</a>.</span>
 </p>
 
 </div>

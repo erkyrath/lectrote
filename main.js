@@ -394,6 +394,11 @@ function open_about_window()
             ev.preventDefault();
         });
 
+    aboutwin.webContents.on('dom-ready', function() {
+            var ls = construct_recent_game_menu();
+            aboutwin.webContents.send('recent-count', ls.length);
+        });
+
     aboutwin.loadURL('file://' + __dirname + '/about.html');
 }
 
