@@ -14,6 +14,7 @@ var prefs = {
     gamewin_height: 800,
     gamewin_marginlevel: 1,
     gamewin_colortheme: 'light',
+    gamewin_font: 'lora',
     gamewin_zoomlevel: 0
 };
 var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
