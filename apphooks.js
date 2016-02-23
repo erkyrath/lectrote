@@ -47,13 +47,13 @@ function set_font(val)
 
     switch (val) {
     case 'georgia':
-        fontline = 'Georgia, serif';
+        fontline = 'Georgia, Cambria, serif';
         break;
     case 'helvetica':
         fontline = '"Helvetica Neue", Helvetica, Arial, sans-serif';
         break;
     case 'gentium':
-        fontline = '"Gentium Book Basic", Georgia, serif';
+        fontline = '"Gentium Book Basic", Georgia, Cambria, serif';
         break;
     case 'baskerville':
         fontline = '"Libre Baskerville", Palatino, Georgia, serif';
