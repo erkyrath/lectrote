@@ -42,6 +42,8 @@ files = [
     './main.js',
     './apphooks.js',
     './play.html',
+    './prefs.html',
+    './prefs.js',
     './about.html',
     './if-card.html',
     './fonts.css',
