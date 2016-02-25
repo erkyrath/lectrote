@@ -7,6 +7,7 @@ const path_mod = require('path');
 var gamewins = {}; /* maps window ID to a game structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
+var prefswin = null; /* the preferences window, if active */
 var gamedialog = false; /* track whether the game-open dialog is visible */
 
 var prefs = {
@@ -416,6 +417,42 @@ function open_about_window()
     aboutwin.loadURL('file://' + __dirname + '/about.html');
 }
 
+function open_prefs_window()
+{
+    var winopts = { 
+        width: 600, height: 400,
+        useContentSize: true,
+        resizable: false
+    };
+    if (prefs.prefswin_x !== undefined)
+        winopts.x = prefs.prefswin_x;
+    if (prefs.prefswin_y !== undefined)
+        winopts.y = prefs.prefswin_y;
+
+    prefswin = new electron.BrowserWindow(winopts);
+
+    if (process.platform != 'darwin') {
+        var template = construct_menu_template('prefs');
+        var menu = electron.Menu.buildFromTemplate(template);
+        prefswin.setMenu(menu);
+    }
+    
+    prefswin.on('closed', function() {
+            prefswin = null;
+        });
+    prefswin.on('move', function() {
+            prefs.prefswin_x = prefswin.getPosition()[0];
+            prefs.prefswin_y = prefswin.getPosition()[1];
+            note_prefs_dirty();
+        });
+
+    prefswin.webContents.on('dom-ready', function() {
+            prefswin.webContents.send('current-prefs');
+        });
+
+    prefswin.loadURL('file://' + __dirname + '/prefs.html');
+}
+
 function open_card_window()
 {
     var winopts = { 
@@ -536,6 +573,18 @@ function construct_menu_template(special)
             label: 'Select All',
             accelerator: 'CmdOrCtrl+A',
             role: 'selectall'
+        },
+        { type: 'separator' },
+        {
+            label: 'Preferences',
+            accelerator: 'CmdOrCtrl+,',
+            enabled: (special != 'prefs'),
+            click: function() {
+                if (!prefswin)
+                    open_prefs_window();
+                else
+                    prefswin.show();
+            }
         }
         ]
     },
@@ -734,7 +783,7 @@ function construct_menu_template(special)
             {
                 label: 'About ' + name,
                 enabled: (special != 'about'),
-                click: function(item, win) {
+                click: function() {
                     if (!aboutwin)
                         open_about_window();
                     else
