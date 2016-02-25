@@ -447,7 +447,7 @@ function open_prefs_window()
         });
 
     prefswin.webContents.on('dom-ready', function() {
-            prefswin.webContents.send('current-prefs');
+            prefswin.webContents.send('current-prefs', prefs);
         });
 
     prefswin.loadURL('file://' + __dirname + '/prefs.html');
