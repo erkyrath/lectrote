@@ -1,6 +1,7 @@
 
 AppHooks = function() {
 
+const electron = require('electron');
 const path_mod = require('path');
 const fs = require('fs');
 
@@ -25,12 +26,12 @@ function load_named_game(path)
     if (title)
         obj.title = title;
     
-    require('electron').ipcRenderer.send('game_metadata', obj);
+    electron.ipcRenderer.send('game_metadata', obj);
 }
 
 function set_zoom_factor(val) 
 {
-    var webFrame = require('electron').webFrame;
+    var webFrame = electron.webFrame;
     webFrame.setZoomFactor(val);
 }
 

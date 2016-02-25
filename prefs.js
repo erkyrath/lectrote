@@ -1,4 +1,6 @@
 
+const electron = require('electron');
+
 function setup_with_prefs(prefs)
 {
     var sel, optel;
@@ -101,6 +103,7 @@ function evhan_color_theme()
     var sel = $('#sel-color-theme');
     var val = sel.val();
     apply_color_theme(val);
+    electron.ipcRenderer.send('pref_color_theme', val);
 }
 
 function evhan_font()
@@ -108,8 +111,9 @@ function evhan_font()
     var sel = $('#sel-font');
     var val = sel.val();
     apply_font(val);
+    electron.ipcRenderer.send('pref_font', val);
 }
 
-require('electron').ipcRenderer.on('current-prefs', function(ev, arg) {
-        setup_with_prefs(arg);
+electron.ipcRenderer.on('current-prefs', function(ev, arg) {
+    setup_with_prefs(arg);
 });

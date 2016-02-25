@@ -925,6 +925,24 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
     }
 });
 
+electron.ipcMain.on('pref_font', function(ev, arg) {
+    prefs.gamewin_font = arg;
+    note_prefs_dirty();
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        invoke_app_hook(game.win, 'set_font', prefs.gamewin_font);
+    }
+});
+
+electron.ipcMain.on('pref_color_theme', function(ev, arg) {
+    prefs.gamewin_colortheme = arg;
+    note_prefs_dirty();
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        invoke_app_hook(game.win, 'set_color_theme', prefs.gamewin_colortheme);
+    }
+});
+
 /* Called at applicationWillFinishLaunching time (or before ready).
    Docs recommend setting up the open-file handler here.
 */
