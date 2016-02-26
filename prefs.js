@@ -144,7 +144,7 @@ function apply_zoom_level(val)
     if (val)
         factor = Math.exp(val * 0.09531017980432493);
 
-    $('.Sample').css({'font-size':factor+'em'});
+    $('.SampleText').css({'font-size':factor+'em'});
 
     var el = $('#display-zoom');
     var text = 'Normal';
