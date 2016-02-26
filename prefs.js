@@ -85,10 +85,10 @@ function apply_color_theme(val)
 
 var fontlist = [
     { key:'lora', label:'Lora' },
-    { key:'georgia', label:'Georgia' },
-    { key:'helvetica', label:'Helvetica' },
     { key:'gentium', label:'Gentium Book' },
+    { key:'georgia', label:'Georgia' },
     { key:'baskerville', label:'Libre Baskerville' },
+    { key:'helvetica', label:'Helvetica' },
     { key:'sourcesanspro', label:'Source Sans Pro' },
     { key:'courier', label:'Courier' }
 ];
