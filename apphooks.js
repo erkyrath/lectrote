@@ -74,6 +74,9 @@ function set_font(val)
     case 'sourcesanspro':
         fontline = '"Source Sans Pro", Helvetica, Arial, sans-serif';
         break;
+    case 'courier':
+        fontline = 'Courier, monospace';
+        break;
     case 'lora':
     default:
         fontline = null;
