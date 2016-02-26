@@ -420,7 +420,7 @@ function open_about_window()
 function open_prefs_window()
 {
     var winopts = { 
-        width: 600, height: 400,
+        width: 600, height: 500,
         useContentSize: true,
         resizable: false
     };
