@@ -858,6 +858,16 @@ electron.ipcMain.on('pref_margin_level', function(ev, arg) {
     }
 });
 
+electron.ipcMain.on('pref_zoom_level', function(ev, arg) {
+    prefs.gamewin_zoomlevel = arg;
+    note_prefs_dirty();
+    var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        invoke_app_hook(game.win, 'set_zoom_factor', val);
+    }
+});
+
 /* Called at applicationWillFinishLaunching time (or before ready).
    Docs recommend setting up the open-file handler here.
 */

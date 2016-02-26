@@ -46,6 +46,16 @@ function setup_with_prefs(prefs)
     sel.on('change', evhan_margin_level);
     sel.val(prefs.gamewin_marginlevel);
     apply_margin_level(prefs.gamewin_marginlevel);
+
+
+    sel = $('#range-zoom');
+    sel.attr('step', 1);
+    sel.attr('min', -6);
+    sel.attr('max', 6);
+
+    sel.on('change', evhan_zoom_level);
+    sel.val(prefs.gamewin_zoomlevel);
+    apply_zoom_level(prefs.gamewin_zoomlevel);
 }
 
 function apply_color_theme(val)
@@ -119,6 +129,24 @@ function apply_margin_level(val)
     el.text(text);
 }
 
+function apply_zoom_level(val)
+{
+    var factor = 1;
+    if (val)
+        factor = Math.exp(val * 0.09531017980432493);
+
+    $('.Sample').css({'font-size':factor+'em'});
+
+    var el = $('#display-zoom');
+    var text = 'Normal';
+    if (val > 0)
+        text = 'In ' + val;
+    else if (val < 0)
+        text = 'Out ' + (-val);
+    el.text(text);
+}
+
+
 function evhan_color_theme()
 {
     var sel = $('#sel-color-theme');
@@ -141,6 +169,14 @@ function evhan_margin_level()
     var val = sel.val();
     apply_margin_level(val);
     electron.ipcRenderer.send('pref_margin_level', val);
+}
+
+function evhan_zoom_level()
+{
+    var sel = $('#range-zoom');
+    var val = sel.val();
+    apply_zoom_level(val);
+    electron.ipcRenderer.send('pref_zoom_level', val);
 }
 
 electron.ipcRenderer.on('current-prefs', function(ev, arg) {
