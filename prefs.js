@@ -88,7 +88,8 @@ var fontlist = [
     { key:'georgia', label:'Georgia' },
     { key:'helvetica', label:'Helvetica' },
     { key:'gentium', label:'Gentium Book' },
-    { key:'baskerville', label:'Libre Baskerville' }
+    { key:'baskerville', label:'Libre Baskerville' },
+    { key:'sourcesanspro', label:'Source Sans Pro' }
 ];
 
 function apply_font(val)
@@ -107,6 +108,9 @@ function apply_font(val)
         break;
     case 'baskerville':
         fontline = '"Libre Baskerville", Palatino, Georgia, serif';
+        break;
+    case 'sourcesanspro':
+        fontline = '"Source Sans Pro", Helvetica, Arial, sans-serif';
         break;
     case 'lora':
     default:

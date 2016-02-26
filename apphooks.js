@@ -71,6 +71,9 @@ function set_font(val)
     case 'baskerville':
         fontline = '"Libre Baskerville", Palatino, Georgia, serif';
         break;
+    case 'sourcesanspro':
+        fontline = '"Source Sans Pro", Helvetica, Arial, sans-serif';
+        break;
     case 'lora':
     default:
         fontline = null;

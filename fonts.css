@@ -84,3 +84,34 @@
   src: url("./font/LibreBaskerville-Bold.ttf") format("truetype");
 }
 
+/* Source Sans Pro by Paul D. Hunt
+   http://www.adobe.com/products/type/font-information/source-sans-pro-readme.html
+   SIL Open Font License 1.1
+*/
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  src: url("./font/SourceSansPro-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-style: italic;
+  src: url("./font/SourceSansPro-It.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-weight: bold;
+  font-style: normal;
+  src: url("./font/SourceSansPro-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  font-weight: bold;
+  font-style: italic;
+  src: url("./font/SourceSansPro-BoldIt.ttf") format("truetype");
+}
+
