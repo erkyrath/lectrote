@@ -160,9 +160,9 @@ function apply_zoom_level(val)
     var el = $('#display-zoom');
     var text = 'Normal';
     if (val > 0)
-        text = 'In ' + val;
+        text = 'Zoom In ' + val;
     else if (val < 0)
-        text = 'Out ' + (-val);
+        text = 'Zoom Out ' + (-val);
     el.text(text);
 }
 
