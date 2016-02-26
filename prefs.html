@@ -43,6 +43,30 @@ hr {
   font-size: 1.0em;
 }
 
+input[type=range] {
+  width: 50%;
+  -webkit-appearance: none;
+  background: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  border-radius: 6px;
+  height: 12px;
+  background: #F0F0F0;
+  -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.8);
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 19px;
+  height: 19px;
+  background: #DDD;
+  border: 1px solid #666;
+  border-radius: 9px;
+  margin-top: -3px;
+  -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
+}
+
 .Sample {
   font-size: 0.95em;
   line-height: 1.4em;
@@ -71,9 +95,9 @@ require('./prefs.js');
 
 <div class="FormSection">
 
-<select disabled id="sel-margin" name="margin">
-<option>&nbsp;--&nbsp;</option>
-</select>
+<input id="range-margin" name="margin" type="range">
+&nbsp;
+<span id="display-margin">--</span>
 
 </div>
 
@@ -100,11 +124,13 @@ require('./prefs.js');
 <hr>
 
 <div class="Sample">
+<div class="SampleText">
 <b>At End Of Road</b><br>
 You are standing at the end of a road before a small brick building. 
 Around you is a forest. A small stream flows out of the building and 
 down a gully.
 <i>(From Colossal Cave, Crowther & Woods)</i>
+</div>
 </div>
 
 </div>

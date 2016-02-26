@@ -873,6 +873,15 @@ electron.ipcMain.on('pref_color_theme', function(ev, arg) {
     }
 });
 
+electron.ipcMain.on('pref_margin_level', function(ev, arg) {
+    prefs.gamewin_marginlevel = arg;
+    note_prefs_dirty();
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        invoke_app_hook(game.win, 'set_margin_level', prefs.gamewin_marginlevel);
+    }
+});
+
 /* Called at applicationWillFinishLaunching time (or before ready).
    Docs recommend setting up the open-file handler here.
 */
