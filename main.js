@@ -630,30 +630,6 @@ function construct_menu_template(special)
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
                 invoke_app_hook(win, 'set_zoom_factor', val);
             }
-        },
-        {
-            label: 'Margins Wider',
-            click: function(item, win) {
-                if (!game_for_window(win))
-                    return;
-                prefs.gamewin_marginlevel += 1;
-                if (prefs.gamewin_marginlevel > 5)
-                    prefs.gamewin_marginlevel = 5;
-                note_prefs_dirty();
-                invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
-            }
-        },
-        {
-            label: 'Margins Narrower',
-            click: function(item, win) {
-                if (!game_for_window(win))
-                    return;
-                prefs.gamewin_marginlevel -= 1;
-                if (prefs.gamewin_marginlevel < 0)
-                    prefs.gamewin_marginlevel = 0;
-                note_prefs_dirty();
-                invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
-            }
         }
         ]
     },
