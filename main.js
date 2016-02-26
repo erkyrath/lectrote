@@ -595,40 +595,49 @@ function construct_menu_template(special)
             label: 'Zoom In',
             accelerator: 'CmdOrCtrl+=',
             click: function(item, win) {
-                if (!game_for_window(win))
-                    return;
                 prefs.gamewin_zoomlevel += 1;
                 if (prefs.gamewin_zoomlevel > 6)
                     prefs.gamewin_zoomlevel = 6;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
-                invoke_app_hook(win, 'set_zoom_factor', val);
+                for (var id in gamewins) {
+                    var game = gamewins[id];
+                    invoke_app_hook(game.win, 'set_zoom_factor', val);
+                }
+                if (prefswin)
+                    prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
         },
         {
             label: 'Zoom Normal',
             accelerator: 'CmdOrCtrl+0',
             click: function(item, win) {
-                if (!game_for_window(win))
-                    return;
                 prefs.gamewin_zoomlevel = 0;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
-                invoke_app_hook(win, 'set_zoom_factor', val);
+                for (var id in gamewins) {
+                    var game = gamewins[id];
+                    invoke_app_hook(game.win, 'set_zoom_factor', val);
+                }
+                if (prefswin)
+                    prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
         },
         {
             label: 'Zoom Out',
             accelerator: 'CmdOrCtrl+-',
             click: function(item, win) {
-                if (!game_for_window(win))
-                    return;
                 prefs.gamewin_zoomlevel -= 1;
                 if (prefs.gamewin_zoomlevel < -6)
                     prefs.gamewin_zoomlevel = -6;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
-                invoke_app_hook(win, 'set_zoom_factor', val);
+                for (var id in gamewins) {
+                    var game = gamewins[id];
+                    invoke_app_hook(game.win, 'set_zoom_factor', val);
+                }
+                if (prefswin)
+                    prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
         }
         ]

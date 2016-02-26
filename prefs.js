@@ -199,5 +199,6 @@ electron.ipcRenderer.on('current-prefs', function(ev, arg) {
     setup_with_prefs(arg);
 });
 electron.ipcRenderer.on('set-zoom-level', function(ev, arg) {
+    $('#range-zoom').val(arg);
     apply_zoom_level(arg);
 });
