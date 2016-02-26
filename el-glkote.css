@@ -113,7 +113,7 @@ body.DarkTheme {
   background: #EEEBDD;
   color: #864;
   overflow: hidden;
-  font-family: monaco, andale mono, lucidatypewriter, courier, courier new, monospace; /* necessary! */
+  font-family: "Source Code Pro", Monaco, Courier, monospace; /* necessary! */
   font-size: 14px;
   padding: 6px 20px;
 }
@@ -176,7 +176,7 @@ body.DarkTheme {
 }
 
 .GridWindow .Input {
-  font-family: monaco, andale mono, lucidatypewriter, courier, courier new, monospace; /* necessary! */
+  font-family: "Source Code Pro", Monaco, Courier, monospace; /* necessary! */
   font-size: 14px;
 }
 
@@ -230,7 +230,7 @@ a {
 }
 
 .Style_preformatted {
-  font-family: monaco, andale mono, lucidatypewriter, courier, courier new, monospace;
+  font-family: "Source Code Pro", Monaco, Courier, monospace;
 }
 
 .BufferWindow .Style_preformatted {

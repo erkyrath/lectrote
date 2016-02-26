@@ -115,3 +115,34 @@
   src: url("./font/SourceSansPro-BoldIt.ttf") format("truetype");
 }
 
+/* Source Code Pro by Paul D. Hunt
+   http://www.adobe.com/products/type/font-information/source-code-pro-readme.html
+   SIL Open Font License 1.1
+*/
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  src: url("./font/SourceCodePro-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: italic;
+  src: url("./font/SourceCodePro-It.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-weight: bold;
+  font-style: normal;
+  src: url("./font/SourceCodePro-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-weight: bold;
+  font-style: italic;
+  src: url("./font/SourceCodePro-BoldIt.ttf") format("truetype");
+}
+
