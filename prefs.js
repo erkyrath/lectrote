@@ -65,6 +65,9 @@ function setup_with_prefs(prefs)
 
 /* The apply_... functions adjust the sample text in this window, but
    do not directly affect the controls or send changes to the app.
+
+   A lot of this code is copied from apphooks.js. It has to be kept
+   in sync.
 */
 
 function apply_color_theme(val)
