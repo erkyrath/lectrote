@@ -1,6 +1,10 @@
 
 const electron = require('electron');
 
+/* Set up the initial appearance of the window. This adjusts the controls
+   and the sample text, but does not send changes to the app (because there
+   have been no changes yet).
+*/
 function setup_with_prefs(prefs)
 {
     var sel, optel;
@@ -57,6 +61,11 @@ function setup_with_prefs(prefs)
     sel.val(prefs.gamewin_zoomlevel);
     apply_zoom_level(prefs.gamewin_zoomlevel);
 }
+
+
+/* The apply_... functions adjust the sample text in this window, but
+   do not directly affect the controls or send changes to the app.
+*/
 
 function apply_color_theme(val)
 {
@@ -147,6 +156,10 @@ function apply_zoom_level(val)
 }
 
 
+/* The evhan_... functions respond to user manipulation of the controls.
+   They invoke apply_... to adjust the sample text, and then send a
+   pref update to the app. */
+
 function evhan_color_theme()
 {
     var sel = $('#sel-color-theme');
@@ -179,6 +192,12 @@ function evhan_zoom_level()
     electron.ipcRenderer.send('pref_zoom_level', val);
 }
 
+
+/* Respond to messages from the app. */
+
 electron.ipcRenderer.on('current-prefs', function(ev, arg) {
     setup_with_prefs(arg);
+});
+electron.ipcRenderer.on('set-zoom-level', function(ev, arg) {
+    apply_zoom_level(arg);
 });
