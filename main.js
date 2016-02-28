@@ -323,7 +323,10 @@ function launch_game(path)
         win = null;
     });
 
-    win.webContents.on('dom-ready', function() {
+    win.webContents.on('dom-ready', function(ev) {
+        var game = game_for_webcontents(ev.sender);
+        if (!game)
+            return;
         invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
         invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
         invoke_app_hook(win, 'set_font', prefs.gamewin_font);
