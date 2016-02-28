@@ -330,6 +330,10 @@ function launch_game(path)
         invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
         invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
         invoke_app_hook(win, 'set_font', prefs.gamewin_font);
+        if (game.suppress_autorestore) {
+            invoke_app_hook(win, 'set_clear_autosave', true);
+            game.suppress_autorestore = false;
+        }
         invoke_app_hook(win, 'load_named_game', game.path);
     });
 
@@ -373,7 +377,9 @@ function reset_game(game)
     var res = electron.dialog.showMessageBox(game.win, winopts);
     if (res == winopts.cancelId) {
         var win = game.win;
-        /* ### do something to inhibit autorestore! But not autosave. */
+        /* Set a flag to inhibit autorestore (but not autosave). This
+           will be cleared when the page finishes loading. */
+        game.suppress_autorestore = true;
         /* Load the game UI and go. */
         win.loadURL('file://' + __dirname + '/play.html');
     }

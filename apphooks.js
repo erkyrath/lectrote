@@ -29,6 +29,11 @@ function load_named_game(path)
     electron.ipcRenderer.send('game_metadata', obj);
 }
 
+function set_clear_autosave(val)
+{
+    game_options.clear_vm_autosave = val;
+}
+
 function set_zoom_factor(val) 
 {
     var webFrame = electron.webFrame;
@@ -100,6 +105,7 @@ function set_font(val)
 
 const namespace = {
     load_named_game : load_named_game,
+    set_clear_autosave : set_clear_autosave,
     set_zoom_factor : set_zoom_factor,
     set_margin_level : set_margin_level,
     set_color_theme : set_color_theme,
