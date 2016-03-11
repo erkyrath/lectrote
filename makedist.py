@@ -101,7 +101,10 @@ def makezip(dir, unwrapped=False):
     zipargs = '-q'
     if 'darwin' in zipfile:
         zipfile = zipfile.replace('darwin', 'macos')
-        zipargs += ' --symlinks'
+        print('AppDMGing up: %s to %s' % (dir, zipfile))
+        subprocess.call('rm -f dist/%s.dmg; node_modules/.bin/appdmg resources/pack-dmg-spec.json dist/%s.dmg' % (zipfile, zipfile),
+                        shell=True)
+        return
     print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
     if unwrapped:
         subprocess.call('cd %s; rm -f ../%s.zip; zip %s -r ../%s.zip *' % (dir, zipfile, zipargs, zipfile),
