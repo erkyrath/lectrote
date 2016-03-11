@@ -190,7 +190,7 @@ function evhan_font()
 function evhan_margin_level()
 {
     var sel = $('#range-margin');
-    var val = sel.val();
+    var val = Math.round(1 * sel.val()); /* cast to int */
     apply_margin_level(val);
     electron.ipcRenderer.send('pref_margin_level', val);
 }
@@ -198,7 +198,7 @@ function evhan_margin_level()
 function evhan_zoom_level()
 {
     var sel = $('#range-zoom');
-    var val = sel.val();
+    var val = Math.round(1 * sel.val()); /*cast to int */
     apply_zoom_level(val);
     electron.ipcRenderer.send('pref_zoom_level', val);
 }
