@@ -1,6 +1,6 @@
 {
   "title": "Install Lectrote",
-  "icon": "appicon-mac.icns",
+  "icon": "appicon-dmg.icns",
   "background": "pack-dmg-background.png",
   "icon-size": 80,
   "contents": [
