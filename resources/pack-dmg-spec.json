@@ -4,10 +4,10 @@
   "background": "pack-dmg-background.png",
   "icon-size": 80,
   "contents": [
-    { "x": 464, "y": 152, "type": "link", "path": "/Applications" },
-    { "x": 176, "y": 152, "type": "file", "path": "../dist/Lectrote-darwin-x64/Lectrote.app" },
-    { "x": 120, "y": 310, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSE" },
-    { "x": 280, "y": 310, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSES-FONTS.txt" },
-    { "x": 440, "y": 310, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSES.chromium.html" }
+    { "x": 448, "y": 200, "type": "link", "path": "/Applications" },
+    { "x": 192, "y": 200, "type": "file", "path": "../dist/Lectrote-darwin-x64/Lectrote.app" },
+    { "x": 160, "y": 360, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSE" },
+    { "x": 320, "y": 360, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSES-FONTS.txt" },
+    { "x": 480, "y": 360, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSES.chromium.html" }
   ]
 }

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="600"
+   viewBox="0 0 800.00001 600.00001"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="pack-dmg-background.svg"
+   inkscape:export-filename="/Users/zarf/src/lectrote/resources/pack-dmg-background.png"
+   inkscape:export-xdpi="72"
+   inkscape:export-ydpi="72">
+  <defs
+     id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4164">
+      <stop
+         style="stop-color:#f8c5ff;stop-opacity:1;"
+         offset="0"
+         id="stop4166" />
+      <stop
+         id="stop4172"
+         offset="0.5"
+         style="stop-color:#f8c5ff;stop-opacity:1" />
+      <stop
+         style="stop-color:#f8c5ff;stop-opacity:0"
+         offset="0.50999999"
+         id="stop4174" />
+      <stop
+         style="stop-color:#f8c5ff;stop-opacity:0;"
+         offset="1"
+         id="stop4168" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4164"
+       id="linearGradient4170"
+       x1="0"
+       y1="812.36218"
+       x2="20"
+       y2="832.36218"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="repeat" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter4200"
+       x="-0.041142859"
+       width="1.0822856"
+       y="-0.057599999"
+       height="1.1152"
+       inkscape:label="Blur 10">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="10"
+         id="feGaussianBlur4202" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter4238">
+      <feFlood
+         flood-opacity="0.26000000000000001"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood4240" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite4242" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="4"
+         result="blur"
+         id="feGaussianBlur4244" />
+      <feOffset
+         dx="0"
+         dy="2"
+         result="offset"
+         id="feOffset4246" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite4248" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="381.67876"
+     inkscape:cy="294.7375"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer3"
+     showgrid="true"
+     units="px"
+     borderlayer="true"
+     inkscape:window-width="1008"
+     inkscape:window-height="874"
+     inkscape:window-x="433"
+     inkscape:window-y="144"
+     inkscape:window-maximized="0"
+     inkscape:object-nodes="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3336" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Background"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-452.36216)"
+     sodipodi:insensitive="true">
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect3338"
+       width="800"
+       height="600"
+       x="0"
+       y="452.36215" />
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#linearGradient4170);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect4160"
+       width="800"
+       height="600"
+       x="0"
+       y="452.36215" />
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;filter:url(#filter4200);color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect4162"
+       width="760"
+       height="560"
+       x="20"
+       y="472.36215" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Stuff">
+    <path
+       style="fill:#e0e0e0;fill-opacity:1;fill-rule:evenodd;stroke:#7a7a7a;stroke-width:1.25px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter4238)"
+       d="m 399.87056,200 c -1.70165,6.8066 -2.92367,15.49614 -3.69872,25 l -46.30128,0 0,50 46.30128,0 c 0.77505,9.50386 1.99707,18.1934 3.69872,25 l 50,-50 -50,-50 z"
+       id="path4204"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.77712631px;line-height:125%;font-family:Lora;-inkscape-font-specification:'Lora, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#8d738c;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="389.67035"
+       y="163.47792"
+       id="text3367"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="389.67035"
+         y="163.47792"
+         id="tspan3371">An interactive fiction interpreter</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3375"
+       y="114.674"
+       x="402.53372"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:49.7670517px;line-height:125%;font-family:Lora;-inkscape-font-specification:'Lora, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#8d738c;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         id="tspan3377"
+         y="114.674"
+         x="402.53372"
+         sodipodi:role="line">Lectrote</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4179"
+       y="361.14117"
+       x="389.61612"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.11927223px;line-height:125%;font-family:Lora;-inkscape-font-specification:'Lora, Italic';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#8d738c;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         id="tspan4181"
+         y="361.14117"
+         x="389.61612"
+         sodipodi:role="line">drag to Applications to install</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Icon Guides"
+     style="display:none">
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#e0e0e0;fill-opacity:1;fill-rule:evenodd;stroke:#7a7a7a;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect4251"
+       width="100"
+       height="100"
+       x="190"
+       y="200" />
+    <rect
+       y="200"
+       x="510"
+       height="100"
+       width="100"
+       id="rect4253"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#e0e0e0;fill-opacity:1;fill-rule:evenodd;stroke:#7a7a7a;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#e0e0e0;fill-opacity:1;fill-rule:evenodd;stroke:#7a7a7a;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect4272"
+       width="100"
+       height="100"
+       x="350"
+       y="400" />
+    <rect
+       y="400"
+       x="550"
+       height="100"
+       width="100"
+       id="rect4274"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#e0e0e0;fill-opacity:1;fill-rule:evenodd;stroke:#7a7a7a;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#e0e0e0;fill-opacity:1;fill-rule:evenodd;stroke:#7a7a7a;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect4276"
+       width="100"
+       height="100"
+       x="150"
+       y="400" />
+  </g>
+</svg>
