@@ -47,7 +47,7 @@ function setup_with_prefs(prefs)
     sel.attr('min', 0);
     sel.attr('max', 5);
 
-    sel.on('change', evhan_margin_level);
+    sel.on('input', evhan_margin_level);
     sel.val(prefs.gamewin_marginlevel);
     apply_margin_level(prefs.gamewin_marginlevel);
 
@@ -57,7 +57,7 @@ function setup_with_prefs(prefs)
     sel.attr('min', -6);
     sel.attr('max', 6);
 
-    sel.on('change', evhan_zoom_level);
+    sel.on('input', evhan_zoom_level);
     sel.val(prefs.gamewin_zoomlevel);
     apply_zoom_level(prefs.gamewin_zoomlevel);
 }
