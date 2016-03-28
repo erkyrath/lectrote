@@ -17,9 +17,7 @@ Because this relies on the Quixe interpreter, sound is not supported. It's also 
 
 ## But what about packaged games?
 
-The goal of this project is to let authors make Mac, Windows, and Linux apps out of their Inform games.
-
-I do not yet have all the pieces in place. In particular, a packaged game absolutely has to support auto-save. If the player quits the app and then launches it again, they should be back where they left off. Quixe does not yet support this feature, but I plan to add it.
+The goal of this project is to let authors make Mac, Windows, and Linux apps out of their Inform games. All the pieces are now in place, but I have not wired them together to make this possible.
 
 ## For developers
 
@@ -59,8 +57,4 @@ You can add arguments to narrow down the platforms you are building, e.g.:
     python3 makedist.py win32
     python3 makedist.py linux
     python3 makedist.py win32-x64
-
-**Note:** This currently requires a custom version of the `electron-packager`, because the Mac package requires features not in the main release. I have submitted a patch. For the moment, use [the zarf branch of this repository][packagerzarf].
-
-[packagerzarf]: https://github.com/erkyrath/electron-packager/tree/zarf
 
