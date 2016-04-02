@@ -93,11 +93,11 @@ def builddir(dir, pack):
     os.unlink(os.path.join(dir, 'version'))
     
 def makezip(dir, unwrapped=False):
-    prefix = 'Lectrote-'
+    prefix = product_name + '-'
     val = os.path.split(dir)[-1]
     if not val.startswith(prefix):
         raise Exception('path does not have the prefix')
-    zipfile = 'Lectrote-' + lectrote_version + '-' + val[len(prefix):]
+    zipfile = product_name + '-' + product_version + '-' + val[len(prefix):]
     zipargs = '-q'
     if 'darwin' in zipfile:
         zipfile = zipfile.replace('darwin', 'macos')
@@ -122,8 +122,9 @@ fl = open('package.json')
 pkg = json.load(fl)
 fl.close()
 
-lectrote_version = pkg['version']
-print('Lectrote version: %s' % (lectrote_version,))
+product_version = pkg['version']
+product_name = pkg['productName'];
+print('%s version: %s' % (product_name, product_version,))
 
 # Decide what distributions we're working on. ("packages" is a bit overloaded,
 # sorry.)
@@ -150,10 +151,10 @@ doall = not (opts.makedist or opts.makezip or opts.makenothing)
 
 if doall or opts.makedist:
     for pack in packages:
-        dest = 'dist/Lectrote-%s' % (pack,)
+        dest = 'dist/%s-%s' % (product_name, pack,)
         builddir(dest, pack)
 
 if doall or opts.makezip:
     for pack in packages:
-        dest = 'dist/Lectrote-%s' % (pack,)
+        dest = 'dist/%s-%s' % (product_name, pack,)
         makezip(dest, unwrapped=('win32' in pack))
