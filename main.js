@@ -540,6 +540,7 @@ function construct_menu_template(special)
         submenu: [
         {
             label: 'Open Game...',
+            id: 'open_game',
             accelerator: 'CmdOrCtrl+O',
             click: function() {
                 select_load_game();
@@ -547,6 +548,7 @@ function construct_menu_template(special)
         },
         {
             label: 'Open Recent',
+            id: 'open_recent',
             type: 'submenu',
             submenu: construct_recent_game_menu()
         },
@@ -707,6 +709,23 @@ function construct_menu_template(special)
         ]
     }
     ];
+
+    if (isbound) {
+        /* In bound-game mode, we knock the open options out of the
+           File menu. */
+        var stanza = find_in_template(template, 'menu_file');
+        if (stanza) {
+            var submenu = stanza.submenu;
+            var pos = index_in_template(submenu, 'open_game');
+            if (pos >= 0)
+                submenu.splice(pos, 1);
+            var pos = index_in_template(submenu, 'open_recent');
+            if (pos >= 0)
+                submenu.splice(pos, 1);
+            if (submenu.length && submenu[0].type == 'separator')
+                submenu.splice(0, 1);
+        }
+    }
     
     if (process.platform == 'darwin') {
         var stanza = find_in_template(template, 'menu_window');
