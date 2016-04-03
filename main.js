@@ -4,6 +4,8 @@ const app = electron.app;
 const fs = require('fs');
 const path_mod = require('path');
 
+var package_json = {};
+
 var isbound = false; /* true if we're a single-game app */
 var gamewins = {}; /* maps window ID to a game structure */
 var aboutwin = null; /* the splash/about window, if active */
@@ -933,8 +935,14 @@ electron.ipcMain.on('pref_zoom_level', function(ev, arg) {
    Docs recommend setting up the open-file handler here.
 */
 app.on('will-finish-launching', function() {
+    try {
+        var path = path_mod.join(__dirname, 'package.json');
+        var val = fs.readFileSync(path, { encoding:'utf8' });
+        package_json = JSON.parse(val);
+    }
+    catch (ex) { }
         
-    var boundpath = process.env.npm_package_lectrotePackagedGame;
+    var boundpath = package_json.lectrotePackagedGame;
     if (boundpath) {
         /* We're in single-game mode. Do not handle command-line
            arguments or open-file events. Launch with the built-in
