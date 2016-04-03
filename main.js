@@ -513,7 +513,7 @@ function find_in_template(template, key)
 {
     for (var ix=0; ix<template.length; ix++) {
         var stanza = template[ix];
-        if (stanza.label == key)
+        if (stanza.id == key)
             return stanza;
     }
     return null;
@@ -523,7 +523,7 @@ function index_in_template(template, key)
 {
     for (var ix=0; ix<template.length; ix++) {
         var stanza = template[ix];
-        if (stanza.label == key)
+        if (stanza.id == key)
             return ix;
     }
     return -1;
@@ -536,6 +536,7 @@ function construct_menu_template(special)
     var template = [
     {
         label: 'File',
+        id: 'menu_file',
         submenu: [
         {
             label: 'Open Game...',
@@ -570,6 +571,7 @@ function construct_menu_template(special)
     },
     {
         label: 'Edit',
+        id: 'menu_edit',
         submenu: [
         {
             label: 'Cut',
@@ -609,6 +611,7 @@ function construct_menu_template(special)
     },
     {
         label: 'View',
+        id: 'menu_view',
         submenu: [
         {
             label: 'Zoom In',
@@ -663,6 +666,7 @@ function construct_menu_template(special)
     },
     {
         label: 'Window',
+        id: 'menu_window',
         role: 'window',
         submenu: [
         {
@@ -687,6 +691,7 @@ function construct_menu_template(special)
     },
     {
         label: 'Help',
+        id: 'menu_help',
         role: 'help',
         submenu: [
         {
@@ -704,7 +709,7 @@ function construct_menu_template(special)
     ];
     
     if (process.platform == 'darwin') {
-        var stanza = find_in_template(template, 'Window');
+        var stanza = find_in_template(template, 'menu_window');
         if (stanza) {
             stanza.submenu.push({
                 type: 'separator'
@@ -756,7 +761,9 @@ function construct_menu_template(special)
         });
     }
     else {
-        var stanza = find_in_template(template, 'Help');
+        /* Windows and Linux... */
+
+        var stanza = find_in_template(template, 'menu_help');
         if (stanza) {
             stanza.submenu.push({
                 label: 'About ' + name,
@@ -772,7 +779,8 @@ function construct_menu_template(special)
         }
 
         if (special) {
-            var pos = index_in_template(template, 'View');
+            /* Drop the View menu for special windows. */
+            var pos = index_in_template(template, 'menu_view');
             if (pos >= 0) {
                 template.splice(pos, 1);
             }
