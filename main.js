@@ -940,7 +940,7 @@ app.on('will-finish-launching', function() {
            arguments or open-file events. Launch with the built-in
            path and no other. */
         isbound = true;
-        launch_paths.push(boundpath);
+        launch_paths.push(path_mod.join(__dirname, boundpath));
         return;        
     }
 
