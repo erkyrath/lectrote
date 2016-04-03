@@ -701,6 +701,7 @@ function construct_menu_template(special)
         submenu: [
         {
             label: 'IF Reference Card',
+            id: 'if_ref_card',
             enabled: (special != 'card'),
             click: function(item, win) {
                 if (!cardwin)
@@ -733,9 +734,7 @@ function construct_menu_template(special)
     if (process.platform == 'darwin') {
         var stanza = find_in_template(template, 'menu_window');
         if (stanza) {
-            stanza.submenu.push({
-                type: 'separator'
-            });
+            stanza.submenu.push({ type: 'separator' });
         }
 
         template.unshift({
