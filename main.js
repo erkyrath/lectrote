@@ -840,11 +840,17 @@ app.on('will-quit', function() {
 });
 
 electron.ipcMain.on('select_load_game', function() {
+    if (isbound)
+        return;
     select_load_game();
 });
 
 electron.ipcMain.on('select_load_recent', function() {
+    if (isbound)
+        return;
     var template = construct_recent_game_menu();
+    if (!template || !template.length)
+        return;
     var menu = electron.Menu.buildFromTemplate(template);
     menu.popup(aboutwin);
 });
