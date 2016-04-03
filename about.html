@@ -95,7 +95,7 @@ function onready()
       var path = path_mod.join(__dirname, 'package.json');
       var val = fs.readFileSync(path, { encoding:'utf8' });
       var package = JSON.parse(val);
-      update('lectrote_version', package.version);
+      update('lectrote_version', package.lectroteVersion);
     }
     catch (ex) { }
   }
