@@ -96,6 +96,11 @@ function onready()
       var val = fs.readFileSync(path, { encoding:'utf8' });
       var package = JSON.parse(val);
       update('lectrote_version', package.lectroteVersion);
+      if (package.lectrotePackagedGame) {
+        var el = document.getElementById('go');
+        if (el)
+          el.remove();
+      }
     }
     catch (ex) { }
   }
@@ -140,7 +145,7 @@ Electron version <span id="electron_version">???</span>
 Chrome <span id="chrome_version">???</span>)
 </p>
 
-<p class="Go">
+<p id='go' class="Go">
 Select <a href="javascript:opengame()">Open Game</a>
 to begin playing a Glulx game file!
 <span id="open_recent" class="Hidden">Or select a <a href="javascript:openrecent()">recently played game</a>.</span>
