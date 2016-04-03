@@ -809,6 +809,9 @@ function construct_menu_template(special)
         }
     }
 
+    if (main_extension.construct_menu_template)
+        template = main_extension.construct_menu_template(template, special);
+    
     return template;
 }
 
