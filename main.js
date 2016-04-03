@@ -4,6 +4,7 @@ const app = electron.app;
 const fs = require('fs');
 const path_mod = require('path');
 
+var isbound = false; /* true if we're a single-game app */
 var gamewins = {}; /* maps window ID to a game structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
@@ -48,6 +49,9 @@ function game_for_webcontents(webcontents)
 function construct_recent_game_menu()
 {
     var res = [];
+
+    if (isbound)
+        return res;
 
     /* This requires a utility function because of Javascript's lousy 
        closures. */
@@ -233,6 +237,12 @@ function invoke_app_hook(win, func, arg)
 */
 function select_load_game()
 {
+    if (isbound) {
+        /* We're in bound-game mode and shouldn't be opening any other
+           games. */
+        return;
+    }
+
     if (gamedialog) {
         /* The dialog is already up. I'd focus it if I had a way to do that,
            but I don't. */
@@ -890,6 +900,17 @@ electron.ipcMain.on('pref_zoom_level', function(ev, arg) {
    Docs recommend setting up the open-file handler here.
 */
 app.on('will-finish-launching', function() {
+        
+    var boundpath = process.env.npm_package_lectrotePackagedGame;
+    if (boundpath) {
+        /* We're in single-game mode. Do not handle command-line
+           arguments or open-file events. Launch with the built-in
+           path and no other. */
+        isbound = true;
+        launch_paths.push(boundpath);
+        return;        
+    }
+
     /* open-file events can come from the dock/taskbar, or (on MacOS)
        from the Finder handing us a double-clicked file. See 
        Lectrote.app/Contents/Info.plist for the definition of what
@@ -933,7 +954,9 @@ app.on('ready', function() {
     electron.Menu.setApplicationMenu(menu);
 
     /* If any paths have been received, launch them. If not, open an
-       initial splash window. */
+       initial splash window. (In bound-game mode, launch_paths should
+       contain exactly one path.) */
+
     if (!launch_paths.length) {
         open_about_window();
         aboutwin_initial = true;
