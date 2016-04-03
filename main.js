@@ -4,7 +4,8 @@ const app = electron.app;
 const fs = require('fs');
 const path_mod = require('path');
 
-var package_json = {};
+var package_json = {}; /* parsed form of our package.json file */
+var main_extension = {}; /* extra code for bound games */
 
 var isbound = false; /* true if we're a single-game app */
 var gamewins = {}; /* maps window ID to a game structure */
@@ -941,6 +942,10 @@ app.on('will-finish-launching', function() {
         package_json = JSON.parse(val);
     }
     catch (ex) { }
+
+    if (package_json.lectroteMainExtension) {
+        main_extension = require(path_mod.join(__dirname, package_json.lectroteMainExtension));
+    }
         
     var boundpath = package_json.lectrotePackagedGame;
     if (boundpath) {
