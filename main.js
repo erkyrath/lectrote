@@ -198,7 +198,7 @@ function window_position_prefs(winopts, key)
         winopts.y = val;
 }
 
-function window_size_prefs(obj, key, defwidth, defheight)
+function window_size_prefs(winopts, key, defwidth, defheight)
 {
     var val;
 
@@ -211,6 +211,24 @@ function window_size_prefs(obj, key, defwidth, defheight)
     if (val === undefined)
         val = defheight;
     winopts.height = val;
+}
+
+function window_position_prefs_handler(key, win)
+{
+    return function() {
+        prefs[key+'_x'] = win.getPosition()[0];
+        prefs[key+'_y'] = win.getPosition()[1];
+        note_prefs_dirty();
+    }
+}
+
+function window_size_prefs_handler(key, win)
+{
+    return function() {
+        prefs[key+'_width'] = win.getSize()[0];
+        prefs[key+'_height'] = win.getSize()[1];
+        note_prefs_dirty();
+    }
 }
 
 /* Called whenever we update the prefs object. This waits five seconds 
@@ -380,11 +398,7 @@ function launch_game(path)
         invoke_app_hook(win, 'load_named_game', game.path);
     });
 
-    win.on('resize', function() {
-        prefs.gamewin_width = win.getSize()[0];
-        prefs.gamewin_height = win.getSize()[1];
-        note_prefs_dirty();
-    });
+    win.on('resize', window_size_prefs_handler('gamewin', win));
     win.on('move', function() {
         prefs.gamewin_x = win.getPosition()[0];
         prefs.gamewin_y = win.getPosition()[1];
@@ -448,11 +462,7 @@ function open_about_window()
     aboutwin.on('closed', function() {
             aboutwin = null;
         });
-    aboutwin.on('move', function() {
-            prefs.aboutwin_x = aboutwin.getPosition()[0];
-            prefs.aboutwin_y = aboutwin.getPosition()[1];
-            note_prefs_dirty();
-        });
+    aboutwin.on('move', window_position_prefs_handler('aboutwin', aboutwin));
     aboutwin.webContents.on('will-navigate', function(ev, url) {
             require('electron').shell.openExternal(url);
             ev.preventDefault();
@@ -486,11 +496,7 @@ function open_prefs_window()
     prefswin.on('closed', function() {
             prefswin = null;
         });
-    prefswin.on('move', function() {
-            prefs.prefswin_x = prefswin.getPosition()[0];
-            prefs.prefswin_y = prefswin.getPosition()[1];
-            note_prefs_dirty();
-        });
+    prefswin.on('move', window_position_prefs_handler('prefswin', prefswin));
 
     prefswin.webContents.on('dom-ready', function() {
             prefswin.webContents.send('current-prefs', prefs);
@@ -507,10 +513,7 @@ function open_card_window()
         useContentSize: true,
         javascript: false
     };
-    if (prefs.cardwin_x !== undefined)
-        winopts.x = prefs.cardwin_x;
-    if (prefs.cardwin_y !== undefined)
-        winopts.y = prefs.cardwin_y;
+    window_position_prefs(winopts, 'cardwin');
 
     cardwin = new electron.BrowserWindow(winopts);
 
@@ -523,11 +526,7 @@ function open_card_window()
     cardwin.on('closed', function() {
             cardwin = null;
         });
-    cardwin.on('move', function() {
-            prefs.cardwin_x = cardwin.getPosition()[0];
-            prefs.cardwin_y = cardwin.getPosition()[1];
-            note_prefs_dirty();
-        });
+    cardwin.on('move', window_position_prefs_handler('cardwin', cardwin));
     cardwin.webContents.on('will-navigate', function(ev, url) {
             require('electron').shell.openExternal(url);
             ev.preventDefault();
@@ -1046,7 +1045,9 @@ app.on('ready', function() {
 exports.note_prefs_dirty = note_prefs_dirty;
 exports.construct_menu_template = construct_menu_template;
 exports.window_position_prefs = window_position_prefs;
+exports.window_position_prefs_handler = window_position_prefs_handler;
 exports.window_size_prefs = window_size_prefs;
+exports.window_size_prefs_handler = window_size_prefs_handler;
 exports.prefs = prefs;
 
 
