@@ -185,6 +185,34 @@ function zoom_factor_for_level(val)
     return Math.exp(val * 0.09531017980432493);
 }
 
+function window_position_prefs(winopts, key)
+{
+    var val;
+
+    val = prefs[key+'_x'];
+    if (val !== undefined)
+        winopts.x = val;
+
+    val = prefs[key+'_y'];
+    if (val !== undefined)
+        winopts.y = val;
+}
+
+function window_size_prefs(obj, key, defwidth, defheight)
+{
+    var val;
+
+    val = prefs[key+'_width'];
+    if (val === undefined)
+        val = defwidth;
+    winopts.width = val;
+
+    val = prefs[key+'_height'];
+    if (val === undefined)
+        val = defheight;
+    winopts.height = val;
+}
+
 /* Called whenever we update the prefs object. This waits five seconds 
    (to consolidate writes) and then launches an async file-write.
 */
@@ -407,10 +435,7 @@ function open_about_window()
         useContentSize: true,
         resizable: false
     };
-    if (prefs.aboutwin_x !== undefined)
-        winopts.x = prefs.aboutwin_x;
-    if (prefs.aboutwin_y !== undefined)
-        winopts.y = prefs.aboutwin_y;
+    window_position_prefs(winopts, 'aboutwin');
 
     aboutwin = new electron.BrowserWindow(winopts);
 
@@ -448,10 +473,7 @@ function open_prefs_window()
         useContentSize: true,
         resizable: false
     };
-    if (prefs.prefswin_x !== undefined)
-        winopts.x = prefs.prefswin_x;
-    if (prefs.prefswin_y !== undefined)
-        winopts.y = prefs.prefswin_y;
+    window_position_prefs(winopts, 'prefswin');
 
     prefswin = new electron.BrowserWindow(winopts);
 
@@ -1019,3 +1041,12 @@ app.on('ready', function() {
     /* Won't need this any more */
     launch_paths = null;
 });
+
+/* Export some API calls needed for extensions. */
+exports.note_prefs_dirty = note_prefs_dirty;
+exports.construct_menu_template = construct_menu_template;
+exports.window_position_prefs = window_position_prefs;
+exports.window_size_prefs = window_size_prefs;
+exports.prefs = prefs;
+
+
