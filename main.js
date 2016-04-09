@@ -970,6 +970,8 @@ app.on('will-finish-launching', function() {
 
     if (package_json.lectroteMainExtension) {
         main_extension = require(path_mod.join(__dirname, package_json.lectroteMainExtension));
+        if (main_extension.launch)
+            main_extension.launch();
     }
         
     var boundpath = package_json.lectrotePackagedGame;
