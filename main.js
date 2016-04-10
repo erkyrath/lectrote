@@ -1044,12 +1044,10 @@ app.on('ready', function() {
 });
 
 /* Export some API calls needed for extensions. */
-exports.note_prefs_dirty = note_prefs_dirty;
 exports.construct_menu_template = construct_menu_template;
+exports.prefs_get = function(key) { return prefs[key]; };
+exports.prefs_set = function(key, val) { prefs[key] = val; note_prefs_dirty(); };
 exports.window_position_prefs = window_position_prefs;
 exports.window_position_prefs_handler = window_position_prefs_handler;
 exports.window_size_prefs = window_size_prefs;
 exports.window_size_prefs_handler = window_size_prefs_handler;
-exports.prefs = prefs;
-
-
