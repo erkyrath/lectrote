@@ -382,6 +382,10 @@ function launch_game(path)
         delete gamewins[game.id];
         game = null;
         win = null;
+        /* In the bound version, closing the game window means closing
+           the app. */
+        if (isbound)
+            app.quit();
     });
 
     win.webContents.on('dom-ready', function(ev) {
