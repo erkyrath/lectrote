@@ -8,6 +8,7 @@ var package_json = {}; /* parsed form of our package.json file */
 var main_extension = {}; /* extra code for bound games */
 
 var isbound = false; /* true if we're a single-game app */
+var bound_game_path = null;
 var gamewins = {}; /* maps window ID to a game structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
@@ -576,6 +577,16 @@ function export_game_file(path)
     });
 }
 
+function get_export_game_path()
+{
+    var path = bound_game_path;
+    if (main_extension.export_game_path)
+        path = main_extension.export_game_path();
+    if (!path)
+        return null;
+    return path;
+}
+
 function index_in_template(template, key)
 {
     for (var ix=0; ix<template.length; ix++) {
@@ -622,9 +633,9 @@ function construct_menu_template(special)
         },
         {
             label: 'Export Portable Game File...',
-            visible: (isbound && main_extension.export_game_path !== undefined && main_extension.export_game_path() != null),
+            visible: (isbound && get_export_game_path() != null),
             click: function(item, win) {
-                export_game_file(main_extension.export_game_path());
+                export_game_file(get_export_game_path());
             }
         },
         { type: 'separator' },
@@ -1025,7 +1036,8 @@ app.on('will-finish-launching', function() {
            arguments or open-file events. Launch with the built-in
            path and no other. */
         isbound = true;
-        launch_paths.push(path_mod.join(__dirname, boundpath));
+        bound_game_path = path_mod.join(__dirname, boundpath);
+        launch_paths.push(bound_game_path);
         return;        
     }
 
