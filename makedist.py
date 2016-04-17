@@ -105,8 +105,37 @@ def install(resourcedir, extrafiles=None):
                     shutil.copyfile(os.path.join(srcfilename, subfile), os.path.join(subdirname, subfile))
 
 def builddir(dir, pack):
-    cmd = 'npm run package-%s' % (pack,)
-    subprocess.call(cmd, shell=True)
+    (platform, dummy, arch) = pack.partition('-')
+    
+    cmd = 'node_modules/.bin/electron-packager'
+    args = [ cmd, 'tempapp', product_name, '--app-version', product_version, '--build-version', '1', '--arch='+arch, '--platform='+platform, '--out', 'dist', '--overwrite' ]
+
+    if platform == 'darwin':
+        args = args + [
+            '--app-bundle-id=com.eblong.lectrote',
+            '--app-category-type=public.app-category.games',
+            '--icon=resources/appicon-mac.icns',
+            '--extra-resource=resources/icon-glulx.icns',
+            '--extra-resource=resources/icon-gblorb.icns',
+            '--extra-resource=resources/icon-glksave.icns',
+            '--extra-resource=resources/icon-glkdata.icns',
+            '--extend-info', 'resources/Add-Info.plist',
+            ]
+
+    if platform == 'win32':
+        args = args + [
+            '--version-string.CompanyName=Zarfhome Software',
+            '--app-copyright=Copyright 2016 by Andrew Plotkin',
+            '--version-string.InternalName='+product_name,
+            '--version-string.ProductName='+product_name,
+            '--version-string.OriginalFilename='+product_name+'.exe',
+            '--version-string.FileDescription=Interactive Fiction Interpreter',
+            '--icon=resources/appicon-win.ico',
+            ]
+        
+    print('### ' + repr(args))
+    
+    subprocess.call(args)
 
     for filename in rootfiles:
         shutil.copyfile(filename, os.path.join(dir, filename))
