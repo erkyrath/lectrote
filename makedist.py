@@ -65,7 +65,7 @@ rootfiles = [
     './LICENSES-FONTS.txt',
 ]
 
-def install(resourcedir):
+def install(resourcedir, extrafiles=None):
     if not os.path.isdir(resourcedir):
         raise Exception('path does not exist: ' + resourcedir)
     appdir = resourcedir
@@ -76,7 +76,7 @@ def install(resourcedir):
     os.makedirs(qdir, exist_ok=True)
     os.makedirs(os.path.join(qdir, 'lib'), exist_ok=True)
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
-    
+
     for filename in appfiles:
         srcfilename = filename
         if opts.gamedir:
@@ -90,7 +90,19 @@ def install(resourcedir):
             os.makedirs(subdirname, exist_ok=True)
             for subfile in os.listdir(srcfilename):
                 shutil.copyfile(os.path.join(srcfilename, subfile), os.path.join(subdirname, subfile))
-            
+
+    if opts.gamedir and extrafiles:
+        gamedir = os.path.join(appdir, os.path.basename(opts.gamedir))
+        os.makedirs(gamedir, exist_ok=True)
+        for filename in extrafiles:
+            srcfilename = os.path.join(opts.gamedir, filename)
+            if not os.path.isdir(filename):
+                shutil.copyfile(srcfilename, os.path.join(gamedir, filename))
+            else:
+                subdirname = os.path.join(gamedir, filename)
+                os.makedirs(subdirname, exist_ok=True)
+                for subfile in os.listdir(srcfilename):
+                    shutil.copyfile(os.path.join(srcfilename, subfile), os.path.join(subdirname, subfile))
 
 def builddir(dir, pack):
     cmd = 'npm run package-%s' % (pack,)
@@ -138,7 +150,8 @@ product_name = pkg['productName'];
 print('%s version: %s' % (product_name, product_version,))
 if product_name != 'Lectrote':
     print('%s version: %s' % ('Lectrote', pkg['lectroteVersion'],))
-    
+
+extrafiles = pkg.get('lectroteExtraFiles')
 
 # Decide what distributions we're working on. ("packages" is a bit overloaded,
 # sorry.)
@@ -157,7 +170,7 @@ if not packages:
     raise Exception('no packages selected')
 
 os.makedirs('tempapp', exist_ok=True)
-install('tempapp')
+install('tempapp', extrafiles)
 
 os.makedirs('dist', exist_ok=True)
 
