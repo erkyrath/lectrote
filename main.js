@@ -550,6 +550,29 @@ function find_in_template(template, key)
     return null;
 };
 
+function export_game_file(path)
+{
+    var suffix = path_mod.extname(path);
+    if (suffix.startsWith('.'))
+        suffix = suffix.slice(1);
+    if (!suffix)
+        suffix = 'gblorb';
+
+    var filename = path_mod.basename(path);
+
+    var opts = {
+        title: 'Export a portable Glulx game file',
+        defaultPath: filename,
+        filters: [ { name: 'Glulx Game File', extensions: [suffix] } ]
+    };
+
+    electron.dialog.showSaveDialog(opts, function(destpath) {
+        if (!destpath)
+            return;
+        console.log('### ' + destpath);
+    });
+}
+
 function index_in_template(template, key)
 {
     for (var ix=0; ix<template.length; ix++) {
@@ -592,6 +615,13 @@ function construct_menu_template(special)
                 if (!game)
                     return;
                 reset_game(game);
+            }
+        },
+        {
+            label: 'Export Portable Game File...',
+            visible: (isbound && main_extension.export_game_path !== undefined && main_extension.export_game_path() != null),
+            click: function(item, win) {
+                export_game_file(main_extension.export_game_path());
             }
         },
         { type: 'separator' },
