@@ -33,6 +33,9 @@ popt.add_option('-z', '--zip',
 popt.add_option('-n', '--none',
                 action='store_true', dest='makenothing',
                 help='do nothing except look at the arguments')
+popt.add_option('-g', '--game', '--gamedir',
+                action='store', dest='gamedir',
+                help='directory for game-specific files')
 
 (opts, args) = popt.parse_args()
 
@@ -75,13 +78,18 @@ def install(resourcedir):
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
     
     for filename in appfiles:
+        srcfilename = filename
+        if opts.gamedir:
+            val = os.path.join(opts.gamedir, filename)
+            if os.path.exists(val):
+                srcfilename = val
         if not os.path.isdir(filename):
-            shutil.copyfile(filename, os.path.join(appdir, filename))
+            shutil.copyfile(srcfilename, os.path.join(appdir, filename))
         else:
             subdirname = os.path.join(appdir, filename)
             os.makedirs(subdirname, exist_ok=True)
-            for subfile in os.listdir(filename):
-                shutil.copyfile(os.path.join(filename, subfile), os.path.join(subdirname, subfile))
+            for subfile in os.listdir(srcfilename):
+                shutil.copyfile(os.path.join(srcfilename, subfile), os.path.join(subdirname, subfile))
             
 
 def builddir(dir, pack):
@@ -118,13 +126,19 @@ def makezip(dir, unwrapped=False):
 
 # Start work! First, read the version string out of package.json.
 
-fl = open('package.json')
+pkgfile = 'package.json'
+if opts.gamedir and os.path.exists(os.path.join(opts.gamedir, 'package.json')):
+    pkgfile = os.path.join(opts.gamedir, 'package.json')
+fl = open(pkgfile)
 pkg = json.load(fl)
 fl.close()
 
 product_version = pkg['version']
 product_name = pkg['productName'];
 print('%s version: %s' % (product_name, product_version,))
+if product_name != 'Lectrote':
+    print('%s version: %s' % ('Lectrote', pkg['lectroteVersion'],))
+    
 
 # Decide what distributions we're working on. ("packages" is a bit overloaded,
 # sorry.)
