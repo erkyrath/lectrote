@@ -37,7 +37,7 @@ popt.add_option('-n', '--none',
 (opts, args) = popt.parse_args()
 
 
-files = [
+appfiles = [
     './package.json',
     './main.js',
     './apphooks.js',
@@ -74,7 +74,7 @@ def install(resourcedir):
     os.makedirs(os.path.join(qdir, 'lib'), exist_ok=True)
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
     
-    for filename in files:
+    for filename in appfiles:
         if not os.path.isdir(filename):
             shutil.copyfile(filename, os.path.join(appdir, filename))
         else:
