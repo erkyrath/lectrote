@@ -26,7 +26,8 @@ var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
 var prefstimer = null;
 var prefswriting = false;
 
-var app_ready = false; /* true once the ready event occurred */
+var app_ready = false; /* true once the ready event occurs */
+var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
 var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
 
@@ -895,6 +896,7 @@ app.on('window-all-closed', function() {
    closed or the user hit cmd-Q. 
 */
 app.on('will-quit', function() {
+    app_quitting = true;
     write_prefs_now();
 });
 
@@ -1045,6 +1047,9 @@ app.on('ready', function() {
 
     /* Won't need this any more */
     launch_paths = null;
+
+    if (main_extension.app_ready)
+        main_extension.app_ready();
 });
 
 /* Export some API calls needed for extensions. */
@@ -1055,3 +1060,5 @@ exports.window_position_prefs = window_position_prefs;
 exports.window_position_prefs_handler = window_position_prefs_handler;
 exports.window_size_prefs = window_size_prefs;
 exports.window_size_prefs_handler = window_size_prefs_handler;
+exports.is_app_ready = function() { return app_ready; };
+exports.is_app_quitting = function() { return app_quitting; };
