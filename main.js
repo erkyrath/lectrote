@@ -569,7 +569,10 @@ function export_game_file(path)
     electron.dialog.showSaveDialog(opts, function(destpath) {
         if (!destpath)
             return;
-        console.log('### ' + destpath);
+        require('ncp').ncp(path, destpath, function(ex) {
+            if (ex)
+                electron.dialog.showErrorBox('Export failed', ''+ex);
+        });
     });
 }
 
