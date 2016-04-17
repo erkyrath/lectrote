@@ -32,6 +32,16 @@ var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
 var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
 
+function game_list()
+{
+    var ls = [];
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        ls.push(game);
+    }
+    return ls;
+}
+
 function game_for_window(win)
 {
     if (!win)
@@ -1104,6 +1114,7 @@ app.on('ready', function() {
 });
 
 /* Export some API calls needed for extensions. */
+exports.game_list = game_list;
 exports.construct_menu_template = construct_menu_template;
 exports.prefs_get = function(key) { return prefs[key]; };
 exports.prefs_set = function(key, val) { prefs[key] = val; note_prefs_dirty(); };
