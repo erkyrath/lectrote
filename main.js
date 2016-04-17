@@ -893,10 +893,16 @@ app.on('window-all-closed', function() {
 });
 
 /* Called when the app is going to quit, either because the last window
+   closed or the user hit cmd-Q. (This happens before windows close.)
+*/
+app.on('before-quit', function() {
+    app_quitting = true;
+});
+
+/* Called when the app is quitting, either because the last window
    closed or the user hit cmd-Q. 
 */
 app.on('will-quit', function() {
-    app_quitting = true;
     write_prefs_now();
 });
 
