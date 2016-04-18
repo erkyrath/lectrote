@@ -65,7 +65,7 @@ rootfiles = [
     './LICENSES-FONTS.txt',
 ]
 
-def install(resourcedir, extrafiles=None):
+def install(resourcedir, pkg):
     if not os.path.isdir(resourcedir):
         raise Exception('path does not exist: ' + resourcedir)
     appdir = resourcedir
@@ -91,6 +91,7 @@ def install(resourcedir, extrafiles=None):
             for subfile in os.listdir(srcfilename):
                 shutil.copyfile(os.path.join(srcfilename, subfile), os.path.join(subdirname, subfile))
 
+    extrafiles = pkg.get('lectroteExtraFiles')
     if opts.gamedir and extrafiles:
         gamedir = os.path.join(appdir, os.path.basename(opts.gamedir))
         os.makedirs(gamedir, exist_ok=True)
@@ -180,8 +181,6 @@ print('%s version: %s' % (product_name, product_version,))
 if product_name != 'Lectrote':
     print('%s version: %s' % ('Lectrote', pkg['lectroteVersion'],))
 
-extrafiles = pkg.get('lectroteExtraFiles')
-
 # Decide what distributions we're working on. ("packages" is a bit overloaded,
 # sorry.)
 
@@ -199,7 +198,7 @@ if not packages:
     raise Exception('no packages selected')
 
 os.makedirs('tempapp', exist_ok=True)
-install('tempapp', extrafiles)
+install('tempapp', pkg)
 
 os.makedirs('dist', exist_ok=True)
 
