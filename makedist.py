@@ -105,15 +105,23 @@ def install(resourcedir, pkg):
                 for subfile in os.listdir(srcfilename):
                     shutil.copyfile(os.path.join(srcfilename, subfile), os.path.join(subdirname, subfile))
 
-def builddir(dir, pack):
+def builddir(dir, pack, pkg):
     (platform, dummy, arch) = pack.partition('-')
     
     cmd = 'node_modules/.bin/electron-packager'
     args = [ cmd, 'tempapp', product_name, '--app-version', product_version, '--build-version', '1', '--arch='+arch, '--platform='+platform, '--out', 'dist', '--overwrite' ]
 
     if platform == 'darwin':
+        appid = 'com.eblong.lectrote'
+        if opts.gamedir:
+            appid = pkg.get('lectroteMacAppID')
+        if not appid:
+            raise Exception('Mac package must set lectroteMacAppID')
+        if appid == 'com.eblong.lectrote':
+            raise Exception('lectroteMacAppID must not be com.eblong.lectrote')
+            
         args = args + [
-            '--app-bundle-id=com.eblong.lectrote',
+            '--app-bundle-id='+appid,
             '--app-category-type=public.app-category.games',
             '--icon=resources/appicon-mac.icns',
             '--extra-resource=resources/icon-glulx.icns',
@@ -207,7 +215,7 @@ doall = not (opts.makedist or opts.makezip or opts.makenothing)
 if doall or opts.makedist:
     for pack in packages:
         dest = 'dist/%s-%s' % (product_name, pack,)
-        builddir(dest, pack)
+        builddir(dest, pack, pkg)
 
 if doall or opts.makezip:
     for pack in packages:
