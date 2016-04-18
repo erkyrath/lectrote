@@ -116,7 +116,8 @@ const namespace = {
    send to it.
    This requires a utility function because of Javascript's lousy closures.
 */
-function attach(name, func) { 
+function attach(name, func)
+{ 
     require('electron').ipcRenderer.on(name, function(ev, arg) {
         func(arg);
     });
