@@ -36,6 +36,10 @@ popt.add_option('-n', '--none',
 popt.add_option('-g', '--game', '--gamedir',
                 action='store', dest='gamedir',
                 help='directory for game-specific files')
+popt.add_option('-v', '--version',
+                action='store', dest='buildversion',
+                default='1',
+                help='build version (default 1)')
 
 (opts, args) = popt.parse_args()
 
@@ -112,7 +116,7 @@ def builddir(dir, pack, pkg):
     args = [
         cmd, 'tempapp', product_name,
         '--app-version', product_version,
-        '--build-version', '1',
+        '--build-version', opts.buildversion,
         '--arch='+arch, '--platform='+platform,
         '--out', 'dist',
         '--overwrite'
