@@ -109,7 +109,14 @@ def builddir(dir, pack, pkg):
     (platform, dummy, arch) = pack.partition('-')
     
     cmd = 'node_modules/.bin/electron-packager'
-    args = [ cmd, 'tempapp', product_name, '--app-version', product_version, '--build-version', '1', '--arch='+arch, '--platform='+platform, '--out', 'dist', '--overwrite' ]
+    args = [
+        cmd, 'tempapp', product_name,
+        '--app-version', product_version,
+        '--build-version', '1',
+        '--arch='+arch, '--platform='+platform,
+        '--out', 'dist',
+        '--overwrite'
+        ]
 
     if platform == 'darwin':
         appid = 'com.eblong.lectrote'
