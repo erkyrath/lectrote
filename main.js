@@ -369,7 +369,10 @@ function launch_game(path)
         }
     };
 
-    if (process.platform == 'win32') {
+    if (process.platform == 'win32' && !isbound) {
+        /* On Windows, set the window icon to a Glulx document icon.
+           (But not in the bound version -- we leave that as the
+           game's app icon.) */
         winopts.icon = path_mod.join(__dirname, 'docicon.ico');
     }
 
@@ -390,7 +393,9 @@ function launch_game(path)
     game.offset = offset;
     gamewins[game.id] = game;
 
-    if (process.platform == 'darwin') {
+    if (process.platform == 'darwin' && !isbound) {
+        /* On Mac, set the window document link to the game file URL.
+           (But not in the bound version.) */
         win.setRepresentedFilename(game.path);
     }
 
