@@ -139,14 +139,30 @@ def builddir(dir, pack, pkg):
         iconpath = 'resources/appicon-win.ico'
         if opts.gamedir and os.path.exists(os.path.join(opts.gamedir, 'resources/appicon-win.ico')):
             iconpath = os.path.join(opts.gamedir, 'resources/appicon-win.ico')
+
+        filedesc = 'Interactive Fiction Interpreter'
+        if opts.gamedir and pkg.get('description'):
+            filedesc = pkg.get('description')
+
+        if not opts.gamedir:
+            companyname = 'Zarfhome Software'
+        else:
+            companyname = pkg.get('lectroteCompanyName')
+        if companyname:
+            args.append('--version-string.CompanyName='+companyname)
+
+        if not opts.gamedir:
+            copyright = 'Copyright 2016 by Andrew Plotkin'
+        else:
+            copyright = pkg.get('lectroteCopyright')
+        if copyright:
+            args.append('--app-copyright='+copyright)
         
         args = args + [
-            '--version-string.CompanyName=Zarfhome Software',
-            '--app-copyright=Copyright 2016 by Andrew Plotkin',
             '--version-string.InternalName='+product_name,
             '--version-string.ProductName='+product_name,
             '--version-string.OriginalFilename='+product_name+'.exe',
-            '--version-string.FileDescription=Interactive Fiction Interpreter',
+            '--version-string.FileDescription='+filedesc,
             '--icon='+iconpath,
             ]
         
