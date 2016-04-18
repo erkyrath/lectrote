@@ -115,10 +115,10 @@ def builddir(dir, pack, pkg):
         appid = 'com.eblong.lectrote'
         if opts.gamedir:
             appid = pkg.get('lectroteMacAppID')
-        if not appid:
-            raise Exception('Mac package must set lectroteMacAppID')
-        if appid == 'com.eblong.lectrote':
-            raise Exception('lectroteMacAppID must not be com.eblong.lectrote')
+            if not appid:
+                raise Exception('Mac package must set lectroteMacAppID')
+            if appid == 'com.eblong.lectrote':
+                raise Exception('lectroteMacAppID must not be com.eblong.lectrote')
 
         iconpath = 'resources/appicon-mac.icns'
         if opts.gamedir and os.path.exists(os.path.join(opts.gamedir, 'resources/appicon-mac.icns')):
