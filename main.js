@@ -97,6 +97,12 @@ function construct_recent_game_menu()
 */
 function add_recent_game(path)
 {
+    if (isbound) {
+        /* We're in bound-game mode and shouldn't be talking about
+           open lists at all. */
+        return;
+    }
+
     /* The system recent list is easy -- it handles its own ordering
        and uniqueness. This list shows up on the Dock icon on MacOS. */
     app.addRecentDocument(path);
