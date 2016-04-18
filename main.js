@@ -835,6 +835,7 @@ function construct_menu_template(special)
             submenu: [
             {
                 label: 'About ' + name,
+                id: 'about_app',
                 enabled: (special != 'about'),
                 click: function() {
                     if (!aboutwin)
@@ -881,6 +882,7 @@ function construct_menu_template(special)
         if (stanza) {
             stanza.submenu.push({
                 label: 'About ' + name,
+                id: 'about_app',
                 enabled: (special != 'about'),
                 click: function(item, win) {
                     if (!aboutwin)
