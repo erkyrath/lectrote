@@ -572,6 +572,18 @@ function find_in_template(template, key)
     return null;
 };
 
+function copy_file(srcpath, destpath, callback)
+{
+    var rd = fs.createReadStream(srcpath);
+    rd.on('error', callback);
+    var wr = fs.createWriteStream(destpath);
+    wr.on('error', callback);
+    wr.on('close', function(ex) {
+            callback(null);
+        });
+    rd.pipe(wr);
+}
+
 function export_game_file(path)
 {
     var suffix = path_mod.extname(path);
@@ -591,7 +603,7 @@ function export_game_file(path)
     electron.dialog.showSaveDialog(opts, function(destpath) {
         if (!destpath)
             return;
-        require('ncp').ncp(path, destpath, function(ex) {
+        copy_file(path, destpath, function(ex) {
             if (ex)
                 electron.dialog.showErrorBox('Export failed', ''+ex);
         });
