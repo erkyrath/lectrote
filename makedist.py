@@ -136,6 +136,10 @@ def builddir(dir, pack, pkg):
             ]
 
     if platform == 'win32':
+        iconpath = 'resources/appicon-win.ico'
+        if opts.gamedir and os.path.exists(os.path.join(opts.gamedir, 'resources/appicon-win.ico')):
+            iconpath = os.path.join(opts.gamedir, 'resources/appicon-win.ico')
+        
         args = args + [
             '--version-string.CompanyName=Zarfhome Software',
             '--app-copyright=Copyright 2016 by Andrew Plotkin',
@@ -143,7 +147,7 @@ def builddir(dir, pack, pkg):
             '--version-string.ProductName='+product_name,
             '--version-string.OriginalFilename='+product_name+'.exe',
             '--version-string.FileDescription=Interactive Fiction Interpreter',
-            '--icon=resources/appicon-win.ico',
+            '--icon='+iconpath,
             ]
         
     print('### ' + repr(args))
