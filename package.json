@@ -33,7 +33,7 @@
     "electron-prebuilt": "^0.37.0"
   },
   "devDependencies": {
-    "electron-packager": "^6.0.0",
+    "electron-packager": "^7.0.0",
     "appdmg": "^0.3.6"
   }
 }
