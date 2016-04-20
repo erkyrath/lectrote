@@ -6,7 +6,7 @@
 
 PREFIX="`npm prefix`"
 
-if [[ "`basename $PREFIX`" != "lectrote" ]];
+if /bin/test "`basename $PREFIX`" "!=" "lectrote";
 then
   LIB="`npm root -g`";
   PREFIX="$LIB/lectrote";
