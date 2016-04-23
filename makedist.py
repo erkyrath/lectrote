@@ -177,8 +177,6 @@ def builddir(dir, pack, pkg):
             '--icon='+iconpath,
             ]
         
-    print('### ' + repr(args))
-    
     subprocess.call(args)
 
     for filename in rootfiles:
