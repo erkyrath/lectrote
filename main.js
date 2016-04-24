@@ -781,11 +781,13 @@ function construct_menu_template(special)
         submenu: [
         {
             label: 'Minimize',
+            id: 'minimize_window',
             accelerator: 'CmdOrCtrl+M',
             role: 'minimize'
         },
         {
             label: 'Toggle Developer Tools',
+            id: 'toggle_devel_tools',
             accelerator: (function() {
                 if (process.platform == 'darwin')
                     return 'Alt+Command+I';
