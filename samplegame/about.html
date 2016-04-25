@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>About Adventure</title>
+
+<link rel="stylesheet" href="./fonts.css" type="text/css">
+
+<style type="text/css">
+
+body {
+  background: #EEE;
+  font-family: "Lora", Georgia, serif;
+  margin: 20px;
+  font-size: 0.85em;
+}
+
+#content {
+  max-width: 550px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.33em;
+}
+
+h3 {
+  font-size: 1.0em;
+  margin: 0.2em;
+}
+
+.Go {
+  font-size: 1.33em;
+  padding: 1em;
+  background: white;
+}
+
+.Hidden {
+  display: none;
+}
+
+</style>
+
+<script type="text/javascript">
+
+function update(id, text)
+{
+  var el = document.getElementById(id);
+  if (el) {
+    remove_children(el);
+    el.appendChild(document.createTextNode(text));
+  }
+}
+
+function remove_children(parent)
+{
+  var obj, ls;
+  ls = parent.childNodes;
+  while (ls.length > 0) {
+    obj = ls.item(0);
+    parent.removeChild(obj);
+  }
+}
+
+function unhide(id)
+{
+  var el = document.getElementById(id);
+  if (el) {
+    if (el.className == 'Hidden')
+      el.className = null;
+  }
+}
+
+function onready()
+{
+  if (!window.require)
+    return;
+
+  var fs = require('fs');
+  var path_mod = require('path');
+
+  require('electron').ipcRenderer.on('recent-count', function(ev, arg) {
+    if (arg)
+      unhide('open_recent');
+  });
+
+
+  if (window.process) {
+    update('electron_version', process.versions.electron);
+    update('chrome_version', process.versions.chrome);
+    update('node_version', process.versions.node);
+  }
+
+  if (window.__dirname) {
+    try {
+      var path = path_mod.join(__dirname, 'package.json');
+      var val = fs.readFileSync(path, { encoding:'utf8' });
+      var package = JSON.parse(val);
+      update('lectrote_version', package.lectroteVersion);
+      update('game_version', package.version);
+    }
+    catch (ex) { }
+  }
+
+  require('./quixe/lib/quixe.min.js');
+  if (window.Quixe) {
+    update('quixe_version', Quixe.version);
+  }
+}
+
+</script>
+
+</head>
+
+<body>
+<div id="content">
+
+<p>
+<img src="icon-128.png" alt="Lectrote icon">
+</p>
+
+<h1>Adventure</h1>
+<h3>The Interactive Original</h3>
+<h3>By Will Crowther (1973) and Don Woods (1977)</h3>
+<h3>Mac/Win/Linux release <span id="game_version">???</span></h3>
+
+<p>
+Interpreter framework: Lectrote <a id="lectrote_version" href="https://github.com/erkyrath/lectrote">???</a>
+</p>
+<p>
+Quixe version <span id="quixe_version">???</span>;
+Electron version <span id="electron_version">???</span>
+(Node <span id="node_version">???</span>,
+Chrome <span id="chrome_version">???</span>)
+</p>
+
+</div>
+</body>
+
+<script type="text/javascript">
+onready();
+</script>
+</html>

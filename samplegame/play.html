@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Adventure</title>
+
+<link rel="stylesheet" href="./fonts.css" type="text/css">
+<link rel="stylesheet" href="./el-glkote.css" type="text/css">
+
+<style id="bodycss" type="text/css">
+
+body {
+  margin: 0px;
+  height: 100%;
+}
+
+#content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+
+#gameport {
+  position: relative;
+  overflow: hidden;
+  background: inherit;
+  height: 100%;
+  margin: 0px 0px;
+}
+
+</style>
+
+
+<script type="text/javascript">
+game_options = {
+  spacing: 4,
+  outspacingx: 0,
+  outspacingy: 16,
+  use_query_story: false,
+  set_page_title: false,
+  do_vm_autosave: true
+};
+
+window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
+if (!game_options.use_unminified_js) {
+  require('./quixe/lib/elkote.min.js');
+  require('./quixe/lib/quixe.min.js');
+}
+else {
+  require('./quixe/src/glkote/glkote.js');
+  require('./quixe/src/glkote/electrofs.js');
+  require('./quixe/src/glkote/glkapi.js');
+  require('./quixe/src/quixe/quixe.js');
+  require('./quixe/src/quixe/gi_dispa.js');
+  require('./quixe/src/quixe/gi_load.js');
+}
+require('./apphooks.js');
+
+</script>
+
+
+</head>
+<body>
+
+<div id="content">
+<div id="gameport">
+<div id="windowport">
+<noscript><hr>
+<p>You'll need to turn on Javascript in your web browser to play this game.</p>
+<hr></noscript>
+</div>
+<div id="loadingpane">
+<img src="quixe/media/waiting.gif" alt="LOADING"><br>
+<em>&nbsp;&nbsp;&nbsp;Loading...</em>
+</div>
+<div id="errorpane" style="display:none;"><div id="errorcontent">...</div></div>
+</div>
+</div>
+
+</body>
+</html>
