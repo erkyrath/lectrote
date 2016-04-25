@@ -1,0 +1,27 @@
+{
+  "name": "adventure",
+  "productName": "ColossalCave",
+  "version": "1.0.0",
+  "lectroteVersion": "0.2.5",
+  "lectrotePackagedGame": "samplegame/Advent.ulx",
+  "lectroteMacAppID": "com.eblong.colossalcave",
+  "lectroteCopyright": "Written by Will Crowther and Don Woods",
+  "description": "The original adventure game",
+  "lectroteExtraFiles": [
+    "Advent.ulx"
+  ],
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "preinstall": "if [ -f quixe/LICENSE ]; then echo Quixe already installed; elif [ -d .git ]; then git submodule init; git submodule update; else git clone https://github.com/erkyrath/quixe.git; fi"
+  },
+  "author": "Andrew Plotkin <erkyrath@eblong.com>",
+  "license": "MIT",
+  "dependencies": {
+    "electron-prebuilt": "0.37.6"
+  },
+  "devDependencies": {
+    "electron-packager": "^7.0.0",
+    "appdmg": "^0.3.6"
+  }
+}
