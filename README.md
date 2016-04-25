@@ -92,3 +92,20 @@ As noted, you can copy `play.html`, `el-glkote.css`, or other Lectrote files int
 
 If you add new files (not replacing Lectrote files), be sure to list them in the `lectroteExtraFiles` array.
 
+You can extend the functionality of the app -- for example, adding or removing menu items. Add a Javascript file to your gamedir, and name it in your `package.json` file:
+
+	"lectroteMainExtension": "GAMEDIR/FILE.js",
+
+(And add it to `lectroteExtraFiles` as well.)
+
+This file can define new functionality by exporting any of three Javascript functions. For example, you could say:
+
+	exports.launch = function() { ... }
+
+- `exports.launch()`: Called when the app starts up.
+- `exports.app_ready()`: Called when the app is ready to open windows. At this point the game window has already been opened.
+- `exports.construct_menu_template(template, special)`: Called to customize the app menu template. The `template` argument is a Javascript data structure as described in [the Electron Menu docs][elemenu]. `special` is null for the game window, or one of the strings `"about", "prefs", "card"` for one of Lectrote's special windows. Modify `template` and return it.
+
+[elemenu]: http://electron.atom.io/docs/latest/api/menu/
+
+The main Lectrote module exports several functions you can use in your extension code. I have not yet documented them; see the `main.js` file.
