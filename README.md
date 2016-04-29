@@ -63,7 +63,7 @@ If you want to code-sign the Mac version, you currently have to do it manually b
 You will need to create a separate directory for your game's files. Copy `package.json` to the directory, adding or modifying these lines:
 
 - `name`: A node package name. This is not used anywhere, so it doesn't really matter.
-- `productName`: The display name for the app. Currently this cannot include spaces or punctuation.
+- `productName`: The display name for the app.
 - `version`: Version number of your game.
 - `author`: You, the game's author.
 - `description`: One-line description of your game.
