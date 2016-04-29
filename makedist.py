@@ -140,6 +140,7 @@ def builddir(dir, pack, pkg):
             '--app-category-type=public.app-category.games',
             '--icon='+iconpath,
             '--extra-resource=resources/icon-glulx.icns',
+            '--extra-resource=resources/icon-blorb.icns',
             '--extra-resource=resources/icon-gblorb.icns',
             '--extra-resource=resources/icon-glksave.icns',
             '--extra-resource=resources/icon-glkdata.icns',
