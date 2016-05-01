@@ -194,18 +194,18 @@ def makezip(dir, unwrapped=False):
     if 'darwin' in zipfile:
         zipfile = zipfile.replace('darwin', 'macos')
         print('AppDMGing up: %s to %s' % (dir, zipfile))
-        subprocess.call('rm -f dist/%s.dmg; node_modules/.bin/appdmg resources/pack-dmg-spec.json dist/%s.dmg' % (zipfile, zipfile),
+        subprocess.call('rm -f "dist/%s.dmg"; node_modules/.bin/appdmg resources/pack-dmg-spec.json "dist/%s.dmg"' % (zipfile, zipfile),
                         shell=True)
         return
     print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
     if unwrapped:
-        subprocess.call('cd %s; rm -f ../%s.zip; zip %s -r ../%s.zip *' % (dir, zipfile, zipargs, zipfile),
+        subprocess.call('cd "%s"; rm -f "../%s.zip"; zip "%s" -r "../%s.zip" *' % (dir, zipfile, zipargs, zipfile),
                         shell=True)
     else:
         dirls = os.path.split(dir)
         subdir = dirls[-1]
         topdir = os.path.join(*os.path.split(dir)[0:-1])
-        subprocess.call('cd %s; rm -f %s.zip; zip %s -r %s.zip %s' % (topdir, zipfile, zipargs, zipfile, subdir),
+        subprocess.call('cd "%s"; rm -f "%s.zip"; zip "%s" -r "%s.zip" "%s"' % (topdir, zipfile, zipargs, zipfile, subdir),
                         shell=True)
 
 # Start work! First, read the version string out of package.json.
