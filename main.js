@@ -203,6 +203,19 @@ function zoom_factor_for_level(val)
     return Math.exp(val * 0.09531017980432493);
 }
 
+/* Send the current zoom factor to all game windows.
+*/
+function set_zoom_factor_all(val)
+{
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        invoke_app_hook(game.win, 'set_zoom_factor', val);
+    }
+}
+
+/* Set up a window-options object (for creating a BrowserWindow) to have
+   a previously-set window position, if there is one.
+*/
 function window_position_prefs(winopts, key)
 {
     var val;
@@ -216,6 +229,10 @@ function window_position_prefs(winopts, key)
         winopts.y = val;
 }
 
+/* Set up a window-options object (for creating a BrowserWindow) to have
+   a previously-set window size, if there is one. If not, use the
+   given defaults.
+*/
 function window_size_prefs(winopts, key, defwidth, defheight)
 {
     var val;
@@ -732,10 +749,7 @@ function construct_menu_template(special)
                     prefs.gamewin_zoomlevel = 6;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
-                for (var id in gamewins) {
-                    var game = gamewins[id];
-                    invoke_app_hook(game.win, 'set_zoom_factor', val);
-                }
+                set_zoom_factor_all(val);
                 if (prefswin)
                     prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
@@ -747,10 +761,7 @@ function construct_menu_template(special)
                 prefs.gamewin_zoomlevel = 0;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
-                for (var id in gamewins) {
-                    var game = gamewins[id];
-                    invoke_app_hook(game.win, 'set_zoom_factor', val);
-                }
+                set_zoom_factor_all(val);
                 if (prefswin)
                     prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
@@ -764,10 +775,7 @@ function construct_menu_template(special)
                     prefs.gamewin_zoomlevel = -6;
                 note_prefs_dirty();
                 var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
-                for (var id in gamewins) {
-                    var game = gamewins[id];
-                    invoke_app_hook(game.win, 'set_zoom_factor', val);
-                }
+                set_zoom_factor_all(val);
                 if (prefswin)
                     prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
@@ -1044,10 +1052,7 @@ electron.ipcMain.on('pref_zoom_level', function(ev, arg) {
     prefs.gamewin_zoomlevel = arg;
     note_prefs_dirty();
     var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
-    for (var id in gamewins) {
-        var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_zoom_factor', val);
-    }
+    set_zoom_factor_all(val);
 });
 
 /* Called at applicationWillFinishLaunching time (or before ready).
