@@ -575,7 +575,6 @@ function open_card_window()
 {
     var winopts = { 
         width: 810, height: 600,
-        maxWidth: 810, maxHeight: 600,
         useContentSize: true,
         javascript: false
     };
