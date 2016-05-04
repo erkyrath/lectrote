@@ -53,6 +53,7 @@ appfiles = [
     './prefs.js',
     './about.html',
     './if-card.html',
+    './if-card.js',
     './fonts.css',
     './el-glkote.css',
     './icon-128.png',
