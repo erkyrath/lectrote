@@ -32,6 +32,7 @@ var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
 var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
 
+/* Return a list of all open game objects. */
 function game_list()
 {
     var ls = [];
@@ -42,6 +43,7 @@ function game_list()
     return ls;
 }
 
+/* Return the game object for a given window. */
 function game_for_window(win)
 {
     if (!win)
@@ -49,6 +51,7 @@ function game_for_window(win)
     return gamewins[win.id];
 }
 
+/* Return the game object for a given webcontents. */
 function game_for_webcontents(webcontents)
 {
     if (!webcontents)
@@ -153,6 +156,9 @@ function pick_window_offset()
     }
 }
 
+/* If a game window is moved, we no longer care about offsets, because we're
+   now offsetting from a new position. Clear our existing offset info.
+*/
 function clear_window_offsets()
 {
     for (var id in gamewins) {
@@ -248,6 +254,9 @@ function window_size_prefs(winopts, key, defwidth, defheight)
     winopts.height = val;
 }
 
+/* Create a function that sets the preferences for a window position.
+   This can be set as the window's 'move' callback.
+*/
 function window_position_prefs_handler(key, win)
 {
     return function() {
@@ -257,6 +266,9 @@ function window_position_prefs_handler(key, win)
     }
 }
 
+/* Create a function that sets the preferences for a window size.
+   This can be set as the window's 'resize' callback.
+*/
 function window_size_prefs_handler(key, win)
 {
     return function() {
@@ -460,6 +472,8 @@ function launch_game(path)
     win.loadURL('file://' + __dirname + '/play.html');
 }
 
+/* Reset the game by reloading its HTML document.
+*/
 function reset_game(game)
 {
     if (!game.win)
@@ -486,6 +500,8 @@ function reset_game(game)
     }
 }
 
+/* Open the "About Lectrote" window. (It must not already exist.)
+*/
 function open_about_window()
 {
     var winopts = { 
@@ -520,6 +536,8 @@ function open_about_window()
     aboutwin.loadURL('file://' + __dirname + '/about.html');
 }
 
+/* Open the Preferences window. (It must not already exist.)
+*/
 function open_prefs_window()
 {
     var winopts = { 
