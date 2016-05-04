@@ -567,6 +567,8 @@ function open_prefs_window()
     prefswin.loadURL('file://' + __dirname + '/prefs.html');
 }
 
+/* Open the IF reference card window. (It must not already exist.)
+*/
 function open_card_window()
 {
     var winopts = { 
@@ -607,6 +609,7 @@ function find_in_template(template, key)
     return null;
 };
 
+/* A simplistic copy-file utility. This is asynchronous. */
 function copy_file(srcpath, destpath, callback)
 {
     var rd = fs.createReadStream(srcpath);
