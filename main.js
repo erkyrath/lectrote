@@ -217,6 +217,8 @@ function set_zoom_factor_all(val)
         var game = gamewins[id];
         invoke_app_hook(game.win, 'set_zoom_factor', val);
     }
+    if (main_extension.set_zoom_factor)
+        main_extension.set_zoom_factor(val);
 }
 
 /* Set up a window-options object (for creating a BrowserWindow) to have
