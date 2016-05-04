@@ -1149,5 +1149,6 @@ exports.window_position_prefs = window_position_prefs;
 exports.window_position_prefs_handler = window_position_prefs_handler;
 exports.window_size_prefs = window_size_prefs;
 exports.window_size_prefs_handler = window_size_prefs_handler;
+exports.zoom_factor = function() { return zoom_factor_for_level(prefs.gamewin_zoomlevel); };
 exports.is_app_ready = function() { return app_ready; };
 exports.is_app_quitting = function() { return app_quitting; };
