@@ -1,8 +1,8 @@
 {
   "name": "lectrote",
   "productName": "Lectrote",
-  "version": "1.0.1",
-  "lectroteVersion": "1.0.1",
+  "version": "1.0.2",
+  "lectroteVersion": "1.0.2",
   "description": "The Quixe/GlkOte IF interpreter in an Electron shell",
   "main": "main.js",
   "bin": {
