@@ -177,9 +177,9 @@ function load_prefs()
         }
     }
     catch (ex) {
-        console.error('load_prefs: unable to load preferences: %s: %s', prefspath, ex);
+        /* console.error('load_prefs: unable to load preferences: %s: %s', prefspath, ex); */
     }
-
+    
     /* Check to make sure the recent files still exist. */
     var recents = prefs.recent_games;
     if (recents && recents.length) {
