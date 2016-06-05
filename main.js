@@ -697,6 +697,7 @@ function construct_menu_template(special)
             label: 'Reset Game...',
             id: 'reset_game',
             accelerator: 'CmdOrCtrl+R',
+            enabled: (!special),
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
