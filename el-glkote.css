@@ -153,6 +153,17 @@ body.DarkTheme {
   color: #420;
 }
 
+.PreviousMark {
+  /* This describes the small horizontal mark that appears in a window
+     when it needs paging. */
+  position: absolute;
+  background: #B09888;
+  height: 2px;
+  width: 12px;
+  top: 0px;
+  right: 0px;
+}
+
 .Input {
   /* This class mimicks the Style_input class. It also eliminates the 
      usual decoration of an <input> field, as much as possible. */
