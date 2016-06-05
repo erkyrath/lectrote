@@ -695,6 +695,7 @@ function construct_menu_template(special)
         { type: 'separator' },
         {
             label: 'Reset Game...',
+            id: 'reset_game',
             accelerator: 'CmdOrCtrl+R',
             click: function(item, win) {
                 var game = game_for_window(win);
@@ -705,6 +706,7 @@ function construct_menu_template(special)
         },
         {
             label: 'Export Portable Game File...',
+            id: 'export_game',
             visible: (isbound && get_export_game_path() != null),
             click: function(item, win) {
                 export_game_file(get_export_game_path());
@@ -713,6 +715,7 @@ function construct_menu_template(special)
         { type: 'separator' },
         {
             label: 'Close Window',
+            id: 'close_window',
             accelerator: 'CmdOrCtrl+W',
             role: 'close'
         }
@@ -747,6 +750,7 @@ function construct_menu_template(special)
         { type: 'separator' },
         {
             label: 'Preferences',
+            id: 'preferences',
             accelerator: 'CmdOrCtrl+,',
             enabled: (special != 'prefs'),
             click: function() {
