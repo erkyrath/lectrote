@@ -2,7 +2,7 @@
 <img style="float:right;" src="icon-128.png" alt="Lectrote logo: purple compass">
 ### The [Quixe][]/GlkOte IF interpreter in an [Electron][] shell
 
-- Version 1.0.2
+- Version 1.0.3
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
 [Quixe]: http://eblong.com/zarf/glulx/quixe/
