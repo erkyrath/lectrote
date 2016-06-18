@@ -28,6 +28,53 @@ body {
   margin: 0px 0px;
 }
 
+#searchbar {
+  display: none;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 1em;
+
+  background: #DDD;
+  border-left: 1px solid #AAA;
+  border-bottom: 1px solid #AAA;
+  -webkit-border-bottom-left-radius: 4px;
+}
+
+.DarkTheme #searchbar {
+  background: #333;
+  border-color: #666;
+}
+
+#searchbar input {
+  width: 200px;
+  font-size: 14px;
+  height: 20px;
+}
+
+.DarkTheme #searchbar input {
+  background: black;
+  color: white;
+  border: 1px solid #555;
+}
+
+#searchbar button {
+  -webkit-appearance: none;
+  font-size: 12px;
+  width: 22px;
+  height: 22px;
+  background: #C0C0C0;
+  border: 1px solid #AAA;
+  -webkit-border-radius: 2px;
+  padding: 0px;
+}
+
+.DarkTheme #searchbar button {
+  background: #505050;
+  border: 1px solid #666;
+  color: white;
+}
+
 </style>
 
 
@@ -74,6 +121,12 @@ require('./apphooks.js');
 <em>&nbsp;&nbsp;&nbsp;Loading...</em>
 </div>
 <div id="errorpane" style="display:none;"><div id="errorcontent">...</div></div>
+</div>
+<div id="searchbar">
+  <input id="searchbar_input" type="text">
+  <button id="searchbar_prev">&#x25C4;</button>
+  <button id="searchbar_next">&#x25BA;</button>
+  <button id="searchbar_done">&#x2716;</button>
 </div>
 </div>
 

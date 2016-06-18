@@ -456,6 +456,13 @@ function launch_game(path)
         invoke_app_hook(win, 'load_named_game', game.path);
     });
 
+    win.webContents.on('found-in-page', function(ev, res) {
+        var game = game_for_webcontents(ev.sender);
+        if (!game)
+            return;
+        console.log('### found-in-page', res);
+    });
+
     win.on('resize', window_size_prefs_handler('gamewin', win));
     win.on('move', function() {
         prefs.gamewin_x = win.getPosition()[0];
@@ -747,6 +754,44 @@ function construct_menu_template(special)
             label: 'Select All',
             accelerator: 'CmdOrCtrl+A',
             role: 'selectall'
+        },
+        { type: 'separator' },
+        {
+            label: 'Find...',
+            id: 'find',
+            accelerator: 'CmdOrCtrl+F',
+            enabled: !special,
+            click: function(item, win) {
+                var game = game_for_window(win);
+                if (!game)
+                    return;
+                var reqid = win.webContents.findInPage('here', {});
+                console.log('### search request id', reqid);
+            }
+        },
+        {
+            label: 'Find Next',
+            id: 'find_next',
+            accelerator: 'CmdOrCtrl+G',
+            enabled: !special,
+            click: function(item, win) {
+                var game = game_for_window(win);
+                if (!game)
+                    return;
+                var reqid = win.webContents.findInPage('here', { findNext:true, forward:true });
+            }
+        },
+        {
+            label: 'Find Previous',
+            id: 'find_prev',
+            accelerator: 'CmdOrCtrl+Shift+G',
+            enabled: !special,
+            click: function(item, win) {
+                var game = game_for_window(win);
+                if (!game)
+                    return;
+                var reqid = win.webContents.findInPage('here', { findNext:true, forward:false });
+            }
         },
         { type: 'separator' },
         {
