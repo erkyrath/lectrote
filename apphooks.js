@@ -116,6 +116,7 @@ function search_request(arg)
     }
     $('#searchbar').css('display', 'block');
     $('#searchbar_input').focus();
+    $('#searchbar_input').select();
 }
 
 const namespace = {
