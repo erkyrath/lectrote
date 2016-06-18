@@ -152,6 +152,14 @@ $(document).ready(function() {
         }
     });
 
+    $('#searchbar_input').on('keydown', function(ev) {
+        if (ev.keyCode == 27) {
+            $('#searchbar').css('display', 'none');
+            $('#searchbar_input').val('');
+            electron.ipcRenderer.send('search_done');
+        }
+    });
+
     $('#searchbar_done').on('click', function() {
         $('#searchbar').css('display', 'none');
         $('#searchbar_input').val('');
