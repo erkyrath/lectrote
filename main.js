@@ -32,6 +32,8 @@ var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
 var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
 
+var search_string = ''; /* recent text search in a game window */
+
 /* Return a list of all open game objects. */
 function game_list()
 {
@@ -456,6 +458,7 @@ function launch_game(path)
         invoke_app_hook(win, 'load_named_game', game.path);
     });
 
+    //### necessary?
     win.webContents.on('found-in-page', function(ev, res) {
         var game = game_for_webcontents(ev.sender);
         if (!game)
@@ -666,6 +669,22 @@ function get_export_game_path()
     return path;
 }
 
+function search_text(webcontents, text, first, forward)
+{
+    console.log('### search_text', text, 'first='+first, 'forward='+forward);
+    if (!text)
+        return;
+
+    search_string = text;
+    webcontents.findInPage(text, { findNext:!first, forward:forward });
+}
+
+function search_cancel(webcontents)
+{
+    console.log('### search_done');
+    webcontents.stopFindInPage('keepSelection');
+}
+
 function index_in_template(template, key)
 {
     for (var ix=0; ix<template.length; ix++) {
@@ -765,8 +784,7 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                var reqid = win.webContents.findInPage('here', {});
-                console.log('### search request id', reqid);
+                invoke_app_hook(win, 'search_request', { inittext:search_string });
             }
         },
         {
@@ -778,7 +796,7 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                var reqid = win.webContents.findInPage('here', { findNext:true, forward:true });
+                search_text(win.webContents, search_string, false, true);
             }
         },
         {
@@ -790,7 +808,7 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                var reqid = win.webContents.findInPage('here', { findNext:true, forward:false });
+                search_text(win.webContents, search_string, false, false);
             }
         },
         { type: 'separator' },
@@ -1125,6 +1143,20 @@ electron.ipcMain.on('pref_zoom_level', function(ev, arg) {
     note_prefs_dirty();
     var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
     set_zoom_factor_all(val);
+});
+
+electron.ipcMain.on('search_done', function(ev, arg) {
+    var game = game_for_webcontents(ev.sender);
+    if (!game)
+        return;
+    search_cancel(ev.sender);
+});
+
+electron.ipcMain.on('search_text', function(ev, arg) {
+    var game = game_for_webcontents(ev.sender);
+    if (!game)
+        return;
+    search_text(ev.sender, arg.text, arg.first, arg.forward);
 });
 
 /* Called at applicationWillFinishLaunching time (or before ready).
