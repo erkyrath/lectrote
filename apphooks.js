@@ -103,13 +103,29 @@ function set_font(val)
     }
 }
 
+function search_request(arg)
+{
+    if ($('#searchbar').css('display') == 'block') {
+        console.log('### already visible');
+        return;
+    }
+
+    if (arg.inittext) {
+        if ($('#searchbar_input').val() == '')
+            $('#searchbar_input').val(arg.inittext);
+    }
+    $('#searchbar').css('display', 'block');
+    $('#searchbar_input').focus();
+}
+
 const namespace = {
     load_named_game : load_named_game,
     set_clear_autosave : set_clear_autosave,
     set_zoom_factor : set_zoom_factor,
     set_margin_level : set_margin_level,
     set_color_theme : set_color_theme,
-    set_font : set_font
+    set_font : set_font,
+    search_request : search_request
 };
 
 /* We hook up the namespace to IPC events, so that the main process can
@@ -125,6 +141,34 @@ function attach(name, func)
 for (var name in namespace) {
     attach(name, namespace[name]);
 }
+
+$(document).ready(function() {
+    $('#searchbar_input').on('keypress', function(ev) {
+        if (ev.keyCode == 13) {
+            var val = $('#searchbar_input').val().trim();
+            if (val)
+                electron.ipcRenderer.send('search_text', { text:val, first:true, forward:true });
+        }
+    });
+
+    $('#searchbar_done').on('click', function() {
+        $('#searchbar').css('display', 'none');
+        $('#searchbar_input').val('');
+        electron.ipcRenderer.send('search_done');
+    });
+
+    $('#searchbar_next').on('click', function() {
+        var val = $('#searchbar_input').val().trim();
+        if (val)
+            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:true });
+    });
+
+    $('#searchbar_prev').on('click', function() {
+        var val = $('#searchbar_input').val().trim();
+        if (val)
+            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:false });
+    });
+});
 
 return namespace;
 }();
