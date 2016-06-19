@@ -53,9 +53,13 @@ function set_color_theme(val)
     if (val == 'dark') {
         if (!bodyel.hasClass('DarkTheme'))
             bodyel.addClass('DarkTheme');
+        if (search_body_el && !search_body_el.hasClass('DarkTheme'))
+            search_body_el.addClass('DarkTheme');
     }
     else {
         bodyel.removeClass('DarkTheme');
+        if (search_body_el)
+            search_body_el.removeClass('DarkTheme');
     }
 }
 
@@ -103,6 +107,100 @@ function set_font(val)
     }
 }
 
+var search_input_el = null;
+var search_body_el = null;
+
+const searchbar_styles = " \
+ \
+input { \
+  width: 200px; \
+  font-size: 14px; \
+  height: 20px; \
+} \
+ \
+.DarkTheme input { \
+  background: black; \
+  color: white; \
+  border: 1px solid #555; \
+} \
+ \
+button { \
+  -webkit-appearance: none; \
+  font-size: 12px; \
+  width: 22px; \
+  height: 22px; \
+  background: #C0C0C0; \
+  border: 1px solid #AAA; \
+  -webkit-border-radius: 2px; \
+  padding: 0px; \
+} \
+ \
+.DarkTheme button { \
+  background: #505050; \
+  border: 1px solid #666; \
+  color: white; \
+} \
+";
+
+function construct_searchbar()
+{
+    $('#searchbar').empty();
+    var shadow = $('#searchbar').get(0).createShadowRoot();
+
+    var bodyel = $('<div>', { id:'searchbar_body' });
+    search_body_el = bodyel;
+
+    var inputel = $('<input>', { id:'searchbar_input', type:'text' });
+    search_input_el = inputel;
+    var prevel = $('<button>', { id:'searchbar_prev' }).text('\u25C4');
+    var nextel = $('<button>', { id:'searchbar_next' }).text('\u25BA');
+    var doneel = $('<button>', { id:'searchbar_done' }).text('\u2716');
+
+    bodyel.append(inputel);
+    bodyel.append(prevel);
+    bodyel.append(nextel);
+    bodyel.append(doneel);
+
+    var styleel = $('<style>').text(searchbar_styles);
+
+    shadow.appendChild(styleel.get(0));
+    shadow.appendChild(bodyel.get(0));
+
+    inputel.on('keypress', function(ev) {
+        if (ev.keyCode == 13) {
+            var val = inputel.val().trim();
+            if (val)
+                electron.ipcRenderer.send('search_text', { text:val, first:true, forward:true });
+        }
+    });
+
+    inputel.on('keydown', function(ev) {
+        if (ev.keyCode == 27) {
+            $('#searchbar').css('display', 'none');
+            inputel.val('');
+            electron.ipcRenderer.send('search_done');
+        }
+    });
+
+    doneel.on('click', function() {
+        $('#searchbar').css('display', 'none');
+        inputel.val('');
+        electron.ipcRenderer.send('search_done');
+    });
+
+    nextel.on('click', function() {
+        var val = inputel.val().trim();
+        if (val)
+            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:true });
+    });
+
+    prevel.on('click', function() {
+        var val = inputel.val().trim();
+        if (val)
+            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:false });
+    });
+}
+
 function search_request(arg)
 {
     if ($('#searchbar').css('display') == 'block') {
@@ -110,13 +208,16 @@ function search_request(arg)
         return;
     }
 
+    if (!search_input_el)
+        return;
+
     if (arg.inittext) {
-        if ($('#searchbar_input').val() == '')
-            $('#searchbar_input').val(arg.inittext);
+        if (search_input_el.val() == '')
+            search_input_el.val(arg.inittext);
     }
     $('#searchbar').css('display', 'block');
-    $('#searchbar_input').focus();
-    $('#searchbar_input').select();
+    search_input_el.focus();
+    search_input_el.select();
 }
 
 const namespace = {
@@ -144,39 +245,7 @@ for (var name in namespace) {
 }
 
 $(document).ready(function() {
-    $('#searchbar_input').on('keypress', function(ev) {
-        if (ev.keyCode == 13) {
-            var val = $('#searchbar_input').val().trim();
-            if (val)
-                electron.ipcRenderer.send('search_text', { text:val, first:true, forward:true });
-        }
-    });
-
-    $('#searchbar_input').on('keydown', function(ev) {
-        if (ev.keyCode == 27) {
-            $('#searchbar').css('display', 'none');
-            $('#searchbar_input').val('');
-            electron.ipcRenderer.send('search_done');
-        }
-    });
-
-    $('#searchbar_done').on('click', function() {
-        $('#searchbar').css('display', 'none');
-        $('#searchbar_input').val('');
-        electron.ipcRenderer.send('search_done');
-    });
-
-    $('#searchbar_next').on('click', function() {
-        var val = $('#searchbar_input').val().trim();
-        if (val)
-            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:true });
-    });
-
-    $('#searchbar_prev').on('click', function() {
-        var val = $('#searchbar_input').val().trim();
-        if (val)
-            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:false });
-    });
+    construct_searchbar();
 });
 
 return namespace;
