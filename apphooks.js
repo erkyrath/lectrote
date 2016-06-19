@@ -110,37 +110,37 @@ function set_font(val)
 var search_input_el = null;
 var search_body_el = null;
 
-const searchbar_styles = " \
- \
-input { \
-  width: 200px; \
-  font-size: 14px; \
-  height: 20px; \
-} \
- \
-.DarkTheme input { \
-  background: black; \
-  color: white; \
-  border: 1px solid #555; \
-} \
- \
-button { \
-  -webkit-appearance: none; \
-  font-size: 12px; \
-  width: 22px; \
-  height: 22px; \
-  background: #C0C0C0; \
-  border: 1px solid #AAA; \
-  -webkit-border-radius: 2px; \
-  padding: 0px; \
-} \
- \
-.DarkTheme button { \
-  background: #505050; \
-  border: 1px solid #666; \
-  color: white; \
-} \
-";
+const searchbar_styles = `
+
+input {
+  width: 200px;
+  font-size: 14px;
+  height: 20px;
+}
+
+.DarkTheme input {
+  background: black;
+  color: white;
+  border: 1px solid #555;
+}
+
+button {
+  -webkit-appearance: none;
+  font-size: 12px;
+  width: 22px;
+  height: 22px;
+  background: #C0C0C0;
+  border: 1px solid #AAA;
+  -webkit-border-radius: 2px;
+  padding: 0px;
+}
+
+.DarkTheme button {
+  background: #505050;
+  border: 1px solid #666;
+  color: white;
+}
+`;
 
 function construct_searchbar()
 {
