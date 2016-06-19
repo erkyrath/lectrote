@@ -116,6 +116,13 @@ input {
   width: 200px;
   font-size: 14px;
   height: 20px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+#searchbar_done {
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .DarkTheme input {
