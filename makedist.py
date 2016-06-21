@@ -49,6 +49,8 @@ appfiles = [
     './main.js',
     './apphooks.js',
     './play.html',
+    './search.html',
+    './search.js',
     './prefs.html',
     './prefs.js',
     './about.html',
