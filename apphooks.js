@@ -113,21 +113,28 @@ function set_font(val)
 
 function search_request(arg)
 {
-    if ($('#searchbar').css('display') == 'block') {
-        console.log('### already visible');
+    if (search_webview) {
+        //### focus?
         return;
     }
 
-    if (!search_input_el)
-        return;
+    var searchel = $('<webview>', { id:'searchbar', class:'CanHaveInputFocus', src:'./search.html' });
+    searchel.prop('nodeintegration', true);
+    $('#content').append(searchel);
+
+    search_webview = searchel.get(0);
+    if (search_webview) {
+        search_webview.send('set_color_theme', color_theme);
+        search_webview.addEventListener('ipc-message', ev => {
+                evhan_webview_message(ev.channel, ...ev.args);
+            });
+    }
 
     if (arg.inittext) {
-        if (search_input_el.val() == '')
-            search_input_el.val(arg.inittext);
+        //### pass in the inittext
     }
-    $('#searchbar').css('display', 'block');
-    search_input_el.focus();
-    search_input_el.select();
+    //###search_input_el.focus();
+    //###search_input_el.select();
 }
 
 function evhan_webview_message(msg, arg)
@@ -140,6 +147,8 @@ function evhan_webview_message(msg, arg)
         electron.ipcRenderer.send('search_text', arg);
         break;
     case 'search_done':
+        $('#searchbar').remove();
+        search_webview = null;
         electron.ipcRenderer.send('search_done');
         break;
     }
@@ -170,13 +179,6 @@ for (var name in namespace) {
 }
 
 $(document).ready(function() {
-    search_webview = $('webview#searchbar').get(0);
-    if (search_webview) {
-        search_webview.send('set_color_theme', color_theme);
-        search_webview.addEventListener('ipc-message', ev => {
-                evhan_webview_message(ev.channel, ...ev.args);
-            });
-    }
 });
 
 return namespace;

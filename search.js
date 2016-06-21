@@ -15,12 +15,15 @@ electron.ipcRenderer.on('set_color_theme', function(sender, val) {
 });
 
 $(document).ready(function() {
-    electron.ipcRenderer.sendToHost('xyzzy', '### search.js log');
+    electron.ipcRenderer.sendToHost('log', '### search.js log');
 
     var inputel = $('#searchbar_input');
     var doneel = $('#searchbar_done');
     var prevel = $('#searchbar_prev');
     var nextel = $('#searchbar_next');
+
+    inputel.focus();
+    inputel.select();
 
     inputel.on('keypress', function(ev) {
         if (ev.keyCode == 13) {
