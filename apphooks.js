@@ -5,6 +5,9 @@ const electron = require('electron');
 const path_mod = require('path');
 const fs = require('fs');
 
+var search_webview = null;
+var color_theme = 'light';
+
 function load_named_game(path)
 {
     game_options.default_page_title = path_mod.basename(path);
@@ -48,19 +51,20 @@ function set_margin_level(val)
 
 function set_color_theme(val)
 {
+    color_theme = val;
+
     var bodyel = $('body');
 
-    if (val == 'dark') {
+    if (color_theme == 'dark') {
         if (!bodyel.hasClass('DarkTheme'))
             bodyel.addClass('DarkTheme');
-        if (search_body_el && !search_body_el.hasClass('DarkTheme'))
-            search_body_el.addClass('DarkTheme');
     }
     else {
         bodyel.removeClass('DarkTheme');
-        if (search_body_el)
-            search_body_el.removeClass('DarkTheme');
     }
+
+    if (search_webview)
+        search_webview.send('set_color_theme', color_theme);
 }
 
 function set_font(val)
@@ -107,107 +111,6 @@ function set_font(val)
     }
 }
 
-var search_input_el = null;
-var search_body_el = null;
-
-const searchbar_styles = `
-
-input {
-  width: 200px;
-  font-size: 14px;
-  height: 20px;
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-#searchbar_done {
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-.DarkTheme input {
-  background: black;
-  color: white;
-  border: 1px solid #555;
-}
-
-button {
-  -webkit-appearance: none;
-  font-size: 12px;
-  width: 22px;
-  height: 22px;
-  background: #C0C0C0;
-  border: 1px solid #AAA;
-  -webkit-border-radius: 2px;
-  padding: 0px;
-}
-
-.DarkTheme button {
-  background: #505050;
-  border: 1px solid #666;
-  color: white;
-}
-`;
-
-function construct_searchbar()
-{
-    $('#searchbar').empty();
-    var shadow = $('#searchbar').get(0).createShadowRoot();
-
-    var bodyel = $('<div>', { id:'searchbar_body' });
-    search_body_el = bodyel;
-
-    var inputel = $('<input>', { id:'searchbar_input', type:'text' });
-    search_input_el = inputel;
-    var prevel = $('<button>', { id:'searchbar_prev' }).text('\u25C4');
-    var nextel = $('<button>', { id:'searchbar_next' }).text('\u25BA');
-    var doneel = $('<button>', { id:'searchbar_done' }).text('\u2716');
-
-    bodyel.append(inputel);
-    bodyel.append(prevel);
-    bodyel.append(nextel);
-    bodyel.append(doneel);
-
-    var styleel = $('<style>').text(searchbar_styles);
-
-    shadow.appendChild(styleel.get(0));
-    shadow.appendChild(bodyel.get(0));
-
-    inputel.on('keypress', function(ev) {
-        if (ev.keyCode == 13) {
-            var val = inputel.val().trim();
-            if (val)
-                electron.ipcRenderer.send('search_text', { text:val, first:true, forward:true });
-        }
-    });
-
-    inputel.on('keydown', function(ev) {
-        if (ev.keyCode == 27) {
-            $('#searchbar').css('display', 'none');
-            inputel.val('');
-            electron.ipcRenderer.send('search_done');
-        }
-    });
-
-    doneel.on('click', function() {
-        $('#searchbar').css('display', 'none');
-        inputel.val('');
-        electron.ipcRenderer.send('search_done');
-    });
-
-    nextel.on('click', function() {
-        var val = inputel.val().trim();
-        if (val)
-            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:true });
-    });
-
-    prevel.on('click', function() {
-        var val = inputel.val().trim();
-        if (val)
-            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:false });
-    });
-}
-
 function search_request(arg)
 {
     if ($('#searchbar').css('display') == 'block') {
@@ -227,6 +130,21 @@ function search_request(arg)
     search_input_el.select();
 }
 
+function evhan_webview_message(msg, arg)
+{
+    switch (msg) {
+    case 'log':
+        console.log('webview log:', arg);
+        break;
+    case 'search_text':
+        electron.ipcRenderer.send('search_text', arg);
+        break;
+    case 'search_done':
+        electron.ipcRenderer.send('search_done');
+        break;
+    }
+}
+
 const namespace = {
     load_named_game : load_named_game,
     set_clear_autosave : set_clear_autosave,
@@ -234,7 +152,7 @@ const namespace = {
     set_margin_level : set_margin_level,
     set_color_theme : set_color_theme,
     set_font : set_font,
-    search_request : search_request
+    search_request : search_request,
 };
 
 /* We hook up the namespace to IPC events, so that the main process can
@@ -252,7 +170,13 @@ for (var name in namespace) {
 }
 
 $(document).ready(function() {
-    construct_searchbar();
+    search_webview = $('webview#searchbar').get(0);
+    if (search_webview) {
+        search_webview.send('set_color_theme', color_theme);
+        search_webview.addEventListener('ipc-message', ev => {
+                evhan_webview_message(ev.channel, ...ev.args);
+            });
+    }
 });
 
 return namespace;

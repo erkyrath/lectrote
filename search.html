@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lectrote Search</title>
+
+<style type="text/css">
+
+body {
+  margin: 0px;
+  width: 332px;
+  height: 60px;
+  overflow: hidden;
+}
+
+#container {
+  display: block;
+  padding: 16px;
+}
+
+input {
+  font-size: 14px;
+  height: 20px;
+  width: 210px;
+}
+
+.DarkTheme input {
+  background: black;
+  color: white;
+  border: 1px solid #555;
+}
+
+button {
+  -webkit-appearance: none;
+  font-size: 12px;
+  width: 22px;
+  height: 22px;
+  background: #C0C0C0;
+  border: 1px solid #AAA;
+  -webkit-border-radius: 2px;
+  padding: 0px;
+}
+
+.DarkTheme button {
+  background: #505050;
+  border: 1px solid #666;
+  color: white;
+}
+
+</style>
+
+
+<script type="text/javascript">
+window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
+require('./search.js');
+</script>
+
+</head>
+
+<body>
+<div id="container">
+  <input id="searchbar_input" type="text">
+  <button id="searchbar_prev">&#x25C4;</button>
+  <button id="searchbar_next">&#x25BA;</button>
+  <button id="searchbar_done">&#x2716;</button>
+</div>
+</body>
+</html>

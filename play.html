@@ -29,11 +29,13 @@ body {
 }
 
 #searchbar {
-  display: none;
+  /*###display: none;*/
+  display: flex;
   position: absolute;
   top: 0px;
   right: 0px;
-  padding: 1em;
+  width: 332px;
+  height: 60px;
 
   background: #DDD;
   border-left: 1px solid #AAA;
@@ -93,7 +95,7 @@ require('./apphooks.js');
 </div>
 <div id="errorpane" style="display:none;"><div id="errorcontent">...</div></div>
 </div>
-<div id="searchbar" class="CanHaveInputFocus">SHADOW</div>
+<webview id="searchbar" class="CanHaveInputFocus" src="./search.html" nodeintegration></webview>
 </div>
 
 </body>
