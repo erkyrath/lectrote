@@ -207,7 +207,7 @@ function construct_searchbar()
 function search_request(arg)
 {
     if ($('#searchbar').css('display') == 'block') {
-        if (arg.alwaysfocus) {
+        if (arg.focus) {
             search_input_el.focus();
             search_input_el.select();
         }
@@ -222,8 +222,10 @@ function search_request(arg)
             search_input_el.val(arg.inittext);
     }
     $('#searchbar').css('display', 'block');
-    search_input_el.focus();
-    search_input_el.select();
+    if (arg.focus) {
+        search_input_el.focus();
+        search_input_el.select();
+    }
 }
 
 const namespace = {

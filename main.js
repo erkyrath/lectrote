@@ -803,7 +803,7 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                invoke_app_hook(win, 'search_request', { inittext:search_string, alwaysfocus:true });
+                invoke_app_hook(win, 'search_request', { inittext:search_string, focus:true });
             }
         },
         {
