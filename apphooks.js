@@ -1,5 +1,6 @@
+'use strict';
 
-AppHooks = function() {
+const AppHooks = function() {
 
 const electron = require('electron');
 const path_mod = require('path');

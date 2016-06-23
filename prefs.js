@@ -1,4 +1,4 @@
-
+'use strict';
 const electron = require('electron');
 
 /* Set up the initial appearance of the window. This adjusts the controls
