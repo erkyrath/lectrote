@@ -669,19 +669,35 @@ function get_export_game_path()
     return path;
 }
 
-function search_text(webcontents, text, first, forward)
+function search_text(game, text)
 {
-    console.log('### search_text', text, 'first='+first, 'forward='+forward);
+    console.log('### search_text', text);
     if (!text)
         return;
 
     search_string = text;
-    webcontents.findInPage(text, { findNext:!first, forward:forward });
+    game.last_search = text;
+
+    var webcontents = game.win.webContents;
+    webcontents.findInPage(text, {});
 }
 
-function search_cancel(webcontents)
+function search_again(game, forward)
+{
+    console.log('### search_again', (forward ? 'forward' : 'backward'));
+
+    var text = game.last_search;
+    if (!text)
+        return;
+
+    var webcontents = game.win.webContents;
+    webcontents.findInPage(text, { findNext:true, forward:forward });
+}
+
+function search_cancel(game)
 {
     console.log('### search_done');
+    var webcontents = game.win.webContents;
     webcontents.stopFindInPage('keepSelection');
 }
 
@@ -796,7 +812,7 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                search_text(win.webContents, search_string, false, true);
+                search_again(game, true);
             }
         },
         {
@@ -808,7 +824,7 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                search_text(win.webContents, search_string, false, false);
+                search_again(game, false);
             }
         },
         { type: 'separator' },
@@ -1149,14 +1165,21 @@ electron.ipcMain.on('search_done', function(ev, arg) {
     var game = game_for_webcontents(ev.sender);
     if (!game)
         return;
-    search_cancel(ev.sender);
+    search_cancel(game);
 });
 
 electron.ipcMain.on('search_text', function(ev, arg) {
     var game = game_for_webcontents(ev.sender);
     if (!game)
         return;
-    search_text(ev.sender, arg.text, arg.first, arg.forward);
+    search_text(game, arg);
+});
+
+electron.ipcMain.on('search_again', function(ev, arg) {
+    var game = game_for_webcontents(ev.sender);
+    if (!game)
+        return;
+    search_again(game, arg);
 });
 
 /* Called at applicationWillFinishLaunching time (or before ready).

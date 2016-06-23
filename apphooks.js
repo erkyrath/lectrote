@@ -177,7 +177,7 @@ function construct_searchbar()
         if (ev.keyCode == 13) {
             var val = inputel.val().trim();
             if (val)
-                electron.ipcRenderer.send('search_text', { text:val, first:true, forward:true });
+                electron.ipcRenderer.send('search_text', val);
         }
     });
 
@@ -196,22 +196,17 @@ function construct_searchbar()
     });
 
     nextel.on('click', function() {
-        var val = inputel.val().trim();
-        if (val)
-            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:true });
+        electron.ipcRenderer.send('search_again', true);
     });
 
     prevel.on('click', function() {
-        var val = inputel.val().trim();
-        if (val)
-            electron.ipcRenderer.send('search_text', { text:val, first:false, forward:false });
+        electron.ipcRenderer.send('search_again', false);
     });
 }
 
 function search_request(arg)
 {
     if ($('#searchbar').css('display') == 'block') {
-        console.log('### already visible');
         return;
     }
 
