@@ -458,12 +458,28 @@ function launch_game(path)
         invoke_app_hook(win, 'load_named_game', game.path);
     });
 
-    //### necessary?
     win.webContents.on('found-in-page', function(ev, res) {
         var game = game_for_webcontents(ev.sender);
         if (!game)
             return;
-        console.log('### found-in-page', res);
+        if (game.foundinpage && game.foundinpage.requestId == res.requestId) {
+            /* merge fields into game.foundinpage */
+            Object.assign(game.foundinpage, res);
+        }
+        else {
+            game.foundinpage = res;
+        }
+
+        //console.log('### found-in-page', game.foundinpage);
+
+        if (game.foundinpage.finalUpdate && game.foundinpage.activeMatchOrdinal == game.foundinpage.matches && game.foundinpage.matches > 1) {
+            /* The last match, by definition, is in the one in the search
+               widget. If we've landed on it, search *again* to jump around
+               to the beginning (or back, as the case may be). */
+            var webcontents = game.win.webContents;
+            var forward = game.searchforward;
+            webcontents.findInPage(game.last_search, { findNext:true, forward:forward });
+        }
     });
 
     win.on('resize', window_size_prefs_handler('gamewin', win));
@@ -694,6 +710,7 @@ function search_again(game, forward)
     invoke_app_hook(game.win, 'search_request', { inittext:text });
 
     var webcontents = game.win.webContents;
+    game.searchforward = forward;
     webcontents.findInPage(text, { findNext:true, forward:forward });
 }
 
