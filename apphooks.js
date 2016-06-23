@@ -207,6 +207,10 @@ function construct_searchbar()
 function search_request(arg)
 {
     if ($('#searchbar').css('display') == 'block') {
+        if (arg.alwaysfocus) {
+            search_input_el.focus();
+            search_input_el.select();
+        }
         return; /* already open */
     }
 
