@@ -687,7 +687,6 @@ function get_export_game_path()
 
 function search_text(game, text)
 {
-    console.log('### search_text', text);
     if (!text)
         return;
 
@@ -700,8 +699,6 @@ function search_text(game, text)
 
 function search_again(game, forward)
 {
-    console.log('### search_again', (forward ? 'forward' : 'backward'));
-
     var text = game.last_search;
     if (!text)
         return;
@@ -716,7 +713,6 @@ function search_again(game, forward)
 
 function search_cancel(game)
 {
-    console.log('### search_done');
     var webcontents = game.win.webContents;
     webcontents.stopFindInPage('keepSelection');
 }
