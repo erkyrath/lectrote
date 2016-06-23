@@ -207,7 +207,7 @@ function construct_searchbar()
 function search_request(arg)
 {
     if ($('#searchbar').css('display') == 'block') {
-        return;
+        return; /* already open */
     }
 
     if (!search_input_el)

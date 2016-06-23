@@ -690,6 +690,9 @@ function search_again(game, forward)
     if (!text)
         return;
 
+    /* If the search widget isn't open, open it. */
+    invoke_app_hook(game.win, 'search_request', { inittext:text });
+
     var webcontents = game.win.webContents;
     webcontents.findInPage(text, { findNext:true, forward:forward });
 }
