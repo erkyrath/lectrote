@@ -21,6 +21,7 @@ var prefs = {
     gamewin_marginlevel: 1,
     gamewin_colortheme: 'light',
     gamewin_font: 'lora',
+    gamewin_customfont: null,
     gamewin_zoomlevel: 0
 };
 var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
@@ -450,7 +451,7 @@ function launch_game(path)
             return;
         invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
         invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
-        invoke_app_hook(win, 'set_font', prefs.gamewin_font);
+        invoke_app_hook(win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
         if (game.suppress_autorestore) {
             invoke_app_hook(win, 'set_clear_autosave', true);
             game.suppress_autorestore = false;
@@ -1154,12 +1155,14 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
     }
 });
 
-electron.ipcMain.on('pref_font', function(ev, arg) {
-    prefs.gamewin_font = arg;
+electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {
+    prefs.gamewin_font = fontkey;
+    if (customfont)
+        prefs.gamewin_customfont = customfont;
     note_prefs_dirty();
     for (var id in gamewins) {
         var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_font', prefs.gamewin_font);
+        invoke_app_hook(game.win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
     }
 });
 

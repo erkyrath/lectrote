@@ -6,6 +6,8 @@ const electron = require('electron');
 const path_mod = require('path');
 const fs = require('fs');
 
+const fonts = require('./fonts.js');
+
 function load_named_game(path)
 {
     game_options.default_page_title = path_mod.basename(path);
@@ -64,34 +66,9 @@ function set_color_theme(val)
     }
 }
 
-function set_font(val)
+function set_font(obj)
 {
-    var fontline = null;
-
-    switch (val) {
-    case 'georgia':
-        fontline = 'Georgia, Cambria, serif';
-        break;
-    case 'helvetica':
-        fontline = '"Helvetica Neue", Helvetica, Arial, sans-serif';
-        break;
-    case 'gentium':
-        fontline = '"Gentium Book Basic", Georgia, Cambria, serif';
-        break;
-    case 'baskerville':
-        fontline = '"Libre Baskerville", Palatino, Georgia, serif';
-        break;
-    case 'sourcesanspro':
-        fontline = '"Source Sans Pro", Helvetica, Arial, sans-serif';
-        break;
-    case 'courier':
-        fontline = 'Courier, monospace';
-        break;
-    case 'lora':
-    default:
-        fontline = null;
-        break;
-    }
+    var fontline = fonts.get_fontline(obj.font, obj.customfont);
 
     var el = $('#fontcss');
     if (!fontline) {

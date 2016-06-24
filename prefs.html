@@ -43,6 +43,15 @@ hr {
   font-size: 1.0em;
 }
 
+#input-font {
+  width: 12em;
+  display: none;
+}
+
+input[type=text] {
+  font-size: 1.0em;
+}
+
 input[type=range] {
   width: 50%;
   -webkit-appearance: none;
@@ -103,6 +112,8 @@ require('./prefs.js');
 <select disabled id="sel-font" name="font">
 <option>&nbsp;--&nbsp;</option>
 </select>
+&nbsp;
+<input id="input-font" type="text">
 
 </div>
 

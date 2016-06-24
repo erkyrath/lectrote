@@ -1,6 +1,8 @@
 'use strict';
 const electron = require('electron');
 
+const fonts = require('./fonts.js');
+
 /* Set up the initial appearance of the window. This adjusts the controls
    and the sample text, but does not send changes to the app (because there
    have been no changes yet).
@@ -39,7 +41,13 @@ function setup_with_prefs(prefs)
     }
 
     sel.on('change', evhan_font);
-    apply_font(prefs.gamewin_font);
+
+    var inpel = $('#input-font');
+    if (prefs.gamewin_customfont)
+        inpel.val(prefs.gamewin_customfont);
+    inpel.on('change', evhan_font);
+
+    apply_font(prefs.gamewin_font, prefs.gamewin_customfont);
 
 
     sel = $('#range-margin');
@@ -90,37 +98,21 @@ var fontlist = [
     { key:'baskerville', label:'Libre Baskerville' },
     { key:'helvetica', label:'Helvetica' },
     { key:'sourcesanspro', label:'Source Sans Pro' },
-    { key:'courier', label:'Courier' }
+    { key:'courier', label:'Courier' },
+    { key:'custom', label:'Other Font...' }
 ];
 
-function apply_font(val)
+function apply_font(fontkey, customfont)
 {
-    var fontline = null;
-
-    switch (val) {
-    case 'georgia':
-        fontline = 'Georgia, Cambria, serif';
-        break;
-    case 'helvetica':
-        fontline = '"Helvetica Neue", Helvetica, Arial, sans-serif';
-        break;
-    case 'gentium':
-        fontline = '"Gentium Book Basic", Georgia, Cambria, serif';
-        break;
-    case 'baskerville':
-        fontline = '"Libre Baskerville", Palatino, Georgia, serif';
-        break;
-    case 'sourcesanspro':
-        fontline = '"Source Sans Pro", Helvetica, Arial, sans-serif';
-        break;
-    case 'courier':
-        fontline = 'Courier, monospace';
-        break;
-    case 'lora':
-    default:
-        fontline = null;
-        break;
+    if (fontkey == 'custom') {
+        $('#input-font').css('display', 'inline-block');
     }
+    else {
+        $('#input-font').css('display', 'none');
+    }
+
+    //### check if anything's changed
+    var fontline = fonts.get_fontline(fontkey, customfont);
 
     var el = $('#fontcss');
     if (!fontline) {
@@ -181,10 +173,10 @@ function evhan_color_theme()
 
 function evhan_font()
 {
-    var sel = $('#sel-font');
-    var val = sel.val();
-    apply_font(val);
-    electron.ipcRenderer.send('pref_font', val);
+    var fontkey = $('#sel-font').val();
+    var customfont = $('#input-font').val();
+    apply_font(fontkey, customfont);
+    electron.ipcRenderer.send('pref_font', fontkey, customfont);
 }
 
 function evhan_margin_level()
