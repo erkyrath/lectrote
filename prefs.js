@@ -104,11 +104,19 @@ var fontlist = [
 
 function apply_font(fontkey, customfont)
 {
+    var inpel = $('#input-font');
+
     if (fontkey == 'custom') {
-        $('#input-font').css('display', 'inline-block');
+        if (inpel.css('display') != 'inline-block') {
+            inpel.css('display', 'inline-block');
+            inpel.select();
+            inpel.focus();
+        }
     }
     else {
-        $('#input-font').css('display', 'none');
+        if (inpel.css('display') != 'none') {
+            inpel.css('display', 'none');
+        }
     }
 
     //### check if anything's changed
