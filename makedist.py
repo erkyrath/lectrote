@@ -51,6 +51,7 @@ appfiles = [
     './play.html',
     './prefs.html',
     './prefs.js',
+    './fonts.js',
     './about.html',
     './if-card.html',
     './if-card.js',
