@@ -10,6 +10,10 @@ function get_fontline(fontkey, customfont)
         /* We try to be conservative, since the player can enter anything
            at all for the customfont. We remove dangerous characters,
            split at commas, and then put quotes around each bit. */
+        if (!customfont) {
+            fontline = 'serif';
+            break;
+        }
         var val = customfont.replace(/\s/g, ' ');
         val = val.replace(/[""{}]/g, '');
         var ls = val.split(',');

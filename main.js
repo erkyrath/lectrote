@@ -1157,8 +1157,7 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
 
 electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {
     prefs.gamewin_font = fontkey;
-    if (customfont)
-        prefs.gamewin_customfont = customfont;
+    prefs.gamewin_customfont = customfont;
     note_prefs_dirty();
     for (var id in gamewins) {
         var game = gamewins[id];
