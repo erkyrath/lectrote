@@ -11,15 +11,15 @@ function get_fontline(fontkey, customfont)
            at all for the customfont. We remove dangerous characters,
            split at commas, and then put quotes around each bit. */
         if (!customfont) {
-            fontline = 'serif';
+            fontline = 'monospace';
             break;
         }
         var val = customfont.replace(/\s/g, ' ');
-        val = val.replace(/[""{}]/g, '');
+        val = val.replace(/[""\\{}]/g, '');
         var ls = val.split(',');
         ls = ls.map(val => ('"' + val.trim() + '"'));
         ls = ls.filter(val => (val.length > 2));
-        ls.push('serif');
+        ls.push('monospace');
         fontline = ls.join(', ');
         break;
     case 'georgia':
