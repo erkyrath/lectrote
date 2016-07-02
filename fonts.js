@@ -9,7 +9,11 @@ function get_fontline(fontkey, customfont)
     case 'custom':
         /* We try to be conservative, since the player can enter anything
            at all for the customfont. We remove dangerous characters,
-           split at commas, and then put quotes around each bit. */
+           split at commas, and then put quotes around each bit.
+           (Dangerous characters in the CSS sense: quotes, backslashes,
+           curly braces, and newlines. We don't worry about HTML special
+           characters; the value will be installed with jQuery el.text()
+           so &-escapes are not needed.) */
         if (!customfont) {
             fontline = 'monospace';
             break;
