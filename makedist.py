@@ -63,6 +63,7 @@ appfiles = [
     './quixe/lib/jquery-1.11.2.min.js',
     './quixe/lib/quixe.min.js',
     './quixe/media/waiting.gif',
+    './inkjs/ink.cjs.js',
     './font',  # all files
 ]
 
@@ -79,6 +80,7 @@ def install(resourcedir, pkg):
     
     os.makedirs(appdir, exist_ok=True)
     qdir = os.path.join(appdir, 'quixe')
+    qdir = os.path.join(appdir, 'inkjs')
     os.makedirs(qdir, exist_ok=True)
     os.makedirs(os.path.join(qdir, 'lib'), exist_ok=True)
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
