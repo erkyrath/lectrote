@@ -8,21 +8,39 @@ const fs = require('fs');
 
 const fonts = require('./fonts.js');
 
-function load_named_game(path)
+function load_named_game(arg)
 {
+    var path = arg.path;
+
     game_options.default_page_title = path_mod.basename(path);
 
-    var buf = fs.readFileSync(path);
-    /* Convert to a generic Array of byte values. */
-    var arr = new Array(buf.length);
-    for (var ix=0; ix<buf.length; ix++)
-        arr[ix] = buf[ix];
+    var arr = null;
+    var sigfunc = null;
+
+    if (arg.engine == 'quixe') {
+        var buf = fs.readFileSync(path);
+        /* Convert to a generic Array of byte values. */
+        arr = new Array(buf.length);
+        for (var ix=0; ix<buf.length; ix++)
+            arr[ix] = buf[ix];
+        sigfunc = Quixe.get_signature;
+    }
+    else if (arg.engine == 'inkjs') {
+        var buf = fs.readFileSync(path, 'UTF-8');
+        /* Pass this string directly to load_run() */
+        arr = buf;
+        sigfunc = GiLoad.get_game_signature;
+    }
+    else {
+        throw(new Error('Unrecognized engine case: ' + arg.engine));
+    }
+
     GiLoad.load_run(null, arr, 'array');
 
     /* Pass some metadata back to the app */
     var obj = {
         title: path_mod.basename(path),
-        signature: Quixe.get_signature()
+        signature: sigfunc()
     };
 
     var title = GiLoad.get_metadata('title');

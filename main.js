@@ -390,7 +390,8 @@ function launch_game(path)
     var win = null;
     var game = {
         path: path,
-        basehtml: 'play.html', //###
+        basehtml: 'inkplay.html', //###
+        engine: 'inkjs', //###
         title: null,
         signature: null
     };
@@ -457,7 +458,7 @@ function launch_game(path)
             invoke_app_hook(win, 'set_clear_autosave', true);
             game.suppress_autorestore = false;
         }
-        invoke_app_hook(win, 'load_named_game', game.path);
+        invoke_app_hook(win, 'load_named_game', { path: game.path, engine: game.engine } );
     });
 
     win.webContents.on('found-in-page', function(ev, res) {
