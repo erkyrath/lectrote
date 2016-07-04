@@ -80,10 +80,11 @@ def install(resourcedir, pkg):
     
     os.makedirs(appdir, exist_ok=True)
     qdir = os.path.join(appdir, 'quixe')
-    qdir = os.path.join(appdir, 'inkjs')
     os.makedirs(qdir, exist_ok=True)
     os.makedirs(os.path.join(qdir, 'lib'), exist_ok=True)
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
+    inkdir = os.path.join(appdir, 'inkjs')
+    os.makedirs(inkdir, exist_ok=True)
 
     for filename in appfiles:
         srcfilename = filename
