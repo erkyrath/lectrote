@@ -1,6 +1,6 @@
 'use strict';
 
-const Story = require('./ink.cjs.js').Story;
+const Story = require('./inkjs/ink.cjs.js').Story;
 
 function load_run(dummy, arr)
 {
