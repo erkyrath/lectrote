@@ -390,6 +390,7 @@ function launch_game(path)
     var win = null;
     var game = {
         path: path,
+        basehtml: 'play.html', //###
         title: null,
         signature: null
     };
@@ -498,7 +499,7 @@ function launch_game(path)
     });
 
     /* Load the game UI and go. */
-    win.loadURL('file://' + __dirname + '/play.html');
+    win.loadURL('file://' + __dirname + '/' + game.basehtml);
 }
 
 /* Reset the game by reloading its HTML document.
@@ -525,7 +526,7 @@ function reset_game(game)
            will be cleared when the page finishes loading. */
         game.suppress_autorestore = true;
         /* Load the game UI and go. */
-        win.loadURL('file://' + __dirname + '/play.html');
+        win.loadURL('file://' + __dirname + '/' + game.basehtml);
     }
 }
 
