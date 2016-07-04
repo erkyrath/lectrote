@@ -2,8 +2,16 @@
 
 const Story = require('./inkjs/ink.cjs.js').Story;
 
-function load_run(dummy, arr)
+var story = null;
+
+function load_run(dummy, src)
 {
+    /* First we strip the BOM, if there is one. Dunno why ink can't deal
+       with a BOM in JSON data, but okay. */
+    src = src.replace(/^\uFEFF/, '');
+
+    story = new Story(src);
+    window.story = story; //### export for debugging
 }
 
 function get_game_signature()
