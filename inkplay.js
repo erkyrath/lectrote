@@ -112,6 +112,14 @@ function say(val, style, runon)
     }
 }
 
+/* Print a line of text, appending it to the previous line. This is a
+   clearer shortcut for say(val, style, true).
+*/
+function say_runon(val, style) 
+{
+    say(val, style, true);
+}
+
 /* This is the top-level game event hook. It's all set up for a basic
    game that accepts line input. */
 function game_accept(res) 
