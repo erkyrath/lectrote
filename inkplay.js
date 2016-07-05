@@ -59,6 +59,27 @@ function get_metadata(key)
     return null;
 }
 
+function game_cycle()
+{
+    while (story.canContinue) {
+        var text = story.Continue();
+        say(text);
+    }
+
+    if (!story.currentChoices.length) {
+        game_quit = true;
+        GlkOte.warning(all_options.exit_warning);
+        return;        
+    }
+    
+    for (var ix=0; ix<story.currentChoices.length; ix++) {
+        var choice = story.currentChoices[ix];
+        say((ix+1)+': ');
+        say_runon(choice.text);
+    }
+
+}
+
 window.GiLoad = {
     load_run: load_run,
     get_metadata: get_metadata,
@@ -69,22 +90,13 @@ window.GiLoad = {
 var game_generation = 1;
 var game_metrics = null;
 var game_streamout = new Array();
+var game_quit = false;
 
 var prompt = '\n>';
 
-/* Put your game-startup text here. 
-*/
 function startup() 
 {
-    say('Welcome to...');
-    say('The Game', 'header');
-}
-
-/* Put your game-response code here. The val argument is the player's input.
-*/
-function respond(val) 
-{
-    say('You typed "' + val + '".');
+    say('\n\n\n');
 }
 
 /* Print a line of text. (Or several lines, if the argument contains \n
@@ -133,6 +145,7 @@ function game_accept(res)
     if (res.type == 'init') {
         game_metrics = res.metrics;
         startup();
+        game_cycle();
         say(prompt);
     }
     else if (res.type == 'arrange') {
@@ -140,7 +153,11 @@ function game_accept(res)
     }
     else if (res.type == 'line') {
         say_runon(res.value, 'input');
-        respond(res.value);
+        var val = parseInt(res.value);
+        if (!isNaN(val) && val > 0 && val <= story.currentChoices.length) {
+            story.ChooseChoiceIndex(val-1);
+            game_cycle();
+        }
         say(prompt);
     }
     
@@ -174,11 +191,17 @@ function game_select()
     }
     
     
-    var argi = [ 
-        { id: 1, gen: game_generation, type: 'line', maxlen: 200 } 
-    ];
+    var argi = [];
+
+    if (!game_quit) {
+        argi.push({ id: 1, gen: game_generation, type: 'line', maxlen: 200 });
+    }
     
     var arg = { type:'update', gen:game_generation, windows:argw, content:argc, input:argi };
+
+    if (game_quit) {
+        arg.disable = true;
+    }
     
     GlkOte.update(arg);
     
