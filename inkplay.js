@@ -59,11 +59,28 @@ function get_metadata(key)
     return null;
 }
 
+function game_choose(val)
+{
+    try {
+        story.ChooseChoiceIndex(val);
+    }
+    catch (ex) {
+        GlkOte.error("Unable to choose: " + show_exception(ex));
+        return;
+    }
+}
+
 function game_cycle()
 {
-    while (story.canContinue) {
-        var text = story.Continue();
-        say(text);
+    try {
+        while (story.canContinue) {
+            var text = story.Continue();
+            say(text);
+        }
+    }
+    catch (ex) {
+        GlkOte.error("Unable to continue: " + show_exception(ex));
+        return;
     }
 
     if (!story.currentChoices.length) {
@@ -155,7 +172,7 @@ function game_accept(res)
         say_runon(res.value, 'input');
         var val = parseInt(res.value);
         if (!isNaN(val) && val > 0 && val <= story.currentChoices.length) {
-            story.ChooseChoiceIndex(val-1);
+            game_choose(val-1);
             game_cycle();
         }
         say(prompt);
