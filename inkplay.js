@@ -29,11 +29,17 @@ function load_run(optobj, src)
     if (optobj)
         jQuery.extend(all_options, optobj);
 
-    /* First we strip the BOM, if there is one. Dunno why ink can't deal
-       with a BOM in JSON data, but okay. */
-    src = src.replace(/^\uFEFF/, '');
+    try {
+        /* First we strip the BOM, if there is one. Dunno why ink can't deal
+           with a BOM in JSON data, but okay. */
+        src = src.replace(/^\uFEFF/, '');
+        story = new Story(src);
+    }
+    catch (ex) {
+        GlkOte.error("Unable to load story: " + show_exception(ex));
+        return;
+    }
 
-    story = new Story(src);
     window.story = story; //### export for debugging
 
     all_options.accept = game_accept;
@@ -178,3 +184,25 @@ function game_select()
     
     game_streamout.length = 0;
 }
+
+/* Exception objects are hard to display in Javascript. This is a rough
+   attempt.
+*/
+function show_exception(ex) 
+{
+    if (typeof(ex) == 'string')
+        return ex;
+    var res = ex.toString();
+    if (ex.message)
+        res = res + ' ' + ex.message;
+    if (ex.fileName)
+        res = res + ' ' + ex.fileName;
+    if (ex.lineNumber)
+        res = res + ' line:' + ex.lineNumber;
+    if (ex.name)
+        res = res + ' ' + ex.name;
+    if (ex.number)
+        res = res + ' ' + ex.number;
+    return res;
+}
+
