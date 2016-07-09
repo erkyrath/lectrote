@@ -87,7 +87,7 @@ function game_cycle()
     try {
         while (story.canContinue) {
             var text = story.Continue();
-            say_runon(text);
+            say(text);
         }
     }
     catch (ex) {
@@ -107,6 +107,7 @@ function game_cycle()
         var choice = story.currentChoices[ix];
         say_choice(ix, game_turn, choice.text);
     }
+    say('');
 
 }
 
@@ -124,11 +125,9 @@ var game_quit = false;
 
 var game_turn = 0;
 
-var prompt = '\n';
-
 function startup() 
 {
-    say('\n\n\n\n');
+    say('\n\n\n');
 }
 
 /* Print a line of text. (Or several lines, if the argument contains \n
@@ -203,7 +202,6 @@ function game_accept(res)
         game_metrics = res.metrics;
         startup();
         game_cycle();
-        say(prompt);
     }
     else if (res.type == 'arrange') {
         game_metrics = res.metrics;
@@ -216,7 +214,6 @@ function game_accept(res)
             if (turn == game_turn && index >= 0 && index < story.currentChoices.length) {
                 game_choose(index);
                 game_cycle();
-                say(prompt);
             }
         }
     }
@@ -234,7 +231,6 @@ function game_accept(res)
         if (index !== undefined && index >= 0 && index < story.currentChoices.length) {
             game_choose(index);
             game_cycle();
-            say(prompt);
         }
     }
     
