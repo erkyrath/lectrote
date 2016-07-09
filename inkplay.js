@@ -209,6 +209,18 @@ function game_accept(res)
     else if (res.type == 'arrange') {
         game_metrics = res.metrics;
     }
+    else if (res.type == 'hyperlink') {
+        var ls = res.value.split(':');
+        if (ls.length == 2) {
+            var turn = parseInt(ls[0]);
+            var index = parseInt(ls[1]);
+            if (turn == game_turn && index >= 0 && index < story.currentChoices.length) {
+                game_choose(index);
+                game_cycle();
+                say(prompt);
+            }
+        }
+    }
     else if (res.type == 'char') {
         var index = undefined;
         if (res.value.length == 1) {
