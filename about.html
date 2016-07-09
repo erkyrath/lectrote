@@ -103,6 +103,13 @@ function onready()
       }
     }
     catch (ex) { }
+    try {
+      var path = path_mod.join(__dirname, 'inkjs', 'package.json');
+      var val = fs.readFileSync(path, { encoding:'utf8' });
+      var package = JSON.parse(val);
+      update('inkjs_version', package.version);
+    }
+    catch (ex) { }
   }
 
   require('./quixe/lib/quixe.min.js');
@@ -135,11 +142,13 @@ function openrecent()
 </p>
 
 <h1>Lectrote <a id="lectrote_version" href="https://github.com/erkyrath/lectrote">???</a></h1>
-<h3>A portable Glulx interpreter app</h3>
+<h3>A portable IF interpreter app</h3>
 <h3>Constructed by Andrew Plotkin</h3>
 
 <p>
 Quixe version <span id="quixe_version">???</span>;
+inkjs version <span id="inkjs_version">???</span>
+<br>
 Electron version <span id="electron_version">???</span>
 (Node <span id="node_version">???</span>,
 Chrome <span id="chrome_version">???</span>)
@@ -147,7 +156,7 @@ Chrome <span id="chrome_version">???</span>)
 
 <p id='go' class="Go">
 Select <a href="javascript:opengame()">Open Game</a>
-to begin playing a Glulx game file!
+to begin playing a Glulx or Ink game file!
 <span id="open_recent" class="Hidden">Or select a <a href="javascript:openrecent()">recently played game</a>.</span>
 </p>
 
