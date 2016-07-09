@@ -39,7 +39,6 @@ function load_run(optobj, buf)
     for (var ix=0; ix<buf.length; ix++)
         checksum += (buf[ix] & 0xFF);
     signature = 'ink_' + checksum + '_' + buf.length;
-    console.log('### signature', signature);
 
     try {
         var str = buf.toString('utf8');
