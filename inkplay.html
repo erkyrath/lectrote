@@ -60,8 +60,13 @@ game_options = {
 };
 
 window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
-require('./quixe/src/glkote/glkote.js');
-require('./quixe/src/glkote/electrofs.js');
+if (!game_options.use_unminified_js) {
+  require('./quixe/lib/elkote.min.js');
+}
+else {
+  require('./quixe/src/glkote/glkote.js');
+  require('./quixe/src/glkote/electrofs.js');
+}
 require('./inkplay.js');
 require('./apphooks.js');
 
