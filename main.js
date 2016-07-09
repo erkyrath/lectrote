@@ -351,9 +351,12 @@ function select_load_game()
     }
 
     var opts = {
-        title: 'Select a Glulx game file',
+        title: 'Select an IF game file',
         properties: ['openFile'],
-        filters: [ { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'blb', 'gblorb', 'glb'] } ]
+        filters: [ 
+            { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'blb', 'gblorb', 'glb'] },
+            { name: 'Ink JSON File', extensions: [ 'json' ] },
+        ]
     };
 
     gamedialog = true;
