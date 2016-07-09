@@ -26,9 +26,9 @@ function load_named_game(arg)
         sigfunc = Quixe.get_signature;
     }
     else if (arg.engine == 'inkjs') {
-        var buf = fs.readFileSync(path, 'UTF-8');
-        /* Pass this string directly to load_run() */
-        arr = buf;
+        var buf = fs.readFileSync(path);
+        /* Convert to a string. */
+        arr = buf.toString('utf8');
         sigfunc = GiLoad.get_game_signature;
     }
     else {
