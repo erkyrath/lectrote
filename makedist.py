@@ -63,7 +63,10 @@ appfiles = [
     './quixe/lib/jquery-1.11.2.min.js',
     './quixe/lib/quixe.min.js',
     './quixe/media/waiting.gif',
+    './inkplay.html',
+    './inkplay.js',
     './inkjs/ink.cjs.js',
+    './inkjs/package.json',
     './font',  # all files
 ]
 
