@@ -27,8 +27,8 @@ function load_named_game(arg)
     }
     else if (arg.engine == 'inkjs') {
         var buf = fs.readFileSync(path);
-        /* Convert to a string. */
-        arr = buf.toString('utf8');
+        /* Pass the Buffer directly to the load_run function. */
+        var arr = buf;
         sigfunc = GiLoad.get_game_signature;
     }
     else {

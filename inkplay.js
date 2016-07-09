@@ -4,6 +4,8 @@ const Story = require('./inkjs/ink.cjs.js').Story;
 
 /* The inkjs story object that will be loaded. */
 var story = null;
+/* Short string which will (hopefully) be unique per game. */
+var signature = null;
 
 /* Start with the defaults. These can be modified later by the game_options
    defined in the HTML file.
@@ -20,7 +22,9 @@ var all_options = {
     exit_warning: 'The game session has ended.',
 };
 
-function load_run(optobj, src)
+/* Launch the game. The buf argument must be a Node Buffer.
+ */
+function load_run(optobj, buf)
 {
     all_options.io = window.GlkOte;
 
@@ -29,11 +33,20 @@ function load_run(optobj, src)
     if (optobj)
         jQuery.extend(all_options, optobj);
 
+    /* We construct a simplistic signature: the length and bytewise
+       sum of the buffer. */
+    var checksum = 0;
+    for (var ix=0; ix<buf.length; ix++)
+        checksum += (buf[ix] & 0xFF);
+    signature = 'ink_' + checksum + '_' + buf.length;
+    console.log('### signature', signature);
+
     try {
+        var str = buf.toString('utf8');
         /* First we strip the BOM, if there is one. Dunno why ink can't deal
            with a BOM in JSON data, but okay. */
-        src = src.replace(/^\uFEFF/, '');
-        story = new Story(src);
+        str = str.replace(/^\uFEFF/, '');
+        story = new Story(str);
     }
     catch (ex) {
         GlkOte.error("Unable to load story: " + show_exception(ex));
@@ -51,7 +64,7 @@ function load_run(optobj, src)
 
 function get_game_signature()
 {
-    return 'XXX'; //###
+    return signature;
 }
 
 function get_metadata(key)
