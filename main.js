@@ -334,6 +334,35 @@ function invoke_app_hook(win, func, arg)
     win.webContents.send(func, arg);
 }
 
+/* Given a pathname, figure out what kind of game it is. Currently
+   understands Glulx, Blorb (assumes Glulx), and JSON-with-ink.
+
+   Returns null if the game type is not recognized. Throws an exception
+   if the file is unreadable.
+*/
+function game_file_discriminate(path)
+{
+    var fd = fs.openSync(path, 'r');
+    var buf = new Buffer(16);
+    var len = fs.readSync(fd, buf, 0, 16, 0);
+    fs.closeSync(fd);
+
+    console.log('###', buf);
+    
+    if (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C) {
+        /* Glulx file */
+        return { engine:'quixe', basehtml:'play.html' };
+    }
+
+    if (buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
+        && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53) {
+        /* Blorb file */
+        return { engine:'quixe', basehtml:'play.html' };
+    }
+
+    return null;
+}
+
 /* Bring up the select-a-game dialog. 
 */
 function select_load_game()
@@ -372,13 +401,20 @@ function select_load_game()
 */
 function launch_game(path)
 {
-    /* Make sure the file is readable before we pass it over to the
-       renderer window. */
+    var kind = null;
+
+    /* Figure out what kind of game file this is, so we know which play.html
+       file to load. */
     try {
-        fs.accessSync(path, fs.R_OK);
+        kind = game_file_discriminate(path);
     }
     catch (ex) {
         electron.dialog.showErrorBox('The game file could not be read.', ''+ex);
+        return;
+    }
+
+    if (!kind) {
+        electron.dialog.showErrorBox('Could not recognize game file.', path);
         return;
     }
 
@@ -393,8 +429,8 @@ function launch_game(path)
     var win = null;
     var game = {
         path: path,
-        basehtml: 'inkplay.html', //###
-        engine: 'inkjs', //###
+        basehtml: kind.basehtml,
+        engine: kind.engine,
         title: null,
         signature: null
     };
