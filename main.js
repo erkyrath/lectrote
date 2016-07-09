@@ -347,8 +347,6 @@ function game_file_discriminate(path)
     var len = fs.readSync(fd, buf, 0, 16, 0);
     fs.closeSync(fd);
 
-    console.log('###', buf);
-    
     if (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C) {
         /* Glulx file */
         return { engine:'quixe', basehtml:'play.html' };
@@ -358,6 +356,22 @@ function game_file_discriminate(path)
         && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53) {
         /* Blorb file */
         return { engine:'quixe', basehtml:'play.html' };
+    }
+
+    /* Ink is a text (JSON) format, which is harder to check. We skip
+       whitespace and non-ASCII characters and look for '{"ink'. */
+    var checkascii = [ 0x7B, 0x22, 0x69, 0x6E, 0x6B ];
+    var pos = 0;
+    for (var ix=0; ix<buf.length; ix++) {
+        var ch = buf[ix];
+        if (!(ch > 32 && ch < 127))
+            continue;
+        if (ch != checkascii[pos]) 
+            break;
+        pos++;
+        if (pos >= checkascii.length) {
+            return { engine:'inkjs', basehtml:'inkplay.html' };
+        }
     }
 
     return null;
