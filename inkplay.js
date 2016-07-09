@@ -102,10 +102,11 @@ function game_cycle()
         return;        
     }
     
+    game_turn++;
+
     for (var ix=0; ix<story.currentChoices.length; ix++) {
         var choice = story.currentChoices[ix];
-        say((ix+1)+': ');
-        say_runon(choice.text);
+        say_choice(ix, game_turn, choice.text);
     }
 
 }
@@ -122,7 +123,9 @@ var game_metrics = null;
 var game_streamout = new Array();
 var game_quit = false;
 
-var prompt = '\n>';
+var game_turn = 0;
+
+var prompt = '\n';
 
 function startup() 
 {
@@ -168,6 +171,31 @@ function say_runon(val, style)
     say(val, style, true);
 }
 
+/* Print one ink choice. This is a special case which sets the hypertext
+   attribute.
+
+   To avoid accepting old choices, the turn argument should be different
+   for every input cycle.
+*/
+function say_choice(index, turn, text)
+{
+    var link = turn+':'+index;
+
+    var indexstr;
+    if (index <= 8)
+        indexstr = String.fromCharCode(49+index);
+    else if (index <= 34)
+        indexstr = String.fromCharCode(65+index-9);
+    else
+        indexstr = '-';
+
+    game_streamout.push({ content: [
+                { style:'note', text:indexstr+': ' },
+                { style:'note', text:text, hyperlink:link },
+            ] });
+    
+}
+
 /* This is the top-level game event hook. It's all set up for a basic
    game that accepts line input. */
 function game_accept(res) 
@@ -181,15 +209,22 @@ function game_accept(res)
     else if (res.type == 'arrange') {
         game_metrics = res.metrics;
     }
-    else if (res.type == 'line') {
-        say_runon(res.value, 'input');
-        var val = parseInt(res.value);
-        if (!isNaN(val) && val > 0 && val <= story.currentChoices.length) {
-            say('\n');
-            game_choose(val-1);
-            game_cycle();
+    else if (res.type == 'char') {
+        var index = undefined;
+        if (res.value.length == 1) {
+            var val = res.value.charCodeAt(0);
+            if (val >= 49 && val <= 57)
+                index = val - 49;
+            else if (val >= 65 && val <= 90)
+                index = (val - 65) + 9;
+            else if (val >= 97 && val <= 122)
+                index = (val - 97) + 9;
         }
-        say(prompt);
+        if (index !== undefined && index >= 0 && index < story.currentChoices.length) {
+            game_choose(index);
+            game_cycle();
+            say(prompt);
+        }
     }
     
     game_select();
@@ -225,7 +260,7 @@ function game_select()
     var argi = [];
 
     if (!game_quit) {
-        argi.push({ id: 1, gen: game_generation, type: 'line', maxlen: 200 });
+        argi.push({ id: 1, gen: game_generation, type: 'char', hyperlink: true });
     }
     
     var arg = { type:'update', gen:game_generation, windows:argw, content:argc, input:argi };
