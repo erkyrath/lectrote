@@ -2259,7 +2259,7 @@ class VariablesState {
 		this.variableChangedEventCallbacks = [];
 
 		//if es6 proxies are available, use them.
-		if (Proxy) {
+		try {
 			//the proxy is used to allow direct manipulation of global variables. It first tries to access the objetcs own property, and if none is found it delegates the call to the $ method, defined below
 			var p = new Proxy(this, {
 				get: function (target, name) {
@@ -2272,8 +2272,9 @@ class VariablesState {
 			});
 
 			return p;
-		} else {
-			console.log("ES6 Proxy not available - direct manipulation of global variables can't work, use $() instead.");
+		} catch (e) {
+			//thr proxy object is not available in this context. we should warn the dev but writting to the console feels a bit intrusive.
+			//			console.log("ES6 Proxy not available - direct manipulation of global variables can't work, use $() instead.");
 		}
 	}
 	get batchObservingVariableChanges() {
@@ -3644,9 +3645,6 @@ class Story extends InkObject {
 
 					case ControlCommand.CommandType.EndString:
 
-						// Since we're iterating backward through the content,
-						// build a stack so that when we build the string,
-						// it's in the right order
 						var contentStackForString = [];
 
 						var outputCountConsumed = 0;
@@ -3666,6 +3664,9 @@ class Story extends InkObject {
 
 						// Consume the content that was produced for this string
 						this.state.outputStream.splice(this.state.outputStream.length - outputCountConsumed, outputCountConsumed);
+
+						//the C# version uses a Stack for contentStackForString, but we're using a simple array, so we need to reverse it before using it
+						contentStackForString = contentStackForString.reverse();
 
 						// Build string out of the content we collected
 						var sb = '';
@@ -4171,7 +4172,7 @@ class Story extends InkObject {
 		var numElements = numElementsIntVal.value;
 
 		//		var seqCountVal = state.PopEvaluationStack () as IntValue;
-		var seqCountVal = tjis.state.PopEvaluationStack();
+		var seqCountVal = this.state.PopEvaluationStack();
 		var seqCount = seqCountVal.value;
 		var loopIndex = seqCount / numElements;
 		var iterationIndex = seqCount % numElements;
