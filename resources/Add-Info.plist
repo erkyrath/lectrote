@@ -40,6 +40,16 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>icon-gblorb.icns</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>json</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>JSON file</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+		</dict>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
