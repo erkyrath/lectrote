@@ -75,7 +75,7 @@ function game_cycle()
     try {
         while (story.canContinue) {
             var text = story.Continue();
-            say(text);
+            say_runon(text);
         }
     }
     catch (ex) {
@@ -113,7 +113,7 @@ var prompt = '\n>';
 
 function startup() 
 {
-    say('\n\n\n');
+    say('\n\n\n\n');
 }
 
 /* Print a line of text. (Or several lines, if the argument contains \n
@@ -172,6 +172,7 @@ function game_accept(res)
         say_runon(res.value, 'input');
         var val = parseInt(res.value);
         if (!isNaN(val) && val > 0 && val <= story.currentChoices.length) {
+            say('\n');
             game_choose(val-1);
             game_cycle();
         }
