@@ -21,7 +21,7 @@
     "electron-prebuilt": "^1.0.0"
   },
   "devDependencies": {
-    "electron-packager": "^7.0.0",
-    "appdmg": "^0.3.6"
+    "electron-packager": "^7.2.0",
+    "appdmg": "^0.4.0"
   }
 }
