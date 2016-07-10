@@ -67,7 +67,7 @@ The `makedist.py` script builds the zip files which you see on the [release page
 
     python3 makedist.py
 
-This creates build directories and then zip files in a "dist" directory. Add `-b` to *only* generate the build dirs; `-z` to transform existing build dirs into zip files.
+This creates build directories and then zip files in a `dist` directory. Add `-b` to *only* generate the build dirs; `-z` to transform existing build dirs into zip files.
 
 You can add arguments to narrow down the platforms you are building, e.g.:
 
@@ -87,8 +87,8 @@ You will need to create a separate directory for your game's files. Copy `packag
 - `version`: Version number of your game.
 - `author`: You, the game's author.
 - `description`: One-line description of your game.
-- `lectrotePackagedGame`: Pathname to the Glulx game file.
-- `lectroteExtraFiles`: An array of extra files to include. These are assumed to be in the game directory, so you do not have to include the directory prefix. (This list must include the Glulx game file -- yes, it's redundant with `lectrotePackagedGame`.)
+- `lectrotePackagedGame`: Pathname to the game file.
+- `lectroteExtraFiles`: An array of extra files to include. These are assumed to be in the game directory, so you do not have to include the directory prefix. (This list must include the game file -- yes, it's redundant with `lectrotePackagedGame`.)
 - `lectroteMacAppID`: If you plan to build a MacOS app, a reverse-DNS ID string to uniquely identify it.
 - `lectroteCopyright`: Copyright string (applied to Windows binaries).
 
@@ -104,7 +104,7 @@ Once your files are ready, do:
 
 This will build and package apps for all platforms. (You can test this out of the box by using `samplegame` for the GAMEDIR.) As noted above, you can cut down the stages or targets with the `-b`, `-z` options or by naming platforms.
 
-You cannot launch a bound game by typing `npm start`.
+You cannot launch a bound game by typing `npm start`. You have to package it, at least to the `-b` stage, and run it from the `dist` directory.
 
 ### Customizing your bound app
 
