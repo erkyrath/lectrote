@@ -118,13 +118,15 @@ You can extend the functionality of the app -- for example, adding or removing m
 
 (And add it to `lectroteExtraFiles` as well.)
 
-This file can define new functionality by exporting any of three Javascript functions. For example, you could say:
+This file can define new functionality by exporting any of the following Javascript functions. For example, you could say:
 
     exports.launch = function() { ... }
 
 - `exports.launch()`: Called when the app starts up.
 - `exports.app_ready()`: Called when the app is ready to open windows. At this point the game window has already been opened.
 - `exports.construct_menu_template(template, special)`: Called to customize the app menu template. The `template` argument is a Javascript data structure as described in [the Electron Menu docs][elemenu]. `special` is null for the game window, or one of the strings `"about", "prefs", "card"` for one of Lectrote's special windows. Modify `template` and return it.
+- `exports.set_zoom_factor(val)`: Called when the app's zoom level changes. The argument is suitable for Electron's `setZoomFactor()` method.
+- `exports.export_game_path()`: The bound app normally has an "Export Portable Game File..." menu option, which lets the user extract your game file for use in other interpreters. You can implement this function and return null to suppress this menu option. You can also return the pathname of a different game file, which is not actually a useful thing to do.
 
 [elemenu]: http://electron.atom.io/docs/latest/api/menu/
 
