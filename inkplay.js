@@ -124,6 +124,7 @@ function perform_autosave(clear)
     }
 
     var snapshot = {
+        ink: story.state.jsonToken,
         scrollback: scrollback
     };
 
