@@ -7,6 +7,9 @@ var story = null;
 /* Short string which will (hopefully) be unique per game. */
 var signature = null;
 
+/* History of recent window output. We need this to do autosave. */
+var scrollback = [];
+
 /* Start with the defaults. These can be modified later by the game_options
    defined in the HTML file.
 
@@ -111,6 +114,28 @@ function game_cycle()
 
 }
 
+/* Create (or erase) an autosave file.
+*/
+function perform_autosave(clear)
+{
+    if (clear) {
+        Dialog.autosave_write(signature, null);
+        return;
+    }
+
+    var snapshot = {
+        scrollback: scrollback
+    };
+
+    /* Tell the GlkOte layer to save its extra display state and pass it
+       back to us. */
+    snapshot.glk = GlkOte.save_allstate();
+
+    /* Write the snapshot into an appropriate location, which depends
+       on the game signature. */
+    Dialog.autosave_write(signature, snapshot);
+}
+
 window.GiLoad = {
     load_run: load_run,
     get_metadata: get_metadata,
@@ -120,7 +145,7 @@ window.GiLoad = {
 
 var game_generation = 1;
 var game_metrics = null;
-var game_streamout = new Array();
+var game_streamout = [];
 var game_quit = false;
 
 var game_turn = 0;
@@ -258,8 +283,15 @@ function game_select()
     var argc = [ ];
     if (game_streamout.length) {
         var obj = { id: 1 };
-        if (game_streamout.length)
-            obj.text = game_streamout;
+        if (game_streamout.length) {
+            obj.text = game_streamout.slice(0);
+
+            for (var ix=0; ix<obj.text.length; ix++)
+                scrollback.push(obj.text[ix]);
+            if (scrollback.length > 100)
+                scrollback.splice(0, scrollback.length-100);
+        }
+        game_streamout.length = 0;
         argc.push(obj);
     }
     
@@ -278,7 +310,9 @@ function game_select()
     
     GlkOte.update(arg);
     
-    game_streamout.length = 0;
+    if (all_options.do_vm_autosave) {
+        perform_autosave(game_quit);
+    }
 }
 
 /* Exception objects are hard to display in Javascript. This is a rough
