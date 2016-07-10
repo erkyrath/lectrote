@@ -7,6 +7,9 @@ var story = null;
 /* Short string which will (hopefully) be unique per game. */
 var signature = null;
 
+/* We need to distinguish each turn's hyperlinks. */
+var game_turn = 0;
+
 /* History of recent window output. We need this to do autosave. */
 var scrollback = [];
 /* Extra update information -- autorestore only. */
@@ -127,6 +130,7 @@ function perform_autosave(clear)
 
     var snapshot = {
         ink: story.state.jsonToken,
+        turn: game_turn,
         scrollback: scrollback.slice(0),
         glkote: GlkOte.save_allstate()
     };
@@ -141,6 +145,7 @@ function perform_autosave(clear)
 function perform_autorestore(snapshot)
 {
     story.state.jsonToken = snapshot.ink;
+    game_turn = snapshot.turn;
 
     for (var ix=0; ix<snapshot.scrollback.length; ix++)
         game_streamout.push(snapshot.scrollback[ix]);
@@ -161,8 +166,6 @@ var game_generation = 1;
 var game_metrics = null;
 var game_streamout = [];
 var game_quit = false;
-
-var game_turn = 0;
 
 function startup() 
 {
