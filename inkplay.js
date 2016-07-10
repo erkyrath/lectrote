@@ -9,6 +9,8 @@ var signature = null;
 
 /* History of recent window output. We need this to do autosave. */
 var scrollback = [];
+/* Extra update information -- autorestore only. */
+var autorestore_glkstate = null;
 
 /* Start with the defaults. These can be modified later by the game_options
    defined in the HTML file.
@@ -125,16 +127,27 @@ function perform_autosave(clear)
 
     var snapshot = {
         ink: story.state.jsonToken,
-        scrollback: scrollback
+        scrollback: scrollback.slice(0),
+        glkote: GlkOte.save_allstate()
     };
-
-    /* Tell the GlkOte layer to save its extra display state and pass it
-       back to us. */
-    snapshot.glk = GlkOte.save_allstate();
 
     /* Write the snapshot into an appropriate location, which depends
        on the game signature. */
     Dialog.autosave_write(signature, snapshot);
+}
+
+/* Load the autosave file back in.
+*/
+function perform_autorestore(snapshot)
+{
+    story.state.jsonToken = snapshot.ink;
+
+    for (var ix=0; ix<snapshot.scrollback.length; ix++)
+        game_streamout.push(snapshot.scrollback[ix]);
+    
+    /* Stash this for the next (first) GlkOte.update call. */
+    autorestore_glkstate = snapshot.glkote;
+    
 }
 
 window.GiLoad = {
@@ -153,6 +166,27 @@ var game_turn = 0;
 
 function startup() 
 {
+    if (all_options.clear_vm_autosave) {
+        Dialog.autosave_write(signature, null);
+    }
+    if (all_options.do_vm_autosave && !all_options.clear_vm_autosave) {
+        try {
+            var snapshot = Dialog.autosave_read(signature);
+            if (snapshot) {
+                console.log('Found autosave...');
+                perform_autorestore(snapshot);
+                return;
+            }
+        }
+        catch (ex) {
+            console.log('Autorestore failed, deleting it: ' + show_exception(ex));
+            if (ex.stack)
+                console.log('JS stack dump:\n' + ex.stack);
+            Dialog.autosave_write(signature, null);
+        }
+    }
+
+    /* The only startup activity is printing a few blank lines. */
     say('\n\n\n');
 }
 
@@ -309,6 +343,13 @@ function game_select()
         arg.disable = true;
     }
     
+    /* If we're doing an autorestore, autorestore_glkstate will 
+       contain additional setup information for the first update()
+       call only. */
+    if (autorestore_glkstate)
+        arg.autorestore = autorestore_glkstate;
+    autorestore_glkstate = null;
+
     GlkOte.update(arg);
     
     if (all_options.do_vm_autosave) {
