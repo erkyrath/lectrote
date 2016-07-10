@@ -1,21 +1,41 @@
 # Lectrote
 <img style="float:right;" src="icon-128.png" alt="Lectrote logo: purple compass">
-### The [Quixe][]/GlkOte IF interpreter in an [Electron][] shell
+### The [Glulx][]/[Ink][] IF interpreter in an [Electron][] shell
 
 - Version 1.1.0
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
-[Quixe]: http://eblong.com/zarf/glulx/quixe/
+[Glulx]: http://eblong.com/zarf/glulx/
+[Ink]: http://www.inklestudios.com/ink
 [Electron]: http://electron.atom.io
 [Node]: http://nodejs.org
 
-Basically, this is a way to package up the Chromium browser and the Quixe IF interpreter as a Mac/Win/Linux app.
+Lectrote packages up IF interpreters with the Chromium browser as a Mac/Win/Linux app.
 
-This version acts as a general Glulx interpreter. When launched, it prompts you to select a Glulx game file (`.ulx` or `.gblorb`) to play. You can play several games at the same time in separate windows.
+When launched, it prompts you to select a game file to play. You can play several games at the same time in separate windows. Your position is always autosaved; when you launch a game, your last play session will automatically be resumed.
 
-Because this relies on the Quixe interpreter, sound is not supported. It's also not as fast as a native interpreter.
+Lectrote currently supports:
 
-You can also use this package to construct a "bound game" -- an app which plays a single built-in Glulx game. This is a package containing Chromium, Quixe, your game file, and perhaps some additional configuration.
+- [Glulx][] games (`.ulx` or `.gblorb`), as produced by [Inform 7][i7].
+- [Ink][] compiled game files (`.json`), as produced by the [Ink][] scripting language.
+
+[i7]: http://inform7.com/
+
+You can also use this package to construct a "bound game" -- an app which plays a single built-in game. This is a package containing Chromium, the interpreter, your game file, and perhaps some additional configuration. You can distribute this as a standalone game application; it's bulky but it lets people play your game.
+
+## Glulx (Inform 7) support
+
+Because this relies on the [Quixe][] interpreter, sound is not supported. It's also not as fast as a native interpreter.
+
+Z-machine games are currently not supported either.
+
+[Quixe]: http://eblong.com/zarf/glulx/quixe/
+
+## Ink support
+
+This relies on the [inkjs][] interpreter. It is a deliberately non-fancy presentation -- no attempt to slow-print the output or hide the choice list.
+
+[inkjs]: https://github.com/y-lohse/inkjs
 
 # For developers
 
@@ -109,3 +129,4 @@ This file can define new functionality by exporting any of three Javascript func
 [elemenu]: http://electron.atom.io/docs/latest/api/menu/
 
 The main Lectrote module exports several functions you can use in your extension code. I have not yet documented them; see the `main.js` file.
+
