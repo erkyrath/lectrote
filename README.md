@@ -94,13 +94,13 @@ If you add new files (not replacing Lectrote files), be sure to list them in the
 
 You can extend the functionality of the app -- for example, adding or removing menu items. Add a Javascript file to your gamedir, and name it in your `package.json` file:
 
-	"lectroteMainExtension": "GAMEDIR/FILE.js",
+    "lectroteMainExtension": "GAMEDIR/FILE.js",
 
 (And add it to `lectroteExtraFiles` as well.)
 
 This file can define new functionality by exporting any of three Javascript functions. For example, you could say:
 
-	exports.launch = function() { ... }
+    exports.launch = function() { ... }
 
 - `exports.launch()`: Called when the app starts up.
 - `exports.app_ready()`: Called when the app is ready to open windows. At this point the game window has already been opened.
