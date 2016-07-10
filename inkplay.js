@@ -189,8 +189,9 @@ function startup()
         }
     }
 
-    /* The only startup activity is printing a few blank lines. */
+    /* Do the initial game output. */
     say('\n\n\n');
+    game_cycle();
 }
 
 /* Print a line of text. (Or several lines, if the argument contains \n
@@ -264,7 +265,6 @@ function game_accept(res)
     if (res.type == 'init') {
         game_metrics = res.metrics;
         startup();
-        game_cycle();
     }
     else if (res.type == 'arrange') {
         game_metrics = res.metrics;
