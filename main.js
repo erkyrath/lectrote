@@ -462,6 +462,7 @@ function launch_game(path)
         /* On Windows, set the window icon to a Glulx document icon.
            (But not in the bound version -- we leave that as the
            game's app icon.) */
+        //### add an ink docicon here
         winopts.icon = path_mod.join(__dirname, 'docicon.ico');
     }
 
@@ -712,13 +713,15 @@ function export_game_file(path)
         suffix = suffix.slice(1);
     if (!suffix)
         suffix = 'gblorb';
+    /*### defaulting to gblorb isn't right for ink files, but really
+      the path will always have a suffix. */
 
     var filename = path_mod.basename(path);
 
     var opts = {
-        title: 'Export a portable Glulx game file',
+        title: 'Export a portable game file',
         defaultPath: filename,
-        filters: [ { name: 'Glulx Game File', extensions: [suffix] } ]
+        filters: [ { name: 'Game File', extensions: [suffix] } ]
     };
 
     electron.dialog.showSaveDialog(opts, function(destpath) {
