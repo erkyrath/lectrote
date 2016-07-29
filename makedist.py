@@ -58,7 +58,7 @@ appfiles = [
     './fonts.css',
     './el-glkote.css',
     './icon-128.png',
-    './docicon.ico',
+    './docicon-glulx.ico',
     './quixe/lib/elkote.min.js',
     './quixe/lib/jquery-1.11.2.min.js',
     './quixe/lib/quixe.min.js',

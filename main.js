@@ -463,7 +463,7 @@ function launch_game(path)
            (But not in the bound version -- we leave that as the
            game's app icon.) */
         //### add an ink docicon here
-        winopts.icon = path_mod.join(__dirname, 'docicon.ico');
+        winopts.icon = path_mod.join(__dirname, 'docicon-glulx.ico');
     }
 
     /* BUG: The offsetting only applies if you have a window location
