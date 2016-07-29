@@ -153,6 +153,7 @@ def builddir(dir, pack, pkg):
             '--extra-resource=resources/icon-gblorb.icns',
             '--extra-resource=resources/icon-glksave.icns',
             '--extra-resource=resources/icon-glkdata.icns',
+            '--extra-resource=resources/icon-json.icns',
             '--extend-info', 'resources/Add-Info.plist',
             ]
 

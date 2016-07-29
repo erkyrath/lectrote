@@ -49,6 +49,8 @@
 			<string>JSON file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-json.icns</string>
 		</dict>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
