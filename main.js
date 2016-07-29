@@ -349,13 +349,13 @@ function game_file_discriminate(path)
 
     if (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C) {
         /* Glulx file */
-        return { engine:'quixe', basehtml:'play.html' };
+        return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
     }
 
     if (buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
         && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53) {
         /* Blorb file */
-        return { engine:'quixe', basehtml:'play.html' };
+        return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
     }
 
     /* Ink is a text (JSON) format, which is harder to check. We skip
@@ -370,7 +370,7 @@ function game_file_discriminate(path)
             break;
         pos++;
         if (pos >= checkascii.length) {
-            return { engine:'inkjs', basehtml:'inkplay.html' };
+            return { engine:'inkjs', basehtml:'inkplay.html', docicon:'docicon-json.ico' };
         }
     }
 
@@ -459,11 +459,10 @@ function launch_game(path)
     };
 
     if (process.platform == 'win32' && !isbound) {
-        /* On Windows, set the window icon to a Glulx document icon.
+        /* On Windows, set the window icon to an appropriate document icon.
            (But not in the bound version -- we leave that as the
            game's app icon.) */
-        //### add an ink docicon here
-        winopts.icon = path_mod.join(__dirname, 'docicon-glulx.ico');
+        winopts.icon = path_mod.join(__dirname, kind.docicon);
     }
 
     /* BUG: The offsetting only applies if you have a window location
