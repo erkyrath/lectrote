@@ -971,19 +971,12 @@ function construct_menu_template(special)
         {
             label: 'Minimize',
             id: 'minimize_window',
-            accelerator: 'CmdOrCtrl+M',
             role: 'minimize'
         },
         {
             label: 'Full Screen',
             id: 'fullscreen_window',
-            /* When we jump to Electron 1.2.5, we can replace this with just:
-               role: 'togglefullscreen' */
-            accelerator: (process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11'),
-            click: function(item, win) {
-                if (win)
-                    win.setFullScreen(!win.isFullScreen());
-            }
+            role: 'togglefullscreen'
         },
         {
             label: 'Toggle Developer Tools',
