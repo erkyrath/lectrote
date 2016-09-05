@@ -171,7 +171,7 @@ def builddir(dir, pack, pkg):
         else:
             companyname = pkg.get('lectroteCompanyName')
         if companyname:
-            args.append('--version-string.CompanyName='+companyname)
+            args.append('--win32metadata.CompanyName='+companyname)
 
         if not opts.gamedir:
             copyright = 'Copyright 2016 by Andrew Plotkin'
@@ -181,10 +181,10 @@ def builddir(dir, pack, pkg):
             args.append('--app-copyright='+copyright)
         
         args = args + [
-            '--version-string.InternalName='+product_name,
-            '--version-string.ProductName='+product_name,
-            '--version-string.OriginalFilename='+product_name+'.exe',
-            '--version-string.FileDescription='+filedesc,
+            '--win32metadata.InternalName='+product_name,
+            '--win32metadata.ProductName='+product_name,
+            '--win32metadata.OriginalFilename='+product_name+'.exe',
+            '--win32metadata.FileDescription='+filedesc,
             '--icon='+iconpath,
             ]
         
