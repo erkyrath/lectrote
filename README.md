@@ -2,7 +2,7 @@
 <img style="float:right;" src="icon-128.png" alt="Lectrote logo: purple compass">
 ### The [Glulx][]/[Ink][] IF interpreter in an [Electron][] shell
 
-- Version 1.1.2
+- Version 1.1.3
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
 [Glulx]: http://eblong.com/zarf/glulx/
