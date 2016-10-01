@@ -417,7 +417,7 @@ TextInput = Object.subClass({
 		$doc.on( 'click.TextInput keydown.TextInput', function( ev )
 		{
 			// Only intercept on things that aren't inputs and if the user isn't selecting text
-			if ( ev.target.nodeName != 'INPUT' && selection() == '' )
+			if ( ev.target.nodeName != 'INPUT' && ev.target.className.indexOf('CanHaveInputFocus') < 0 && selection() == '' )
 			{
 				// If the input box is close to the viewport then focus it
 				if ( $window.scrollTop() + $window.height() - input.offset().top > -60 )
@@ -2089,6 +2089,15 @@ Library = Object.subClass({
 		{
 			storyfile = [ storyfile, 0 ];
 		}
+
+                // If the storyfile is a very long array, we assume it's
+                // an already-loaded game file (rather than the URL of one).
+                if (storyfile[0].length > 16) {
+                    var arg = { vm:parchment.vms['zvm'], library:self, responseArray:storyfile[0] };
+                    launch_callback([ null, null, arg ]);
+                    return;
+                }
+
 		url = storyfile[0];
 		self.url = url;
 
@@ -2346,10 +2355,22 @@ http://code.google.com/p/parchment
 // Load Parchment, start it all up!
 $(function()
 {
+
+/* Unlike in regular Parchment, this code is not executed at page-ready
+   time. Instead, we must wait for the Lectrote process to hand us a game
+   file to load. 
+
+   Therefore, this code goes into a function: parchment.load_library().
+*/
+function load_library(parchment_options) 
+{
 	var library;
 	
 	// Check for any customised options
-	if ( window.parchment_options )
+        if ( !parchment_options )
+            parchment_options = window.parchment_options;
+
+	if ( parchment_options )
 	{
 		$.extend( parchment.options, parchment_options );
 	}
@@ -2369,7 +2390,10 @@ $(function()
 	// Load the library
 	library = new parchment.lib.Library();
 	parchment.library = library;
-	//library.load();
+	library.load();
+}
+
+parchment.load_library = load_library;
 
 });
 
