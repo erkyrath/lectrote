@@ -5,12 +5,29 @@
   <meta charset="utf-8">
   <title>Lectrote</title>
 
-<script>
-window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
-</script>
+  <script>
+  window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
+  </script>
 
   <script src="parchment/parchment.debug.js"></script>
   <link rel="stylesheet" href="parchment/parchment.debug.css">
+
+<style id="bodycss" type="text/css">
+
+#searchbar {
+  display: none;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 1em;
+
+  background: #DDD;
+  border-left: 1px solid #AAA;
+  border-bottom: 1px solid #AAA;
+  -webkit-border-bottom-left-radius: 4px;
+}
+
+</style>
 
 <script>
 game_options = {
@@ -37,5 +54,8 @@ require('./apphooks.js');
   </div>
 
   <div id="parchment" aria-live="polite" aria-atomic="false" aria-relevant="additions"></div>
+
+  <div id="searchbar" class="CanHaveInputFocus">SHADOW</div>
+
 </body>
 </html>
