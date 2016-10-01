@@ -66,7 +66,7 @@ appfiles = [
     './quixe/media/waiting.gif',
     './inkplay.html',
     './inkplay.js',
-    './inkjs/ink.cjs.js',
+    './inkjs/ink.min.js',
     './inkjs/package.json',
     './font',  # all files
 ]
