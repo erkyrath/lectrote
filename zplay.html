@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,user-scalable=no">
+  <meta charset="utf-8">
+  <title>Lectrote</title>
+  <script src="parchment/jquery-1.12.0.min.js"></script>
+  <script src="parchment/parchment.debug.js"></script>
+  <link rel="stylesheet" href="parchment/parchment.debug.css">
+
+<script>
+parchment_options = {
+  default_story: [ "parchment-repo/stories/troll.zblorb.js" ],
+  lib_path: 'parchment/',
+  lock_story: true,
+  lock_option: true,
+  page_title: false
+};
+</script>
+
+
+</head>
+
+<body>
+
+  <div id="loadingpane">
+  <img src="quixe/media/waiting.gif" alt="LOADING"><br>
+  <em>&nbsp;&nbsp;&nbsp;Loading...</em>
+  </div>
+
+  <div id="parchment" aria-live="polite" aria-atomic="false" aria-relevant="additions"></div>
+</body>
+</html>
