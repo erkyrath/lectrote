@@ -335,8 +335,8 @@ function invoke_app_hook(win, func, arg)
 }
 
 /* Given a pathname, figure out what kind of game it is. Currently
-   understands Glulx, Blorb (assumes Glulx), and JSON-with-ink.
-   ### Blorb should not assume Glulx!
+   understands Glulx, Zcode, Blorb (with Glulx or Zcode), and 
+   JSON-with-ink.
 
    Returns null if the game type is not recognized. Throws an exception
    if the file is unreadable.
@@ -356,7 +356,11 @@ function game_file_discriminate(path)
     if (buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
         && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53) {
         /* Blorb file */
-        return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
+        var gametype = parse_blorb(path);
+        if (gametype == 'Glul')
+            return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
+        else if (gametype == 'Zcod')
+            return { engine:'parchment', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
     }
 
     if (buf[0] >= 3 && buf[0] <= 8) {
