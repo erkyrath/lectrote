@@ -147,8 +147,12 @@ button {
 
 function construct_searchbar()
 {
-    $('#searchbar').empty();
-    var shadow = $('#searchbar').get(0).createShadowRoot();
+    var barel = $('#searchbar');
+    if (!barel || !barel.length)
+        return;
+
+    barel.empty();
+    var shadow = barel.get(0).createShadowRoot();
 
     var bodyel = $('<div>', { id:'searchbar_body' });
     search_body_el = bodyel;
@@ -179,14 +183,14 @@ function construct_searchbar()
 
     inputel.on('keydown', function(ev) {
         if (ev.keyCode == 27) {
-            $('#searchbar').css('display', 'none');
+            barel.css('display', 'none');
             inputel.val('');
             electron.ipcRenderer.send('search_done');
         }
     });
 
     doneel.on('click', function() {
-        $('#searchbar').css('display', 'none');
+        barel.css('display', 'none');
         inputel.val('');
         electron.ipcRenderer.send('search_done');
     });
