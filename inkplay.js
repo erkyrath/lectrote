@@ -60,8 +60,6 @@ function load_run(optobj, buf)
         return;
     }
 
-    window.story = story; //### export for debugging
-
     all_options.accept = game_accept;
 
     /* Now fire up the display library. This will take care of starting
