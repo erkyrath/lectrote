@@ -4,18 +4,26 @@
   <meta name="viewport" content="width=device-width,user-scalable=no">
   <meta charset="utf-8">
   <title>Lectrote</title>
-  <script src="parchment/jquery-1.12.0.min.js"></script>
+
+<script>
+window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
+</script>
+
   <script src="parchment/parchment.debug.js"></script>
   <link rel="stylesheet" href="parchment/parchment.debug.css">
 
 <script>
-parchment_options = {
+game_options = {
   default_story: [ "parchment-repo/stories/troll.zblorb.js" ],
   lib_path: 'parchment/',
   lock_story: true,
   lock_option: true,
   page_title: false
 };
+
+require('./zplay.js');
+require('./apphooks.js');
+
 </script>
 
 

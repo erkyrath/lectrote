@@ -25,6 +25,16 @@ function load_named_game(arg)
             arr[ix] = buf[ix];
         sigfunc = Quixe.get_signature;
     }
+    else if (arg.engine == 'parchment') {
+        var buf = fs.readFileSync(path);
+        /* Convert to a generic Array of byte values. */
+        arr = new Array(buf.length);
+        for (var ix=0; ix<buf.length; ix++)
+            arr[ix] = buf[ix];
+        /* Since autosave is not implemented for Parchment, we don't
+           need a signature. */
+        sigfunc = function() { return 'dummy'; };
+    }
     else if (arg.engine == 'inkjs') {
         var buf = fs.readFileSync(path);
         /* Pass the Buffer directly to the load_run function. */
