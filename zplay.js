@@ -1,6 +1,10 @@
 'use strict';
 
 var all_options = {
+  lib_path: 'parchment/',
+  lock_story: true,
+  lock_option: true,
+  page_title: false
 };
 
 /* Launch the game. The buf argument must be a Node Buffer.
