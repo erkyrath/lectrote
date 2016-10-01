@@ -927,6 +927,8 @@ var basic_stream_handler = function( e )
 	if ( order.name )
 	{
 		elem.addClass( order.name );
+                if (order.name == 'main')
+                    elem.addClass('BufferWindow');
 	}
 	if ( order.text )
 	{
