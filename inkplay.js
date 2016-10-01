@@ -1,6 +1,6 @@
 'use strict';
 
-const Story = require('./inkjs/ink.cjs.js').Story;
+const Story = require('./inkjs/ink.min.js').Story;
 
 /* The inkjs story object that will be loaded. */
 var story = null;
