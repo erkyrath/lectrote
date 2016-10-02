@@ -22,6 +22,9 @@
     "quixe",
     "glkote",
     "glulx",
+    "parchment",
+    "zcode",
+    "zmachine",
     "ink"
   ],
   "author": "Andrew Plotkin <erkyrath@eblong.com>",
