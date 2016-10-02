@@ -70,7 +70,7 @@ appfiles = [
     './parchment/parchment.min.js',
     './parchment/zvm.min.js',
     './parchment/jquery-1.12.0.min.js',
-    './parchment/parchment.min.css',
+    './parchment/parchment-bare.min.css',
     './inkplay.html',
     './inkplay.js',
     './inkjs/ink.min.js',
