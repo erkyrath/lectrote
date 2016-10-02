@@ -357,9 +357,9 @@ function game_file_discriminate(path)
         && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53) {
         /* Blorb file */
         var gametype = parse_blorb(path);
-        if (gametype == 'Glul')
+        if (gametype == 'GLUL')
             return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
-        else if (gametype == 'Zcod')
+        else if (gametype == 'ZCOD')
             return { engine:'parchment', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
     }
 
@@ -385,6 +385,48 @@ function game_file_discriminate(path)
     }
 
     return null;
+}
+
+/* Given the pathname of a Blorb file, look through it for a Z-code or
+   Glulx chunk. Return 'ZCOD' or 'GLUL', or null if neither is found.
+*/
+function parse_blorb(path)
+{
+    var res = null;
+
+    var fd = fs.openSync(path, 'r');
+    var buf = new Buffer(16);
+
+    var len = fs.readSync(fd, buf, 0, 16, 0);
+    if (!(buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
+            && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53)) {
+        /* not Blorb at all. */
+        fs.closeSync(fd);
+        return null;
+    }
+
+    /* Search through the chunks for a Zcode/Glulx chunk. */
+    len = fs.readSync(fd, buf, 0, 12, 0);
+
+    var filelen = buf.readUInt32BE(4) + 8;
+    var pos = 12;
+
+    while (pos < filelen) {
+        len = fs.readSync(fd, buf, 0, 8, pos);
+        pos += 8;
+        var chunktype = buf.toString('utf8', 0, 4);
+        var chunklen = buf.readUInt32BE(4);
+        if (chunktype == 'ZCOD' || chunktype == 'GLUL') {
+            res = chunktype;
+            break;
+        }
+        pos += chunklen;
+        if (pos & 1)
+            pos++;
+    }
+
+    fs.closeSync(fd);
+    return res;
 }
 
 /* Bring up the select-a-game dialog. 
