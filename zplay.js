@@ -72,14 +72,42 @@ function custom_from_runner(runner, event)
                         fl.fclose();
                     }
                 }
+                /*### How to mark event as failed? */
                 runner.fromParchment( event );
             });
         return;
     }
     
     if (code == 'restore') {
-        console.log('### restore', event);
-        //event.data = [ 65, 65, 65, 65 ]; //###
+        Dialog.open(false, 'save', GiLoad.get_game_signature(), function(fref) {
+                if (!fref) {
+                    /* Load dialog cancelled. Mark event as failed. */
+                }
+                else {
+                    const filemode_Read = 0x02;
+                    var fl = Dialog.file_fopen(filemode_Read, fref);
+                    if (!fl) {
+                        /* Could not open file. Mark event as failed. */
+                    }
+                    else {
+                        var res = [];
+                        var buf = new Buffer(256);
+                        while (true) {
+                            var len = fl.fread(buf);
+                            if (!len)
+                                break;
+                            for (var ix=0; ix<len; ix++)
+                                res.push(buf[ix]);
+                        }
+                        fl.fclose();
+                        event.data = res;
+                    }
+                }
+                /* The restore event will be considered to have failed
+                   if event.data is not set. */
+                runner.fromParchment( event );
+            });
+        return;
     }
     
     runner.fromParchment( event );
