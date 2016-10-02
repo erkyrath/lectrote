@@ -1,6 +1,7 @@
 'use strict';
 
 var all_options = {
+  container: '#parchment',
   lib_path: 'parchment/',
   lock_story: true,
   lock_option: true,
@@ -18,7 +19,14 @@ function load_run(optobj, buf)
 
     all_options.default_story = [ buf ];
 
-    parchment.load_library(all_options);
+    /* Now we perform a simplified version of the code from Parchment's
+       src/parchment/outro.js. (The intro.js stuff is baked into
+       zplay.html.) */
+
+    parchment.options = all_options;
+    var library = new parchment.lib.Library();
+    parchment.library = library;
+    library.load();
 }
 
 function get_metadata(key)

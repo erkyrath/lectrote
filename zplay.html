@@ -6,7 +6,13 @@
   <title>Lectrote</title>
 
   <script>
+  /* Globals that must exist before loading Parchment. (It will be the
+  version of Parchment without intro.js, so we have to set up a few
+  things.) */
   window.$ = window.jQuery = require('./quixe/lib/jquery-1.11.2.min.js');
+  window.parchment = { lib: {} };
+  window.urloptions = {}; /* not used */
+  window.DEBUG = false;
   </script>
 
   <script src="parchment/parchment.min.js"></script>
