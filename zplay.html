@@ -15,7 +15,7 @@
 
 <style id="defaultbodycss" type="text/css">
 
-.BufferWindow {
+.main {
   font-family: "Lora", Georgia, serif;
   font-size: 15px;
   line-height: 1.4;
@@ -53,6 +53,8 @@ body.DarkTheme {
 <script>
 
 game_options = {
+  /* The set_font() hook in apphooks.js needs this to set the font properly. */
+  lectrote_font_class: '.main'
 };
 
 require('./zplay.js');
