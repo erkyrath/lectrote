@@ -98,6 +98,12 @@ function set_font(obj)
 {
     var fontline = fonts.get_fontline(obj.font, obj.customfont);
 
+    var fontclass = '.BufferWindow';
+    /* In Parchment the buffer-div class is different, so check the
+       game options for that. */
+    if (game_options.lectrote_font_class)
+        fontclass = game_options.lectrote_font_class;
+
     var el = $('#fontcss');
     if (!fontline) {
         el.remove();
@@ -107,8 +113,9 @@ function set_font(obj)
             el = $('<style>', { id:'fontcss', type:'text/css' });
             $('#bodycss').before(el);
         }
-        var text = '.BufferWindow { font-family: @@; }\n.BufferWindow .Input { font-family: @@; }\n';
-        text = text.replace(/@@/g, fontline);
+        var text = '@@2 { font-family: @@1; }\n@@2 .Input { font-family: @@1; }\n';
+        text = text.replace(/@@1/g, fontline);
+        text = text.replace(/@@2/g, fontclass);
         el.text(text);
     }
 }
