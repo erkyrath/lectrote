@@ -27,9 +27,18 @@ You can also use this package to construct a "bound game" -- an app which plays 
 
 Because this relies on the [Quixe][] interpreter, sound is not supported. It's also not as fast as a native interpreter.
 
-Z-machine games are currently not supported either.
-
 [Quixe]: http://eblong.com/zarf/glulx/quixe/
+
+## Z-code support
+
+Lectrote contains a version of the [Parchment][] interpreter for Z-machine support. However, Parchment's interface does not fit the environment perfectly; you will see some bugs.
+
+- *Auto-save is not supported!* You must save your game explicitly or you will lose your position.
+- The margins preference does not work.
+- Window resizing and the font-size preference can mess up the status line.
+- The search widget can be partially or completely hidden behind the status line.
+
+[Parchment]: https://github.com/curiousdannii/parchment
 
 ## Ink support
 
