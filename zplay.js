@@ -28,7 +28,12 @@ function load_run(optobj, buf)
        zplay.html.) */
 
     parchment.options = all_options;
+
+    /* Construct the library object. */
     var library = new parchment.lib.Library();
+    /* Replace Parchment's fromRunner handler. */
+    library.fromRunner = custom_from_runner;
+
     parchment.library = library;
     library.load();
 }
@@ -41,6 +46,43 @@ function get_game_signature()
 function get_metadata(key)
 {
     return null;
+}
+
+/* Customization of the library.fromRunner() function defined in
+   src/parchment/library.js. This handles the save and restore events,
+   implementing them in terms of electrofs.js.
+*/
+function custom_from_runner(runner, event)
+{
+    var code = event.code;
+    
+    if (code == 'save') {
+        Dialog.open(true, 'save', GiLoad.get_game_signature(), function(fref) {
+                if (!fref) {
+                    /* Save dialog cancelled. Mark event as having failed? */
+                }
+                else {
+                    const filemode_Write = 0x01;
+                    var fl = Dialog.file_fopen(filemode_Write, fref);
+                    if (!fl) {
+                        /* Could not open file. Mark event as failed? */
+                    }
+                    else {
+                        fl.fwrite(Buffer.from(event.data));
+                        fl.fclose();
+                    }
+                }
+                runner.fromParchment( event );
+            });
+        return;
+    }
+    
+    if (code == 'restore') {
+        console.log('### restore', event);
+        //event.data = [ 65, 65, 65, 65 ]; //###
+    }
+    
+    runner.fromParchment( event );
 }
 
 window.GiLoad = {
