@@ -8,6 +8,10 @@ var all_options = {
   page_title: false
 };
 
+/* Short string which will (hopefully) be unique per game. We don't need
+   this until autosave exists, so we just define a dummy value. */
+var signature = 'zcode_dummy';
+
 /* Launch the game. The buf argument must be a Node Buffer.
  */
 function load_run(optobj, buf)
@@ -29,6 +33,11 @@ function load_run(optobj, buf)
     library.load();
 }
 
+function get_game_signature()
+{
+    return signature;
+}
+
 function get_metadata(key)
 {
     return null;
@@ -37,4 +46,5 @@ function get_metadata(key)
 window.GiLoad = {
     load_run: load_run,
     get_metadata: get_metadata,
+    get_game_signature: get_game_signature,
 };

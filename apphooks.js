@@ -31,9 +31,7 @@ function load_named_game(arg)
         arr = new Array(buf.length);
         for (var ix=0; ix<buf.length; ix++)
             arr[ix] = buf[ix];
-        /* Since autosave is not implemented for Parchment, we don't
-           need a signature. */
-        sigfunc = function() { return 'dummy'; };
+        sigfunc = GiLoad.get_game_signature;
     }
     else if (arg.engine == 'inkjs') {
         var buf = fs.readFileSync(path);
