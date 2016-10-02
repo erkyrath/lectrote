@@ -1,12 +1,10 @@
 # Lectrote
 <img style="float:right;" src="icon-128.png" alt="Lectrote logo: purple compass">
-### The [Glulx][]/[Ink][] IF interpreter in an [Electron][] shell
+### The IF interpreter in an [Electron][] shell
 
 - Version 1.1.4
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
-[Glulx]: http://eblong.com/zarf/glulx/
-[Ink]: http://www.inklestudios.com/ink
 [Electron]: http://electron.atom.io
 [Node]: http://nodejs.org
 
@@ -17,9 +15,13 @@ When launched, it prompts you to select a game file to play. You can play severa
 Lectrote currently supports:
 
 - [Glulx][] games (`.ulx` or `.gblorb`), as produced by [Inform 7][i7].
+- [Z-code][] games (`.z3/.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
 - [Ink][] compiled game files (`.json`), as produced by the [Ink][] scripting language.
 
 [i7]: http://inform7.com/
+[Glulx]: http://eblong.com/zarf/glulx/
+[Ink]: http://www.inklestudios.com/ink
+[Z-code]: http://inform-fiction.org/zmachine/standards/z1point1
 
 You can also use this package to construct a "bound game" -- an app which plays a single built-in game. This is a package containing Chromium, the interpreter, your game file, and perhaps some additional configuration. You can distribute this as a standalone game application; it's bulky but it lets people play your game.
 
