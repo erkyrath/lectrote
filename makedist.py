@@ -94,6 +94,8 @@ def install(resourcedir, pkg):
     os.makedirs(qdir, exist_ok=True)
     os.makedirs(os.path.join(qdir, 'lib'), exist_ok=True)
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
+    inkdir = os.path.join(appdir, 'parchment')
+    os.makedirs(inkdir, exist_ok=True)
     inkdir = os.path.join(appdir, 'inkjs')
     os.makedirs(inkdir, exist_ok=True)
 
@@ -156,8 +158,10 @@ def builddir(dir, pack, pkg):
             '--app-category-type=public.app-category.games',
             '--icon='+iconpath,
             '--extra-resource=resources/icon-glulx.icns',
+            '--extra-resource=resources/icon-zcode.icns',
             '--extra-resource=resources/icon-blorb.icns',
             '--extra-resource=resources/icon-gblorb.icns',
+            '--extra-resource=resources/icon-zblorb.icns',
             '--extra-resource=resources/icon-glksave.icns',
             '--extra-resource=resources/icon-glkdata.icns',
             '--extra-resource=resources/icon-json.icns',

@@ -18,6 +18,18 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
+			<string>Z-code Story File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.zcode</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-zcode.icns</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
 			<string>Blorbed IF Story File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -39,6 +51,18 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>icon-gblorb.icns</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Blorbed Z-code Story File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.blorb.zcode</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-zblorb.icns</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -76,6 +100,35 @@
 			</dict>
 			<key>UTTypeIconFile</key>
 			<string>icon-glulx.icns</string>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.zcode</string>
+			<key>UTTypeDescription</key>
+			<string>Z-code Story File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://inform-fiction.org/zmachine/standards/z1point1/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>z3</string>
+					<string>z4</string>
+					<string>z5</string>
+					<string>z6</string>
+					<string>z7</string>
+					<string>z8</string>
+				</array>
+				<key>public.mime-type</key>
+				<string>application/x-zmachine</string>
+			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-zcode.icns</string>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
@@ -123,6 +176,28 @@
 			</dict>
 			<key>UTTypeIconFile</key>
 			<string>icon-gblorb.icns</string>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.blorb.zcode</string>
+			<key>UTTypeDescription</key>
+			<string>Blorbed Z-code Story File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://inform-fiction.org/zmachine/standards/z1point1/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>zblorb</string>
+				<key>public.mime-type</key>
+				<string>application/x-blorb;profile=&quot;zcode&quot;</string>
+			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-zblorb.icns</string>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
