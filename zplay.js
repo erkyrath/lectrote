@@ -59,20 +59,22 @@ function custom_from_runner(runner, event)
     if (code == 'save') {
         Dialog.open(true, 'save', GiLoad.get_game_signature(), function(fref) {
                 if (!fref) {
-                    /* Save dialog cancelled. Mark event as having failed? */
+                    /* Save dialog cancelled. Mark event as having failed. */
+                    event.result = 0;
                 }
                 else {
                     const filemode_Write = 0x01;
                     var fl = Dialog.file_fopen(filemode_Write, fref);
                     if (!fl) {
-                        /* Could not open file. Mark event as failed? */
+                        /* Could not open file. Mark event as failed. */
+                        event.result = 0;
                     }
                     else {
                         fl.fwrite(Buffer.from(event.data));
                         fl.fclose();
+                        event.result = 1;
                     }
                 }
-                /*### How to mark event as failed? */
                 runner.fromParchment( event );
             });
         return;
