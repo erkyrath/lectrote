@@ -6,6 +6,8 @@ const Story = require('./inkjs/ink.min.js').Story;
 var story = null;
 /* Short string which will (hopefully) be unique per game. */
 var signature = null;
+/* Global taqgs. */
+var metadata = {};
 
 /* We need to distinguish each turn's hyperlinks. */
 var game_turn = 0;
@@ -60,6 +62,23 @@ function load_run(optobj, buf)
         return;
     }
 
+    /* Pull out the story's global tag info. This may include title
+       and author. */
+    try {
+        var tags = story.globalTags;
+        for (var ix=0; ix<tags.length; ix++) {
+            var pos = tags[ix].search(':');
+            if (pos >= 0) {
+                var key = tags[ix].slice(0, pos).trim();
+                var val = tags[ix].slice(pos+1).trim();
+                metadata[key] = val;
+            }
+        }
+    }
+    catch (ex) {
+        console.log("Unable to read globalTags", ex);
+    }
+
     all_options.accept = game_accept;
 
     /* Now fire up the display library. This will take care of starting
@@ -74,7 +93,7 @@ function get_game_signature()
 
 function get_metadata(key)
 {
-    return null;
+    return metadata[key];
 }
 
 function game_choose(val)
