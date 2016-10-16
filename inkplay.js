@@ -79,6 +79,17 @@ function load_run(optobj, buf)
         console.log("Unable to read globalTags", ex);
     }
 
+    {
+        var title = metadata.title;
+        if (!title)
+            title = all_options.default_page_title;
+        if (!title)
+            title = 'Game';
+        
+        if (all_options.set_page_title)
+            document.title = title + " - InkJS";
+    }
+
     all_options.accept = game_accept;
 
     /* Now fire up the display library. This will take care of starting
