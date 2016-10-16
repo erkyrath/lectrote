@@ -220,6 +220,7 @@ body.DarkTheme {
 }
 
 .GraphicsWindow canvas {
+  display: block;
   background-color: white;
 }
 
