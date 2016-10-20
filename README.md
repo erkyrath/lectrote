@@ -2,7 +2,7 @@
 <img style="float:right;" src="icon-128.png" alt="Lectrote logo: purple compass">
 ### The IF interpreter in an [Electron][] shell
 
-- Version 1.1.5
+- Version 1.1.6
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
 [Electron]: http://electron.atom.io
