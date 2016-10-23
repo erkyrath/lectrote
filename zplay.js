@@ -35,7 +35,15 @@ function load_run(optobj, buf)
     library.fromRunner = custom_from_runner;
 
     parchment.library = library;
-    library.load();
+    try {
+        library.load();
+    }
+    catch (ex) {
+        /*### Parchment is currently not set up to use GlkOte, so we
+          can't call GlkOte.error. This will in the future. */
+        show_error("Unable to load story: " + show_exception(ex));
+        return;
+    }
 }
 
 function get_game_signature()
@@ -113,6 +121,43 @@ function custom_from_runner(runner, event)
     }
     
     runner.fromParchment( event );
+}
+
+/* This is a quick hack to display an error div. We will want to replace
+   this with GlkOte.error when that's available.
+*/
+function show_error(text)
+{
+    var el = $('<div>').text(text);
+    el.css({
+        background: '#F88',
+        color: 'black',
+        padding: '2em',
+        'margin-top': '1em',
+        'font-size': '1.25em',
+    });
+    $('#parchment').append(el);
+}
+
+/* Exception objects are hard to display in Javascript. This is a rough
+   attempt.
+*/
+function show_exception(ex) 
+{
+    if (typeof(ex) == 'string')
+        return ex;
+    var res = ex.toString();
+    if (ex.message)
+        res = res + ' ' + ex.message;
+    if (ex.fileName)
+        res = res + ' ' + ex.fileName;
+    if (ex.lineNumber)
+        res = res + ' line:' + ex.lineNumber;
+    if (ex.name)
+        res = res + ' ' + ex.name;
+    if (ex.number)
+        res = res + ' ' + ex.number;
+    return res;
 }
 
 window.GiLoad = {
