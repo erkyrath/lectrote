@@ -449,7 +449,9 @@ function select_load_game()
         title: 'Select an IF game file',
         properties: ['openFile'],
         filters: [ 
-            { name: 'Glulx Game File', extensions: ['ulx', 'blorb', 'blb', 'gblorb', 'glb'] },
+            { name: 'Blorbed Game File', extensions: ['blorb', 'blb'] },
+            { name: 'Glulx Game File', extensions: ['ulx', 'gblorb', 'glb'] },
+            { name: 'Z-code Game File', extensions: ['z3', 'z4', 'z5', 'z6', 'z7', 'z8', 'zblorb', 'zlb'] },
             { name: 'Ink JSON File', extensions: [ 'json' ] },
         ]
     };
