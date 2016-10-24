@@ -15,7 +15,7 @@ When launched, it prompts you to select a game file to play. You can play severa
 Lectrote currently supports:
 
 - [Glulx][] games (`.ulx` or `.gblorb`), as produced by [Inform 7][i7].
-- [Z-code][] games (`.z3/.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
+- [Z-code][] games (`.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
 - [Ink][] compiled game files (`.json`), as produced by the [Ink][] scripting language.
 
 [i7]: http://inform7.com/
