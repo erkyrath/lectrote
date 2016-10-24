@@ -62,7 +62,7 @@ appfiles = [
     './docicon-zcode.ico',
     './docicon-json.ico',
     './quixe/lib/elkote.min.js',
-    './quixe/lib/jquery-1.11.2.min.js',
+    './quixe/lib/jquery-1.12.4.min.js',
     './quixe/lib/quixe.min.js',
     './quixe/media/waiting.gif',
     './zplay.html',
