@@ -69,7 +69,6 @@ appfiles = [
     './zplay.js',
     './parchment/parchment-bare.min.js',
     './parchment/zvm.min.js',
-    './parchment/jquery-1.12.0.min.js',
     './parchment/parchment.min.css',
     './inkplay.html',
     './inkplay.js',
