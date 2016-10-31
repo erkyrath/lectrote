@@ -66,12 +66,14 @@ function load_run(optobj, buf)
        and author. */
     try {
         var tags = story.globalTags;
-        for (var ix=0; ix<tags.length; ix++) {
-            var pos = tags[ix].search(':');
-            if (pos >= 0) {
-                var key = tags[ix].slice(0, pos).trim();
-                var val = tags[ix].slice(pos+1).trim();
-                metadata[key] = val;
+        if (tags) {
+            for (var ix=0; ix<tags.length; ix++) {
+                var pos = tags[ix].search(':');
+                if (pos >= 0) {
+                    var key = tags[ix].slice(0, pos).trim();
+                    var val = tags[ix].slice(pos+1).trim();
+                    metadata[key] = val;
+                }
             }
         }
     }
