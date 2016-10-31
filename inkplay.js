@@ -52,10 +52,20 @@ function load_run(optobj, buf)
 
     try {
         var str = buf.toString('utf8');
-        /* First we strip the BOM, if there is one. Dunno why ink can't deal
-           with a BOM in JSON data, but okay. */
+        /* First we strip the BOM, if there is one. Dunno why JSON.parse
+           can't deal with a BOM, but okay. */
         str = str.replace(/^\uFEFF/, '');
-        story = new Story(str);
+        var json = JSON.parse(str);
+        var version = parseInt(json["inkVersion"]);
+        if (version >= 15) {
+            /* current version of inkjs */
+            story = new Story(json);
+        }
+        else {
+            console.log('Game version', version, '; loading inkjs 1.3.0');
+            const OldStory = require('./inkjs/ink-130.min.js').Story;
+            story = new OldStory(json);
+        }
     }
     catch (ex) {
         GlkOte.error("Unable to load story: " + show_exception(ex));
