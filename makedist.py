@@ -73,6 +73,7 @@ appfiles = [
     './inkplay.html',
     './inkplay.js',
     './inkjs/ink.min.js',
+    './inkjs/ink-130.min.js',
     './inkjs/package.json',
     './font',  # all files
 ]
