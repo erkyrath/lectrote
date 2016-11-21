@@ -307,6 +307,12 @@ a {
   background: #FFF0C0;
 }
 
+.SepiaTheme .Style_blockquote {
+  background: #E4DDC0;
+}
+.SlateTheme .Style_blockquote {
+  background: #667;
+}
 .DarkTheme .Style_blockquote {
   background: #404010;
 }
