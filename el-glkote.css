@@ -35,10 +35,22 @@
   background: #202010;
 }
 
+body.SepiaTheme {
+  background: #F4EDE1;
+}
+body.SlateTheme {
+  background: #4D4D4F;
+}
 body.DarkTheme {
   background: black;
 }
 
+.SepiaTheme #content {
+  background: #F4EDE1;
+}
+.SlateTheme #content {
+  background: #4D4D4F;
+}
 .DarkTheme #content {
   background: black;
 }
@@ -92,6 +104,14 @@ body.DarkTheme {
   background: white;
 }
 
+.SepiaTheme .WindowFrame {
+  background: #F4EDE1;
+  color: black;
+}
+.SlateTheme .WindowFrame {
+  background: #4D4D4F;
+  color: white;
+}
 .DarkTheme .WindowFrame {
   background: black;
   color: #FFF4EE;
@@ -118,6 +138,14 @@ body.DarkTheme {
   padding: 6px 20px;
 }
 
+.SepiaTheme .GridWindow {
+  background: #FFFFF4;
+  color: #864;
+}
+.SlateTheme .GridWindow {
+  background: #333333;
+  color: #DDDDEE;
+}
 .DarkTheme .GridWindow {
   background: #432;
   color: #DDDACC;
@@ -177,6 +205,12 @@ body.DarkTheme {
   color: #060;
 }
 
+.SepiaTheme .Input {
+  color: #040;
+}
+.SlateTheme .Input {
+  color: #DFD;
+}
 .DarkTheme .Input {
   color: #CFC;
 }
@@ -282,6 +316,12 @@ a {
   color: #060;
 }
 
+.SepiaTheme .Style_input {
+  color: #040;
+}
+.SlateTheme .Style_input {
+  color: #DFD;
+}
 .DarkTheme .Style_input {
   color: #CFC;
 }

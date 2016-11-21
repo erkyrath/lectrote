@@ -79,16 +79,39 @@ function set_color_theme(val)
 {
     var bodyel = $('body');
 
-    if (val == 'dark') {
-        if (!bodyel.hasClass('DarkTheme'))
-            bodyel.addClass('DarkTheme');
-        if (search_body_el && !search_body_el.hasClass('DarkTheme'))
-            search_body_el.addClass('DarkTheme');
+    bodyel.removeClass('SepiaTheme');
+    bodyel.removeClass('SlateTheme');
+    bodyel.removeClass('DarkTheme');
+
+    if (search_body_el) {
+        search_body_el.removeClass('SepiaTheme');
+        search_body_el.removeClass('SlateTheme');
+        search_body_el.removeClass('DarkTheme');
     }
-    else {
-        bodyel.removeClass('DarkTheme');
+
+    switch (val) {
+
+    case 'sepia':
+        bodyel.addClass('SepiaTheme');
         if (search_body_el)
-            search_body_el.removeClass('DarkTheme');
+            search_body_el.addClass('SepiaTheme');
+        break;
+
+    case 'slate':
+        bodyel.addClass('SlateTheme');
+        if (search_body_el)
+            search_body_el.addClass('SlateTheme');
+        break;
+
+    case 'dark':
+        bodyel.addClass('DarkTheme');
+        if (search_body_el)
+            search_body_el.addClass('DarkTheme');
+        break;
+
+    default:
+        /* Light theme is the default. */
+        break;
     }
 }
 
