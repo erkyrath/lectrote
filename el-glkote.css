@@ -262,6 +262,12 @@ a {
   color: #00E;
 }
 
+.SepiaTheme a {
+  color: #00E;
+}
+.SlateTheme a {
+  color: #BBF;
+}
 .DarkTheme a {
   color: #AAF;
 }
