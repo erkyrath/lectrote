@@ -56,6 +56,7 @@ appfiles = [
     './if-card.html',
     './if-card.js',
     './fonts.css',
+    './play.css',
     './el-glkote.css',
     './icon-128.png',
     './docicon-glulx.ico',
