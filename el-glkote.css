@@ -176,6 +176,14 @@ body.DarkTheme {
   -moz-border-radius: 4px;
 }
 
+.SepiaTheme .MorePrompt {
+  background: #603010;
+  color: #FFFFCC;
+}
+.SlateTheme .MorePrompt {
+  background: #FDA;
+  color: #420;
+}
 .DarkTheme .MorePrompt {
   background: #FDA;
   color: #420;
