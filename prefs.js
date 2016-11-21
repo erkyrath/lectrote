@@ -15,14 +15,13 @@ function setup_with_prefs(prefs)
     sel.prop('disabled', false);
     sel.empty();
 
-    optel = $('<option>', { value:'light' }).text('Light');
-    if (prefs.gamewin_colortheme == 'light')
-        optel.prop('selected', true);
-    sel.append(optel);
-    optel = $('<option>', { value:'dark' }).text('Dark');
-    if (prefs.gamewin_colortheme == 'dark')
-        optel.prop('selected', true);
-    sel.append(optel);
+    for (var ix=0; ix<themelist.length; ix++) {
+        var theme = themelist[ix];
+        optel = $('<option>', { value:theme.key }).text(theme.label);
+        if (prefs.gamewin_colortheme == theme.key)
+            optel.prop('selected', true);
+        sel.append(optel);
+    }
 
     sel.on('change', evhan_color_theme);
     apply_color_theme(prefs.gamewin_colortheme);
@@ -78,16 +77,38 @@ function setup_with_prefs(prefs)
    in sync.
 */
 
+var themelist = [
+    { key:'light', label:'Light' },
+    { key:'sepia', label:'Sepia' },
+    { key:'slate', label:'Slate' },
+    { key:'dark', label:'Dark' }
+];
+
 function apply_color_theme(val)
 {
     var bodyel = $('.Sample');
 
-    if (val == 'dark') {
-        if (!bodyel.hasClass('DarkTheme'))
-            bodyel.addClass('DarkTheme');
-    }
-    else {
-        bodyel.removeClass('DarkTheme');
+    bodyel.removeClass('SepiaTheme');
+    bodyel.removeClass('SlateTheme');
+    bodyel.removeClass('DarkTheme');
+
+    switch (val) {
+
+    case 'sepia':
+        bodyel.addClass('SepiaTheme');
+        break;
+
+    case 'slate':
+        bodyel.addClass('SlateTheme');
+        break;
+
+    case 'dark':
+        bodyel.addClass('DarkTheme');
+        break;
+
+    default:
+        /* Light theme is the default. */
+        break;
     }
 }
 
