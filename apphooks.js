@@ -152,6 +152,7 @@ input {
   height: 20px;
   margin-left: 4px;
   margin-right: 4px;
+  border: 1px solid #BBB;
 }
 
 #searchbar_done {
@@ -159,6 +160,16 @@ input {
   margin-right: 4px;
 }
 
+.SepiaTheme input {
+  background: white;
+  color: black;
+  border: 1px solid #BBB;
+}
+.SlateTheme input {
+  background: black;
+  color: white;
+  border: 1px solid #555;
+}
 .DarkTheme input {
   background: black;
   color: white;
@@ -176,6 +187,16 @@ button {
   padding: 0px;
 }
 
+.SepiaTheme button {
+  background: #C0C0C0;
+  border: 1px solid #AAA;
+  color: black;
+}
+.SlateTheme button {
+  background: #505050;
+  border: 1px solid #666;
+  color: white;
+}
 .DarkTheme button {
   background: #505050;
   border: 1px solid #666;

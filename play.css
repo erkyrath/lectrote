@@ -38,6 +38,14 @@ body {
   -webkit-border-bottom-left-radius: 4px;
 }
 
+.SepiaTheme #searchbar {
+  background: #DDD;
+  border-color: #AAA;
+}
+.SlateTheme #searchbar {
+  background: #333;
+  border-color: #666;
+}
 .DarkTheme #searchbar {
   background: #333;
   border-color: #666;
