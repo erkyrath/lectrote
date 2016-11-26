@@ -2,7 +2,7 @@
   "name": "adventure",
   "productName": "Adventure",
   "version": "1.0.0",
-  "lectroteVersion": "1.1.6",
+  "lectroteVersion": "1.1.8",
   "lectrotePackagedGame": "samplegame/Advent.ulx",
   "lectroteMacAppID": "com.eblong.adventsample",
   "lectroteCopyright": "Written by Will Crowther and Don Woods",
@@ -18,7 +18,7 @@
   "author": "Andrew Plotkin <erkyrath@eblong.com>",
   "license": "MIT",
   "dependencies": {
-    "electron-prebuilt": "1.4.4"
+    "electron-prebuilt": "1.4.8"
   },
   "devDependencies": {
     "electron-packager": "^8.0.0",
