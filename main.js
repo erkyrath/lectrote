@@ -1319,6 +1319,9 @@ electron.ipcMain.on('search_again', function(ev, arg) {
    Docs recommend setting up the open-file handler here.
 */
 app.on('will-finish-launching', function() {
+    process.noAsar = true;
+    process.env.ELECTRON_NO_ASAR = '1';
+
     try {
         var path = path_mod.join(__dirname, 'package.json');
         var val = fs.readFileSync(path, { encoding:'utf8' });
