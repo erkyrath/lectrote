@@ -1623,8 +1623,10 @@ module.exports = {
 			time: time,
 		};
 		
+                var array = [];
+                array.length = len;
 		// TODO: pre-existing input
-		this.glk.glk_request_line_event_uni( this.mainwin, [], /*len,*/ initiallen );
+		this.glk.glk_request_line_event_uni( this.mainwin, array, /*len,*/ initiallen );
 	},
 
 	// Request character input
