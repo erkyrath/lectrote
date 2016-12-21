@@ -795,7 +795,7 @@ Class.subClass = function( props )
 // Accepts an ArrayBuffer, typed array, or a length number
 function MemoryView( buffer, byteOffset, byteLength )
 {
-	if ( typeof buffer[0] === 'number' )
+	if ( typeof buffer === 'number' )
 	{
 		buffer = new ArrayBuffer( buffer );
 	}

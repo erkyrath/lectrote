@@ -27,10 +27,8 @@ function load_named_game(arg)
     }
     else if (arg.engine == 'ifvms') {
         var buf = fs.readFileSync(path);
-        /* Convert to a generic Array of byte values. */
-        arr = new Array(buf.length);
-        for (var ix=0; ix<buf.length; ix++)
-            arr[ix] = buf[ix];
+        /* Convert to a Uint8Array. */
+        arr = Uint8Array.from(buf);
         sigfunc = function() { return 'XXXXX'; }; /*###*/
     }
     else if (arg.engine == 'inkjs') {
