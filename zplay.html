@@ -1,103 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width,user-scalable=no">
-  <meta charset="utf-8">
-  <title>Lectrote</title>
+<title>Lectrote</title>
 
-  <script>
-  /* Globals that must exist before loading Parchment. (It will be the
-  version of Parchment without intro.js, so we have to set up a few
-  things.) */
-  window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
-  window.parchment = { lib: {} };
-  window.urloptions = {}; /* not used */
-  window.DEBUG = false;
-  </script>
+<link rel="stylesheet" href="./fonts.css" type="text/css">
+<link rel="stylesheet" href="./el-glkote.css" type="text/css">
+<link id="bodycss" rel="stylesheet" href="./play.css" type="text/css">
 
-  <script src="parchment/parchment-bare.min.js"></script>
-  <script src="parchment/zvm.min.js"></script>
-  <link rel="stylesheet" href="parchment/parchment.min.css">
-
-<style id="defaultbodycss" type="text/css">
-
-.main {
-  font-family: "Lora", Georgia, serif;
-  font-size: 15px;
-  line-height: 1.4;
-}
-
-body.SepiaTheme {
-  background: #F4EDE1;
-  color: black;
-}
-body.SlateTheme {
-  background: #4D4D4F;
-  color: white;
-}
-body.DarkTheme {
-  background: black;
-  color: #FFF4EE;
-}
-
-</style>
-
-<style id="bodycss" type="text/css">
-
-#searchbar {
-  display: none;
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  padding: 1em;
-
-  background: #DDD;
-  border-left: 1px solid #AAA;
-  border-bottom: 1px solid #AAA;
-  -webkit-border-bottom-left-radius: 4px;
-}
-
-.SepiaTheme #searchbar {
-  background: #DDD;
-  border-color: #AAA;
-}
-.SlateTheme #searchbar {
-  background: #333;
-  border-color: #666;
-}
-.DarkTheme #searchbar {
-  background: #333;
-  border-color: #666;
-}
-
-</style>
-
-<script>
-
+<script type="text/javascript">
 game_options = {
-  /* The set_font() hook in apphooks.js needs this to set the font properly. */
-  lectrote_font_class: '.main'
+  use_unminified_js: true, /*###*/
+  spacing: 4,
+  outspacingx: 0,
+  outspacingy: 16,
+  use_query_story: false,
+  set_page_title: true,
+  do_vm_autosave: true
 };
 
-require('./quixe/lib/elkote.min.js'); /* for electrofs */
-require('./zplay.js');
+window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
+if (!game_options.use_unminified_js) {
+  /*###*/
+}
+else {
+  require('./quixe/src/glkote/glkote.js');
+  require('./quixe/src/glkote/electrofs.js');
+  require('./quixe/src/glkote/glkapi.js');
+  require('./ifvms/zvm.debug.js');
+  require('./quixe/src/quixe/gi_load.js');
+}
 require('./apphooks.js');
 
 </script>
 
 
 </head>
-
 <body>
 
-  <div id="about">
-  <img src="quixe/media/waiting.gif" alt="LOADING"><br>
-  <em>&nbsp;&nbsp;&nbsp;Loading...</em>
-  </div>
-
-  <div id="parchment" aria-live="polite" aria-atomic="false" aria-relevant="additions"></div>
-
-  <div id="searchbar" class="CanHaveInputFocus">SHADOW</div>
+<div id="content">
+<div id="gameport">
+<div id="windowport">
+<noscript><hr>
+<p>You'll need to turn on Javascript in your web browser to play this game.</p>
+<hr></noscript>
+</div>
+<div id="loadingpane">
+<img src="quixe/media/waiting.gif" alt="LOADING"><br>
+<em>&nbsp;&nbsp;&nbsp;Loading...</em>
+</div>
+<div id="errorpane" style="display:none;"><div id="errorcontent">...</div></div>
+</div>
+<div id="searchbar" class="CanHaveInputFocus">SHADOW</div>
+</div>
 
 </body>
 </html>
