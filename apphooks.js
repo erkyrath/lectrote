@@ -25,7 +25,7 @@ function load_named_game(arg)
             arr[ix] = buf[ix];
         sigfunc = Quixe.get_signature;
     }
-    else if (arg.engine == 'parchment') {
+    else if (arg.engine == 'ifvms') {
         var buf = fs.readFileSync(path);
         /* Convert to a generic Array of byte values. */
         arr = new Array(buf.length);
