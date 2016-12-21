@@ -138,6 +138,7 @@ function load_run(optobj, image, image_format) {
     all_options.vm = window.engine = new window.ZVM();
     all_options.io = window.Glk;
     all_options.glk = window.Glk;
+    all_options.Glk = window.Glk;
     
     if (!optobj)
         optobj = window.game_options;

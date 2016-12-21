@@ -10,6 +10,8 @@ http://github.com/curiousdannii/ifvms.js
 
 */
 
+'use strict';
+
 /*
 
 All AST nodes must use these functions, even constants
@@ -79,7 +81,7 @@ Variable = Operand.subClass({
 			return 'l[' + variable + ']';
 		}
 		// Globals
-		return 'm.getUint16(' + ( this.e.globals + ( variable - 15 ) * 2 ) + ')';
+		return 'e.m.getUint16(' + ( this.e.globals + ( variable - 15 ) * 2 ) + ')';
 	},
 
 	// Store a value
@@ -111,7 +113,7 @@ Variable = Operand.subClass({
 			return 'l[' + variable + ']=' + value;
 		}
 		// Globals
-		return 'm.setUint16(' + ( this.e.globals + ( variable - 15 ) * 2 ) + ',' + value + ')';
+		return 'e.ram.setUint16(' + ( this.e.globals + ( variable - 15 ) * 2 ) + ',' + value + ')';
 	},
 
 	// Convert an Operand into a signed operand
@@ -178,7 +180,7 @@ Pauser = Stopper.subClass({
 
 	newfunc: function()
 	{
-		return 'e.pc=' + this.next + ';' + this.origfunc.apply( this, arguments );
+		return 'e.stop=1;e.pc=' + this.next + ';' + this.origfunc.apply( this, arguments );
 	},
 }),
 
@@ -419,7 +421,7 @@ RoutineContext = Context.subClass({
 		// TODO: Debug: If we have routine names, find this one's name
 
 		// Add in some extra vars and return
-		this.pre.unshift( 'var l=e.l,m=e.m,s=e.s;\n' );
+		this.pre.unshift( 'var l=e.l,s=e.s;\n' );
 		return RoutineContext.super.toString.call( this );
 	},
 });
@@ -473,51 +475,47 @@ http://github.com/curiousdannii/ifvms.js
 
 */
 
-function string_to_Uint32( str, offset )
-{
-	return str.charCodeAt( offset ) << 24 | str.charCodeAt( offset + 1 ) << 16 | str.charCodeAt( offset + 2 ) << 8 | str.charCodeAt( offset + 3 );
-}
-
-function Uint32_to_string( num )
-{
-	return String.fromCharCode.call( null, ( num >> 24 ) & 0xFF, ( num >> 16 ) & 0xFF, ( num >> 8 ) & 0xFF, num & 0xFF );
-}
+'use strict';
 
 var utils = require( './utils.js' ),
-Class = utils.Class,
+MemoryView = utils.MemoryView,
 
 // A basic IFF file, to be extended later
-// Currently supports string data
-IFF = Class.subClass({
+// Currently supports buffer data
+IFF = utils.Class.subClass({
 	init: function( data )
 	{
 		this.type = '';
 		this.chunks = [];
+		
 		if ( data )
 		{
+			var view = MemoryView( data ),
+			i = 12, length, chunk_length;
+			
 			// Check that it is actually an IFF file
-			if ( data.substr( 0, 4 ) !== 'FORM' )
+			if ( view.getFourCC( 0 ) !== 'FORM' )
 			{
 				throw new Error( 'Not an IFF file' );
 			}
 
 			// Parse the file
-			this.type = data.substr( 8, 4 );
+			this.type = view.getFourCC( 8 );
+			length = view.getUint32( 4 ) + 8;
 
-			var i = 12, l = data.length, chunk_length;
-			while ( i < l )
+			while ( i < length )
 			{
-				chunk_length = string_to_Uint32( data, i + 4 );
+				chunk_length = view.getUint32( i + 4 );
 
-				if ( chunk_length < 0 || ( chunk_length + i ) > l )
+				if ( chunk_length < 0 || ( chunk_length + i ) > length )
 				{
 					throw new Error( 'IFF chunk out of range' );
 				}
 
 				this.chunks.push({
-					type: data.substr( i, 4 ),
+					type: view.getFourCC( i ),
 					offset: i,
-					data: data.substr( i + 8, chunk_length ),
+					data: view.getUint8Array( i + 8, chunk_length ),
 				});
 
 				i += 8 + chunk_length;
@@ -532,24 +530,80 @@ IFF = Class.subClass({
 	write: function()
 	{
 		// Start with the IFF type
-		var out = this.type,
-		i = 0, l = this.chunks.length,
-		chunk, data;
+		var buffer_len = 12, i = 0, index = 12,
+		out, chunk;
 
+		// First calculate the required buffer length
+		while ( i < this.chunks.length )
+		{
+			// Replace typed arrays or dataviews with their buffers
+			if ( this.chunks[i].data.buffer )
+			{
+				this.chunks[i].data = this.chunks[i].data.buffer;
+			}
+			this.chunks[i].length = this.chunks[i].data.byteLength || this.chunks[i].data.length;
+			buffer_len += 8 + this.chunks[i++].length;
+			if ( buffer_len % 2 )
+			{
+				buffer_len++;
+			}
+		}
+		
+		out = MemoryView( buffer_len );
+		out.setFourCC( 0, 'FORM' );
+		out.setUint32( 4, buffer_len - 8 );
+		out.setFourCC( 8, this.type );
+		
 		// Go through the chunks and write them out
-		while ( i < l )
+		i = 0;
+		while ( i < this.chunks.length )
 		{
 			chunk = this.chunks[i++];
-			data = chunk.data;
-			out += chunk.type + Uint32_to_string( data.length ) + data;
-			if ( data.length % 2 )
+			out.setFourCC( index, chunk.type );
+			out.setUint32( index + 4, chunk.length );
+			out.setUint8Array( index + 8, chunk.data );
+			index += 8 + chunk.length;
+			if ( index % 2 )
 			{
-				out += '\0';
+				index++;
 			}
 		}
 
-		// Add the header and return
-		return 'FORM' + Uint32_to_string( out.length ) + out;
+		return out.buffer;
+	},
+}),
+
+Blorb = IFF.subClass({
+	init: function( data )
+	{
+		this.super.init.call( this, data );
+		if ( data )
+		{
+			if ( this.type !== 'IFRS' )
+			{
+				throw new Error( 'Not a Blorb file' );
+			}
+			
+			// Process the RIdx chunk to find the main exec chunk
+			if ( this.chunks[0].type !== 'RIdx' )
+			{
+				throw new Error( 'Malformed Blorb: chunk 1 is not RIdx' );
+			}
+			var view = MemoryView( this.chunks[0].data ),
+			i = 4;
+			while ( i < this.chunks[0].data.length )
+			{
+				if ( view.getFourCC( i ) === 'Exec' && view.getUint32( i + 4 ) === 0 )
+				{
+					this.exec = this.chunks.filter( function( chunk )
+					{
+						return chunk.offset === view.getUint32( i + 8 );
+					})[0];
+					return;
+				}
+				i += 12;
+			}
+		}
 	},
 }),
 
@@ -557,7 +611,7 @@ Quetzal = IFF.subClass({
 	// Parse a Quetzal savefile, or make a blank one
 	init: function( data )
 	{
-		this.super.init.call( data );
+		this.super.init.call( this, data );
 		if ( data )
 		{
 			// Check this is a Quetzal savefile
@@ -567,31 +621,35 @@ Quetzal = IFF.subClass({
 			}
 
 			// Go through the chunks and extract the useful ones
-			var i = 0, l = this.chunks.length, type, chunk_data;
-			while ( i < l )
+			var i = 0,
+			type, chunk_data, view;
+			
+			while ( i < this.chunks.length )
 			{
 				type = this.chunks[i].type;
 				chunk_data = this.chunks[i++].data;
 
-				// Memory and stack chunks. Overwrites existing data if more than one of each is present!
+				// Memory and stack chunks
 				if ( type === 'CMem' || type === 'UMem' )
 				{
-					this.memory = data;
+					this.memory = chunk_data;
 					this.compressed = ( type === 'CMem' );
 				}
 				else if ( type === 'Stks' )
 				{
-					this.stacks = data;
+					this.stacks = chunk_data;
 				}
 
 				// Story file data
 				else if ( type === 'IFhd' )
 				{
-					this.release = chunk_data.slice( 0, 2 );
-					this.serial = chunk_data.slice( 2, 8 );
+					view = MemoryView( chunk_data.buffer );
+					this.release = view.getUint16( 0 );
+					this.serial = view.getUint8Array( 2, 6 );
 					// The checksum isn't used, but if we throw it away we can't round-trip
-					this.checksum = chunk_data.slice( 8, 10 );
-					this.pc = chunk_data[10] << 16 | chunk_data[11] << 8 | chunk_data[12];
+					this.checksum = view.getUint16( 8 );
+					// The pc is only a Uint24, but there's no function for that, so grab an extra byte and then discard it
+					this.pc = view.getUint32( 9 ) & 0xFFFFFF;
 				}
 			}
 		}
@@ -604,12 +662,11 @@ Quetzal = IFF.subClass({
 		this.type = 'IFZS';
 
 		// Format the IFhd chunk correctly
-		var pc = this.pc,
-		ifhd = this.release.concat(
-			this.serial,
-			this.checksum,
-			( pc >> 16 ) & 0xFF, ( pc >> 8 ) & 0xFF, pc & 0xFF
-		);
+		var ifhd = MemoryView( 13 );
+		ifhd.setUint16( 0, this.release );
+		ifhd.setUint8Array( 2, this.serial );
+		ifhd.setUint32( 9, this.pc );
+		ifhd.setUint16( 8, this.checksum );
 
 		// Add the chunks
 		this.chunks = [
@@ -623,22 +680,79 @@ Quetzal = IFF.subClass({
 	},
 });
 
+// Inspect a file and identify its format and version number
+function identify( buffer )
+{
+	var view = MemoryView( buffer ),
+	blorb,
+	format,
+	version;
+	
+	// Blorb
+	if ( view.getFourCC( 0 ) === 'FORM' && view.getFourCC( 8 ) === 'IFRS' )
+	{
+		blorb = new Blorb( buffer );
+		if ( blorb.exec )
+		{
+			format = blorb.exec.type;
+			buffer = blorb.exec.data;
+			if ( format === 'GLUL' )
+			{
+				view = MemoryView( buffer );
+				version = view.getUint32( 4 );
+			}
+			if ( format === 'ZCOD' )
+			{
+				version = buffer[0];
+			}
+		}
+	}
+	// Glulx
+	else if ( view.getFourCC( 0 ) === 'Glul' )
+	{
+		format = 'GLUL';
+		version = view.getUint32( 4 );
+	}
+	// Z-Code
+	else
+	{
+		version = view.getUint8( 0 );
+		if ( version > 0 && version < 9 )
+		{
+			format = 'ZCOD';
+		}
+	}
+	
+	if ( format && version )
+	{
+		return {
+			format: format,
+			version: version,
+			data: buffer,
+		};
+	}
+}
+
 module.exports = {
 	IFF: IFF,
+	Blorb: Blorb,
 	Quetzal: Quetzal,
+	identify: identify,
 };
 
 },{"./utils.js":3}],3:[function(require,module,exports){
 /*
 
 Common untility functions
-=================================================
+=========================
 
-Copyright (c) 2013 The ifvms.js team
+Copyright (c) 2016 The ifvms.js team
 BSD licenced
 http://github.com/curiousdannii/ifvms.js
 
 */
+
+'use strict';
 
 // Utility to extend objects
 function extend()
@@ -678,45 +792,53 @@ Class.subClass = function( props )
 };
 
 // An enhanced DataView
-function MemoryView( buffer )
+// Accepts an ArrayBuffer, typed array, or a length number
+function MemoryView( buffer, byteOffset, byteLength )
 {
-	return extend( new DataView( buffer ), {
-		getBuffer8: function( start, length )
+	if ( typeof buffer[0] === 'number' )
+	{
+		buffer = new ArrayBuffer( buffer );
+	}
+	// Typed arrays
+	if ( buffer.buffer )
+	{
+		buffer = buffer.buffer;
+	}
+	
+	return extend( new DataView( buffer, byteOffset, byteLength ), {
+		getUint8Array: function( start, length )
 		{
 			return new Uint8Array( this.buffer.slice( start, start + length ) );
 		},
-		getBuffer16: function( start, length )
+		getUint16Array: function( start, length )
 		{
-			return new Uint16Array( this.buffer.slice( start, start + length * 2 ) );
+			// We cannot simply return a Uint16Array as most systems are little-endian
+			return Uint8toUint16Array( new Uint8Array( this.buffer, start, length * 2 ) );
 		},
-		setBuffer8: function( start, data )
+		setUint8Array: function( start, data )
 		{
+			if ( data instanceof ArrayBuffer )
+			{
+				data = new Uint8Array( data );
+			}
 			( new Uint8Array( this.buffer ) ).set( data, start );
 		},
-		//setBuffer16
+		//setBuffer16 NOTE: if we implement this we cannot simply set a Uint16Array as most systems are little-endian
+		
+		// For use with IFF files
+		getFourCC: function( index )
+		{
+			return String.fromCharCode( this.getUint8( index ), this.getUint8( index + 1 ), this.getUint8( index + 2 ), this.getUint8( index + 3 ) );
+		},
+		setFourCC: function( index, text )
+		{
+			this.setUint8( index, text.charCodeAt( 0 ) );
+			this.setUint8( index + 1, text.charCodeAt( 1 ) );
+			this.setUint8( index + 2, text.charCodeAt( 2 ) );
+			this.setUint8( index + 3, text.charCodeAt( 3 ) );
+		},
 	} );
 }
-
-// DataView doesn't seem to be subclassable in ES5: http://stackoverflow.com/a/36068693/2854284
-/*function MemoryView()
-{
-	DataView.apply( this, arguments );
-}
-MemoryView.prototype = extend( Object.create( DataView.prototype ), {
-	getBuffer8: function( start, length )
-	{
-		return new Uint8Array( this.buffer.slice( start, start + length ) );
-	},
-	getBuffer16: function( start, length )
-	{
-		return new Uint16Array( this.buffer.slice( start, start + length * 2 ) );
-	},
-	setBuffer8: function( start, buffer )
-	{
-		( new Uint8Array( this.buffer ) ).set( buffer, start );
-	},
-	//setBuffer16
-} );*/
 
 // Utilities for 16-bit signed arithmetic
 function U2S16( value )
@@ -729,10 +851,10 @@ function S2U16 ( value )
 }
 
 // Utility to convert from byte arrays to word arrays
-function byte_to_word( array )
+function Uint8toUint16Array( array )
 {
 	var i = 0, l = array.length,
-	result = [];
+	result = new Uint16Array( l / 2 );
 	while ( i < l )
 	{
 		result[i / 2] = array[i++] << 8 | array[i++];
@@ -746,70 +868,13 @@ module.exports = {
 	MemoryView: MemoryView,
 	U2S16: U2S16,
 	S2U16: S2U16,
-	byte_to_word: byte_to_word,
+	Uint8toUint16Array: Uint8toUint16Array,
 };
-
-/*// Perform some micro optimisations
-function optimise( code )
-{
-	return code
-
-	// Sign conversions
-	.replace( /(e\.)?U2S\(([^(]+?)\)/g, '(($2)<<16>>16)' )
-	.replace( /(e\.)?S2U\(([^(]+?)\)/g, '(($2)&65535)' )
-
-	// Bytearray
-	.replace( /([\w.]+)\.getUint8\(([^(]+?)\)/g, '$1[$2]' )
-	.replace( /([\w.]+)\.getUint16\(([^(]+?)\)/g, '($1[$2]<<8|$1[$2+1])' );
-}
-// Optimise some functions of an obj, compiling several at once
-function optimise_obj( obj, funcnames )
-{
-	var funcname, funcparts, newfuncs = [];
-	for ( funcname in obj )
-	{
-		if ( funcnames.indexOf( funcname ) >= 0 )
-		{
-			funcparts = /function\s*\(([^(]*)\)\s*\{([\s\S]+)\}/.exec( '' + obj[funcname] );
-			if ( DEBUG )
-			{
-				newfuncs.push( funcname + ':function ' + funcname + '(' + funcparts[1] + '){' + optimise( funcparts[2] ) + '}' );
-			}
-			else
-			{
-				newfuncs.push( funcname + ':function(' + funcparts[1] + '){' + optimise( funcparts[2] ) + '}' );
-			}
-		}
-	}
-	extend( obj, eval( '({' + newfuncs.join() + '})' ) );
-}*/
-
-/*if ( DEBUG ) {
-
-	// Debug flags
-	var debugflags = {},
-	get_debug_flags = function( data )
-	{
-		data = data.split( ',' );
-		var i = 0;
-		while ( i < data.length )
-		{
-			debugflags[data[i++]] = 1;
-		}
-	};
-	if ( typeof parchment !== 'undefined' && parchment.options && parchment.options.debug )
-	{
-		get_debug_flags( parchment.options.debug );
-	}
-
-} // ENDDEBUG
-*/
-
 },{}],4:[function(require,module,exports){
 /*
 
 ZVM - the ifvms.js Z-Machine (versions 3, 5 and 8)
-===============================================
+==================================================
 
 Copyright (c) 2016 The ifvms.js team
 BSD licenced
@@ -832,9 +897,11 @@ Any other non-standard behaviour should be considered a bug
 
 */
 
+'use strict';
+
 var utils = require( './common/utils.js' ),
-Class = utils.Class,
-extend = utils.extend,
+file = require( './common/file.js' ),
+MemoryView = utils.MemoryView,
 
 api = {
 
@@ -842,9 +909,7 @@ api = {
 	{
 		// Create this here so that it won't be cleared on restart
 		this.jit = {};
-		this.env = {
-			width: 80, // Default width of 80 characters
-		};
+		this.env = {};
 		
 		// The Quixe API expects the start function to be named init
 		this.init = this.start;
@@ -853,134 +918,129 @@ api = {
 	prepare: function( storydata, options )
 	{
 		// If we are not given a glk option then we cannot continue
-		if ( !options.glk )
+		if ( !options.Glk )
 		{
-			throw new Error( 'a reference to Glk is required' );
+			throw new Error( 'A reference to Glk is required' );
 		}
-		this.glk = options.glk;
-		
-		// Convert the storyfile we are given to a Uint8Array
-		this.data = new Uint8Array( storydata );
-		
-		// TODO: check that we are given a valid storyfile
+		this.glk = options.Glk;
+		this.data = storydata;
 	},
 
 	start: function()
 	{
-		try {
+		var Glk = this.glk,
+		data;
+		try
+		{
+			// Identify the format and version number of the data file we were given
+			data = file.identify( this.data );
+			delete this.data;
+			if ( !data || data.format !== 'ZCOD' )
+			{
+				throw new Error( 'This is not a Z-Code file' );
+			}
+			if ( data.version !== 3 && data.version !== 5 && data.version !== 8 )
+			{
+				throw new Error( 'Unsupported Z-Machine version: ' + data.version );
+			}
+			
+			// Load the storyfile we are given into our MemoryView (an enhanced DataView)
+			this.m = MemoryView( data.data );
+			
+			// Make a seperate MemoryView for the ram, and store the original ram
+			this.staticmem = this.m.getUint16( 0x0E );
+			this.ram = MemoryView( this.m.buffer, 0, this.staticmem );
+			this.origram = this.m.getUint8Array( 0, this.staticmem );
+			
+			// Initiate the engine, run, and wait for our first Glk event
 			this.restart();
 			this.run();
+			if ( !this.quit )
+			{
+				this.glk_event = new Glk.RefStruct();
+				Glk.glk_select( this.glk_event );
+				Glk.update();
+			}
 		}
 		catch ( e )
 		{
-			this.glk.fatal_error("ZVM start: " + e );
+			if ( e instanceof Error )
+			{
+				e.message = 'ZVM start: ' + e.message;
+			}
+			Glk.fatal_error( e );
 			throw e;
 		}
 	},
 
 	resume: function()
 	{
-		try {
-			this.run();
+		var Glk = this.glk,
+		glk_event = this.glk_event,
+		event_type,
+		run;
+		
+		try
+		{
+			event_type = glk_event.get_field( 0 );
+			
+			// Process the event
+			if ( event_type === 2 )
+			{
+				this.handle_char_input( glk_event.get_field( 2 ) );
+				run = 1;
+			}
+			if ( event_type === 3 )
+			{
+				this.handle_line_input( glk_event.get_field( 2 ), glk_event.get_field( 3 ) );
+				run = 1;
+			}
+			// Arrange events
+			if ( event_type === 5 )
+			{
+				this.update_width();
+			}
+			// glk_fileref_create_by_prompt handler
+			if ( event_type === -1 )
+			{
+				this.save_restore_handler( glk_event.get_field( 1 ) );
+				run = 1;
+			}
+			
+			if ( run )
+			{
+				this.run();
+			}
+			
+			// Wait for another event
+			if ( !this.quit )
+			{
+				this.glk_event = new Glk.RefStruct();
+				Glk.glk_select( this.glk_event );
+				Glk.update();
+			}
 		}
 		catch ( e )
 		{
-			this.glk.fatal_error("ZVM: " + e );
+			if ( e instanceof Error )
+			{
+				e.message = 'ZVM: ' + e.message;
+			}
+			Glk.fatal_error( e );
 			throw e;
 		}
 	},
-
-	// An input event, or some other event from the runner
-	inputEvent: function( data )
+	
+	// Return a game signature from the header
+	get_signature: function()
 	{
-		var memory = this.m,
-		code = data.code;
-
-		// Update environment variables
-		if ( data.env )
+		var result = [],
+		i = 0;
+		while ( i < 0x1E )
 		{
-			extend( this.env, data.env );
-
-			/*if ( this.env.debug )
-			{
-				if ( data.env.debug )
-				{
-					get_debug_flags( data.env.debug );
-				}
-			}*/
-
-			// Also need to update the header
-
-			// Stop if there's no code - we're being sent live updates
-			if ( !code )
-			{
-				return;
-			}
+			result.push( ( this.origram[i] < 0x10 ? '0' : '' ) + this.origram[i++].toString( 16 ) );
 		}
-
-		// Load the story file
-		if ( code === 'load' )
-		{
-			// Convert the data we are given to a Uint8Array
-			this.data = new Uint8Array( data.data );
-			return;
-		}
-
-		// Clear the list of orders
-		this.orders = [];
-
-		if ( code === 'restart' )
-		{
-			this.restart();
-		}
-
-		if ( code === 'save' )
-		{
-			// Set the result variable, assume success
-			this.save_restore_result( data.result || 1 );
-		}
-
-		if ( code === 'restore' )
-		{
-			// Restart the VM if we never have before
-			if ( !this.m )
-			{
-				this.restart();
-			}
-
-			// Successful restore
-			if ( data.data )
-			{
-				this.restore_file( data.data );
-			}
-			// Failed restore
-			else
-			{
-				this.save_restore_result( 0 );
-			}
-		}
-
-		// Handle line input
-		if ( code === 'read' )
-		{
-			this.handle_input( data );
-		}
-
-		// Handle character input
-		if ( code === 'char' )
-		{
-			this.variable( this.read_data.storer, this.keyinput( data.response ) );
-		}
-
-		// Write the status window's cursor position
-		if ( code === 'get_cursor' )
-		{
-			memory.setUint16( data.addr, data.pos[0] + 1 );
-			memory.setUint16( data.addr + 2, data.pos[1] + 1 );
-		}
-
-		// Resume normal operation
-		this.run();
+		return result.join( '' );
 	},
 
 	// Run
@@ -1006,78 +1066,25 @@ api = {
 				this.ret( result );
 			}
 		}
-		this.glk.update();
 	},
 
 	// Compile a JIT routine
 	compile: function()
 	{
-		var context = this.disassemble(), code, func;
-
+		var context = this.disassemble();
+		
 		// Compile the routine with new Function()
-		if ( this.env.debug )
-		{
-			code = '' + context;
-			/*if ( !debugflags.nooptimise )
-			{
-				code = optimise( code );
-			}
-			if ( debugflags.jit )
-			{
-				console.log( code );
-			}*/
-			// We use eval because Firebug can't profile new Function
-			// The 0, is to make IE8 work. h/t Secrets of the Javascript Ninja
-			func = eval( '(0,function JIT_' + context.pc + '(e){' + code + '})' );
+		this.jit[context.pc] = new Function( 'e', '' + context );
 
-			// Extra stuff for debugging
-			func.context = context;
-			func.code = code;
-			if ( context.name )
-			{
-				func.name = context.name;
-			}
-			this.jit[context.pc] = func;
-		}
-		else // DEBUG
-		{
-			// TODO: optimise
-			//this.jit[context.pc] = new Function( 'e', optimise( '' + context ) );
-			this.jit[context.pc] = new Function( 'e', '' + context );
-		}
 		if ( context.pc < this.staticmem )
 		{
 			this.warn( 'Caching a JIT function in dynamic memory: ' + context.pc );
 		}
 	},
 
-	// Return control to the ZVM runner to perform some action
-	act: function( code, options )
-	{
-		options = options || {};
-
-		// Handle numerical codes from jit-code - these codes are opcode numbers
-		if ( code === 183 )
-		{
-			code = 'restart';
-		}
-		if ( code === 186 )
-		{
-			code = 'quit';
-		}
-
-		options.code = code;
-		this.orders.push( options );
-		this.stop = 1;
-		if ( this.outputEvent )
-		{
-			this.outputEvent( this.orders );
-		}
-	},
-
 },
 
-VM = Class.subClass( extend(
+VM = utils.Class.subClass( utils.extend(
 	api,
 	require( './zvm/runtime.js' ),
 	require( './zvm/text.js' ),
@@ -1087,7 +1094,7 @@ VM = Class.subClass( extend(
 
 module.exports = VM;
 
-},{"./common/utils.js":3,"./zvm/disassembler.js":5,"./zvm/io.js":6,"./zvm/runtime.js":8,"./zvm/text.js":9}],5:[function(require,module,exports){
+},{"./common/file.js":2,"./common/utils.js":3,"./zvm/disassembler.js":5,"./zvm/io.js":6,"./zvm/runtime.js":8,"./zvm/text.js":9}],5:[function(require,module,exports){
 /*
 
 Z-Machine disassembler - disassembles zcode into an AST
@@ -1322,11 +1329,69 @@ http://github.com/curiousdannii/ifvms.js
 
 */
 
+'use strict';
+
+/*
+
+TODO:
+
+ - style and colour support
+ - pre-existing line input
+ - timed input
+ - mouse input
+ - text grid quote boxes
+
+*/
+
+// Glulx key codes accepted by the Z-Machine
+var ZSCII_keyCodes = (function()
+{
+	var codes = {
+		0xfffffff9: 8, // delete/backspace
+		0xfffffffa: 13, // enter
+		0xfffffff8: 27, // escape
+		0xfffffffc: 129, // up
+		0xfffffffb: 130, // down
+		0xfffffffe: 131, // left
+		0xfffffffd: 132, // right
+		0xfffffff3: 146, // End / key pad 1
+		0xfffffff5: 148, // PgDn / key pad 3
+		0xfffffff4: 152, // Home / key pad 7
+		0xfffffff6: 154, // PgUp / key pad 9
+	},
+	i = 0;
+	while ( i < 12 )
+	{
+		codes[ 0xffffffef - i ] = 133 + i++; // function keys
+	}
+	return codes;
+})(),
+
+/*
+
+Try to support as many of the Z-Machine's formatting combinations as possible.
+There are not enough styles to support them all, so sometimes bold formatting misses out.
+This spreadsheet shows how the Z-Machine formatting is mapped to Glk styles
+
+http://docs.google.com/spreadsheets/d/1Nvwyb_twC3_fPYDrjQu86b3KRAmLFDllIUvPUpMz108
+
+The index bits are (lowest to highest): mono, italic, bold, reverse
+
+We use the default GlkOte styles as much as possible, but for full support zvm.css must also be used
+
+*/
+style_mappings = [
+	// main window
+	[ 0, 2, 1, 7, 4, 7, 5, 7, 9, 10, 6, 3, 6, 3, 6, 3 ],
+	// status window
+	[ 0, 0, 1, 1, 4, 4, 5, 5, 9, 9, 6, 6, 3, 3, 7, 7 ],
+];
+
 module.exports = {
 
-	init_ui: function()
+	init_io: function()
 	{
-		this.ui = {
+		this.io = {
 			reverse: 0,
 			bold: 0,
 			italic: 0,
@@ -1339,39 +1404,55 @@ module.exports = {
 			// A variable for whether we are outputing in a monospaced font. If non-zero then we are
 			// Bit 0 is for @set_style, bit 1 for the header, and bit 2 for @set_font
 			mono: this.m.getUint8( 0x11 ) & 0x02,
+			
+			currentwin: 0,
+			
+			width: 0,
+			height: 0,
+			row: 0,
+			col: 0,
 		};
 
-		this.process_colours();
+		//this.process_colours();
 
 		// Construct the windows if they do not already exist
-		var Glk = this.glk;
 		if ( !this.mainwin )
 		{
-			this.mainwin = Glk.glk_window_open( 0, 0, 0, 3, 201 );
-			this.statuswin = Glk.glk_window_open( this.mainwin, 0x12, 0, 4, 202 );
+			this.mainwin = this.glk.glk_window_open( 0, 0, 0, 3, 201 );
+			if ( this.version3 )
+			{
+				this.statuswin = this.glk.glk_window_open( this.mainwin, 0x12, 1, 4, 202 );
+			}
+			this.upperwin = this.glk.glk_window_open( this.mainwin, 0x12, 0, 4, 203 );
 		}
 		this.set_window( 0 );
 	},
 
 	erase_line: function( value )
 	{
-		/*if ( value === 1 )
+		if ( value === 1 )
 		{
-			this.status.push( { code: 'eraseline' } );
-		}*/
+			var io = this.io,
+			row = io.row,
+			col = io.col;
+			this._print( Array( io.width - io.col + 1 ).join( ' ' ) );
+			this.set_cursor( row, col );
+		}
 	},
 
 	erase_window: function( window )
 	{
-		var Glk = this.glk;
-		
 		if ( window < 1 )
 		{
-			Glk.glk_window_clear( this.mainwin );
+			this.glk.glk_window_clear( this.mainwin );
 		}
 		if ( window === 1 || window === -2 )
 		{
-			Glk.glk_window_clear( this.statuswin );
+			if ( this.upperwin )
+			{
+				this.glk.glk_window_clear( this.upperwin );
+				this.set_cursor( 0, 0 );
+			}
 		}
 		if ( window === -1 )
 		{
@@ -1381,75 +1462,66 @@ module.exports = {
 
 	format: function()
 	{
-		/*var props = {},
-		temp,
-		classes = [],
-		fg = this.fg,
-		bg = this.bg;
-
-		if ( this.bold )
-		{
-			classes.push( 'zvm-bold' );
-		}
-		if ( this.italic )
-		{
-			classes.push( 'zvm-italic' );
-		}
-		if ( this.mono )
-		{
-			classes.push( 'zvm-mono' );
-		}
-		if ( this.reverse )
-		{
-			temp = fg;
-			fg = bg || this.env.bg;
-			bg = temp || this.env.fg;
-		}
-		if ( typeof fg !== 'undefined' )
-		{
-			if ( isNaN( fg ) )
-			{
-				props.css = { color: fg };
-			}
-			else
-			{
-				classes.push( 'zvm-fg-' + fg );
-			}
-		}
-		if ( typeof bg !== 'undefined' )
-		{
-			if ( isNaN( bg ) )
-			{
-				if ( !props.css )
-				{
-					props.css = {};
-				}
-				props.css['background-color'] = bg;
-			}
-			else
-			{
-				classes.push( 'zvm-bg-' + bg );
-			}
-		}
-		if ( classes.length )
-		{
-			props['class'] = classes.join( ' ' );
-		}
-		return props;*/
+		this.glk.glk_set_style( style_mappings[ this.io.currentwin ][ !!this.io.mono | this.io.italic | this.io.bold | this.io.reverse ] );
 	},
 
 	get_cursor: function( array )
 	{
-		/*this.status.push({
-			code: 'get_cursor',
-			addr: array,
-		});
-		this.e.act();*/
+		this.ram.setUint16( array, this.io.row + 1 );
+		this.ram.setUint16( array + 2, this.io.col + 1 );
+	},
+
+	// Handle char input
+	handle_char_input: function( charcode )
+	{
+		this.variable( this.read_data.storer, ZSCII_keyCodes[ charcode ] || this.reverse_unicode_table[ charcode ] || 63 );
+	},
+
+	// Handle line input
+	handle_line_input: function( len, terminator )
+	{
+		var ram = this.ram,
+		options = this.read_data,
+		
+		// 7.1.1.1: The response must be echoed, Glk will handle this
+		
+		// Cut the response array to len, convert back to a string, convert to lower case, and then to a ZSCII array
+		response = this.text_to_zscii( String.fromCharCode.apply( null, options.buffer.slice( 0, len ) ).toLowerCase() );
+
+		// Store the response
+		if ( this.version3 )
+		{
+			// Append zero terminator
+			response.push( 0 );
+
+			// Store the response in the buffer
+			ram.setUint8Array( options.bufaddr + 1, response );
+		}
+		else
+		{
+			// Store the response length
+			ram.setUint8( options.bufaddr + 1, len );
+
+			// Store the response in the buffer
+			ram.setUint8Array( options.bufaddr + 2, response );
+
+			// Store the terminator
+			this.variable( options.storer, isNaN( terminator ) ? 13 : terminator );
+		}
+
+		if ( options.parseaddr )
+		{
+			// Tokenise the response
+			this.tokenise( options.bufaddr, options.parseaddr );
+		}
 	},
 
 	// Print text!
 	_print: function( text )
 	{
+		var io = this.io,
+		i = 0;
+		
 		// Stream 3 gets the text first
 		if ( this.streams[2].length )
 		{
@@ -1463,12 +1535,32 @@ module.exports = {
 			
 			// Check if the monospace font bit has changed
 			// Unfortunately, even now Inform changes this bit for the font statement, even though the 1.1 standard depreciated it :(
-			if ( ( this.m.getUint8( 0x11 ) & 0x02 ) !== ( this.ui.mono & 0x02 ) )
+			if ( ( this.m.getUint8( 0x11 ) & 0x02 ) !== ( io.mono & 0x02 ) )
 			{
-				this.ui.mono ^= 0x02;
-				// TODO: send font
+				io.mono ^= 0x02;
+				this.format();
 			}
-			this.glk.glk_put_jstring( text );
+			
+			// For the upper window we print each character individually so that we can track the cursor position
+			if ( io.currentwin )
+			{
+				// Don't automatically increase the size of the window
+				// If we confirm that games do need this then we can implement it later
+				while ( i < text.length && io.row < io.height )
+				{
+					this.glk.glk_put_jstring( text[i++] );
+					io.col++;
+					if ( io.col === io.width )
+					{
+						io.col = 0;
+						io.row++;
+					}
+				}
+			}
+			else
+			{
+				this.glk.glk_put_jstring( text );
+			}
 		}
 	},
 
@@ -1517,7 +1609,7 @@ module.exports = {
 		var i = 0;
 		while ( i++ < height )
 		{
-			this._print( this.zscii_to_text( this.m.getBuffer8( zscii, width ) ) + ( i < height ? '\r' : '' ) );
+			this._print( this.zscii_to_text( this.m.getUint8Array( zscii, width ) ) + ( i < height ? '\r' : '' ) );
 			zscii += width + skip;
 		}
 	},
@@ -1527,7 +1619,7 @@ module.exports = {
 	{
 		// Convert RGB to a Z-Machine true colour
 		// RGB is a css colour code. rgb(), #000000 and #000 formats are supported.
-		function convert_RGB( code )
+		/*function convert_RGB( code )
 		{
 			var round = Math.round,
 			data = /(\d+),\s*(\d+),\s*(\d+)|#(\w{1,2})(\w{1,2})(\w{1,2})/.exec( code ),
@@ -1554,7 +1646,7 @@ module.exports = {
 		}
 
 		// Standard colours
-		/*var colours = [
+		var colours = [
 			0xFFFE, // Current
 			0xFFFF, // Default
 			0x0000, // Black
@@ -1567,7 +1659,7 @@ module.exports = {
 			0x7FFF, // White
 			0x5AD6, // Light grey
 			0x4631, // Medium grey
-			0x2D6B,  // Dark grey
+			0x2D6B,	 // Dark grey
 		],
 
 		// Start with CSS colours provided by the runner
@@ -1602,11 +1694,12 @@ module.exports = {
 	read: function( storer, text, parse, time, routine )
 	{
 		var len = this.m.getUint8( text ),
-		initiallen = 0;
+		initiallen = 0,
+		buffer;
 
 		if ( this.version3 )
 		{
-			len--;
+			len++;
 			this.v3_status();
 		}
 		else
@@ -1614,19 +1707,18 @@ module.exports = {
 			//initiallen = this.m.getUint8( text + 1 );
 		}
 
+		buffer =  Array( len );
 		this.read_data = {
-			buffer: text, // text-buffer
-			len: len,
-			parse: parse, // parse-buffer
+			buffer: buffer,
+			bufaddr: text, // text-buffer
+			parseaddr: parse, // parse-buffer
 			routine: routine,
 			storer: storer,
 			time: time,
 		};
 		
-                var array = [];
-                array.length = len;
 		// TODO: pre-existing input
-		this.glk.glk_request_line_event_uni( this.mainwin, array, /*len,*/ initiallen );
+		this.glk.glk_request_line_event_uni( this.mainwin, buffer, initiallen );
 	},
 
 	// Request character input
@@ -1640,7 +1732,7 @@ module.exports = {
 		this.glk.glk_request_char_event_uni( this.mainwin );
 	},
 
-	set_colour: function( foreground, background )
+	set_colour: function( /*foreground, background*/ )
 	{
 		/*if ( foreground === 1 )
 		{
@@ -1660,57 +1752,66 @@ module.exports = {
 		}*/
 	},
 
+	// Note that row and col must be decremented in JIT code
 	set_cursor: function( row, col )
 	{
-		// TODO: cursor variables
-		this.glk.glk_window_move_cursor( this.statuswin, col - 1, row - 1 );
+		var io = this.io;
+		if ( this.upperwin && row >= 0 && row < io.height && col >= 0 && col < io.width )
+		{
+			this.glk.glk_window_move_cursor( this.upperwin, col, row );
+			io.row = row;
+			io.col = col;
+		}
 	},
 
 	set_font: function( font )
 	{
 		// We only support fonts 1 and 4
-		/*if ( font !== 1 && font !== 4 )
+		if ( font !== 1 && font !== 4 )
 		{
 			return 0;
 		}
-		var returnval = this.mono & 0x04 ? 4 : 1;
+		var returnval = this.io.mono & 0x04 ? 4 : 1;
 		if ( font !== returnval )
 		{
-			this.mono ^= 0x04;
+			this.io.mono ^= 0x04;
+			this.format();
 		}
-		return returnval;*/
+		return returnval;
 	},
 
 	// Set styles
 	set_style: function( stylebyte )
 	{
-		/*
+		var io = this.io;
+
 		// Setting the style to Roman will clear the others
 		if ( stylebyte === 0 )
 		{
-			this.reverse = this.bold = this.italic = 0;
-			this.mono &= 0xFE;
+			io.reverse = io.bold = io.italic = 0;
+			io.mono &= 0xFE;
 		}
 		if ( stylebyte & 0x01 )
 		{
-			this.reverse = 1;
+			io.reverse = 0x08;
 		}
 		if ( stylebyte & 0x02 )
 		{
-			this.bold = 1;
+			io.bold = 0x04;
 		}
 		if ( stylebyte & 0x04 )
 		{
-			this.italic = 1;
+			io.italic = 0x02;
 		}
 		if ( stylebyte & 0x08 )
 		{
-			this.mono |= 0x01;
-		}*/
+			io.mono |= 0x01;
+		}
+		this.format();
 	},
 
 	// Set true colours
-	set_true_colour: function( foreground, background )
+	set_true_colour: function( /*foreground, background*/ )
 	{
 		// Convert a 15 bit colour to RGB
 		/*function convert_true_colour( colour )
@@ -1749,57 +1850,122 @@ module.exports = {
 
 	set_window: function( window )
 	{
-		var Glk = this.glk;
-		
-		Glk.glk_set_window( window ? this.statuswin : this.mainwin );
+		this.glk.glk_set_window( this.upperwin && window ? this.upperwin : this.mainwin );
+		this.io.currentwin = window;
+		this.format();
 		
 		// Focusing the upper window resets the cursor to the top left
 		if ( window )
 		{
-			// TODO: cursor variables
-			Glk.glk_window_move_cursor( this.statuswin, 0, 0 );
+			this.set_cursor( 0, 0 );
 		}
 	},
 
 	split_window: function( lines )
 	{
-		var Glk = this.glk;
-		
-		Glk.glk_window_set_arrangement( Glk.glk_window_get_parent( this.statuswin ), 0x12, lines, null );
-		
-		// 8.6.1.1.2: In version three the upper window is always cleared
-		if ( this.version3 )
+		if ( this.upperwin )
 		{
-			Glk.glk_window_clear( this.statuswin );
+			this.glk.glk_window_set_arrangement( this.glk.glk_window_get_parent( this.upperwin ), 0x12, lines, null );
+			this.io.height = lines;
+			if ( this.io.row >= lines )
+			{
+				this.set_cursor( 0, 0 );
+			}
+
+			// 8.6.1.1.2: In version three the upper window is always cleared
+			if ( this.version3 )
+			{
+				this.glk.glk_window_clear( this.upperwin );
+			}
 		}
 	},
 
-	// Update ZVM's header with correct colour information
-	// If colours weren't provided then the default colour will be used for both
+	// Update the header after restarting or restoring
 	update_header: function()
 	{
-		/*var memory = this.m;
-		memory.setUint8( 0x2C, isNaN( this.env.bg ) ? 1 : this.env.bg );
-		memory.setUint8( 0x2D, isNaN( this.env.fg ) ? 1 : this.env.fg );
-		this.extension_table( 5, this.env.fg_true );
-		this.extension_table( 6, this.env.bg_true );*/
+		var ram = this.ram;
+
+		// Reset the Xorshift seed
+		this.xorshift_seed = 0;
+
+		// Update the width - in version 3 does not actually set the header variables
+		this.update_width();
+
+		// For version 3 we only set Flags 1
+		if ( this.version3 )
+		{
+			return ram.setUint8( 0x01,
+				( ram.getUint8( 0x01 ) & 0x8F ) // Keep all except bits 4-6
+				| ( this.statuswin ? 0 : 0x10 ) // Status win not available
+				| ( this.upperwin ? 0x20 : 0 ) // Upper win is available
+				| 0x40 // Variable pitch font is default - Or can we tell from env if the font is fixed pitch?
+			);
+		}
+		
+		// Flags 1
+		ram.setUint8( 0x01,
+			0x00 // Colour is not supported yet
+			| 0x1C // Bold, italic and mono are supported
+			| 0x00 // Timed input not supported yet
+		);
+		
+		// Flags 2: Clear bits 3, 5, 7: no character graphics, mouse or sound effects
+		// This is really a word, but we only care about the lower byte
+		ram.setUint8( 0x11, ram.getUint8( 0x11 ) & 0x57 );
+		
+		// Screen settings
+		ram.setUint8( 0x20, 255 ); // Infinite height
+		ram.setUint16( 0x24, 255 );
+		ram.setUint16( 0x26, 0x0101 ); // Font height/width in "units"
+		
+		// Colours
+		//ram.setUint8( 0x2C, isNaN( this.env.bg ) ? 1 : this.env.bg );
+		//ram.setUint8( 0x2D, isNaN( this.env.fg ) ? 1 : this.env.fg );
+		//this.extension_table( 5, this.env.fg_true );
+		//this.extension_table( 6, this.env.bg_true );
+		
+		// Z Machine Spec revision
+		ram.setUint16( 0x32, 0x0102 );
+		
+		// Clear flags three, we don't support any of that stuff
+		this.extension_table( 4, 0 );
 	},
 
+	update_width: function()
+	{
+		var width, box = new this.glk.RefBox();
+		this.glk.glk_window_get_size( this.upperwin || this.mainwin, box );
+		this.io.width = width = box.get_value();
+		if ( !this.version3 )
+		{
+			this.ram.setUint8( 0x21, width );
+			this.ram.setUint16( 0x22, width );
+		}
+		if ( this.io.col >= width )
+		{
+			this.io.col = width - 1;
+		}
+	},
+	
 	// Output the version 3 status line
 	v3_status: function()
 	{
-		/*var engine = this.e,
-		width = engine.env.width,
-		hours_score = engine.m.getUint16( engine.globals + 2 ),
-		mins_turns = engine.m.getUint16( engine.globals + 4 ),
+		if ( !this.statuswin )
+		{
+			return;
+		}
+
+		var Glk = this.glk,
+		io = this.io,
+		width = io.width,
+		hours_score = this.m.getUint16( this.globals + 2 ),
+		mins_turns = this.m.getUint16( this.globals + 4 ),
+		proptable = this.m.getUint16( this.objects + 9 * this.m.getUint16( this.globals ) + 7 ),
+		shortname = '' + this.decode( proptable + 1, this.m.getUint8( proptable ) * 2 ),
 		rhs;
-		this.set_window( 1 );
-		this.set_style( 1 );
-		engine._print( Array( width + 1 ).join( ' ' ) );
-		this.set_cursor( 1, 1 );
 
 		// Handle the turns/score or time
-		if ( this.time )
+		if ( io.time )
 		{
 			rhs = 'Time: ' + ( hours_score % 12 === 0 ? 12 : hours_score % 12 ) + ':' + ( mins_turns < 10 ? '0' : '' ) + mins_turns + ' ' + ( hours_score > 11 ? 'PM' : 'AM' );
 		}
@@ -1808,14 +1974,23 @@ module.exports = {
 			rhs = 'Score: ' + hours_score + '  Turns: ' + mins_turns;
 		}
 
-		engine.print( 3, engine.m.getUint16( engine.globals ) );
-		// this.buffer now has the room name, so ensure it is not too long
-		this.buffer = ' ' + this.buffer.slice( 0, width - rhs.length - 4 );
+		// Print a blank line in reverse
+		Glk.glk_set_window( this.statuswin );
+		Glk.glk_window_move_cursor( this.statuswin, 0, 0 );
+		Glk.glk_set_style( style_mappings[1][ 0x08 ] );
+		Glk.glk_put_jstring( Array( width + 1 ).join( ' ' ) );
 
-		this.set_cursor( 1, width - rhs.length );
-		engine._print( rhs );
-		this.set_style( 0 );
-		this.set_window( 0 );*/
+		// Trim the shortname if necessary
+		Glk.glk_window_move_cursor( this.statuswin, 0, 0 );
+		Glk.glk_put_jstring( ' ' + shortname.slice( 0, width - rhs.length - 4 ) );
+
+		// Print the right hand side
+		Glk.glk_window_move_cursor( this.statuswin, width - rhs.length - 1, 0 );
+		Glk.glk_put_jstring( rhs );
+
+		// Return to the former window
+		Glk.glk_set_style( 0 );
+		Glk.glk_set_window( this.upperwin && io.currentwin ? this.upperwin : this.mainwin );
 	},
 
 };
@@ -1831,6 +2006,8 @@ BSD licenced
 http://github.com/curiousdannii/ifvms.js
 
 */
+
+'use strict';
 
 /*
 
@@ -1942,8 +2119,8 @@ return {
 /* clear_attr */ 12: opcode_builder( Opcode, function() { return 'e.clear_attr(' + this.args() + ')'; } ),
 /* store */ 13: Indirect,
 /* insert_obj */ 14: opcode_builder( Opcode, function() { return 'e.insert_obj(' + this.args() + ')'; } ),
-/* loadw */ 15: opcode_builder( Storer, function( array, index ) { return 'm.getUint16(e.S2U(' + array + '+2*' + index.U2S() + '))'; } ),
-/* loadb */ 16: opcode_builder( Storer, function( array, index ) { return 'm.getUint8(e.S2U(' + array + '+' + index.U2S() + '))'; } ),
+/* loadw */ 15: opcode_builder( Storer, function( array, index ) { return 'e.m.getUint16(e.S2U(' + array + '+2*' + index.U2S() + '))'; } ),
+/* loadb */ 16: opcode_builder( Storer, function( array, index ) { return 'e.m.getUint8(e.S2U(' + array + '+' + index.U2S() + '))'; } ),
 /* get_prop */ 17: opcode_builder( Storer, function() { return 'e.get_prop(' + this.args() + ')'; } ),
 /* get_prop_addr */ 18: opcode_builder( Storer, function() { return 'e.find_prop(' + this.args() + ')'; } ),
 /* get_next_prop */ 19: opcode_builder( Storer, function() { return 'e.find_prop(' + this.args( ',0,' ) + ')'; } ),
@@ -1982,21 +2159,21 @@ return {
 /* nop */ 180: Opcode,
 /* save (v3) */ 181: V3SaveRestore,
 /* restore (v3) */ 182: V3SaveRestore,
-/* restart */ 183: opcode_builder( Stopper, function() { return 'e.act(183)'; } ),
+/* restart */ 183: opcode_builder( Stopper, function() { return 'e.erase_window(-1);e.restart()'; } ),
 /* ret_popped */ 184: opcode_builder( Stopper, function( a ) { return 'return ' + a; }, { post: function() { this.operands.push( stack_var ); } } ),
 185: version3 ?
 	/* pop (v3) */ opcode_builder( Opcode, function() { return 's.pop()'; } ) :
 	/* catch (v5/8) */ opcode_builder( Storer, function() { return 'e.call_stack.length'; } ),
-/* quit */ 186: opcode_builder( Stopper, function() { return 'e.act(186)'; } ),
+/* quit */ 186: opcode_builder( Pauser, function() { return 'e.quit=1;e.glk.glk_exit()'; } ),
 /* new_line */ 187: opcode_builder( Opcode, function() { return 'e.print(1,13)'; } ),
 188: version3 ?
-	/* show_status (v3) */ opcode_builder( Stopper, function() { return 'e.pc=' + this.next + ';e.v3_status();e.act()'; } ) :
+	/* show_status (v3) */ opcode_builder( Stopper, function() { return 'e.pc=' + this.next + ';e.v3_status()'; } ) :
 	/* act as a nop in later versions */ Opcode,
 /* verify */ 189: alwaysbranch, // Actually check??
 /* piracy */ 191: alwaysbranch,
 /* call_vs */ 224: CallerStorer,
-/* storew */ 225: opcode_builder( Opcode, function( array, index, value ) { return 'm.setUint16(e.S2U(' + array + '+2*' + index.U2S() + '),' + value + ')'; } ),
-/* storeb */ 226: opcode_builder( Opcode, function( array, index, value ) { return 'm.setUint8(e.S2U(' + array + '+' + index.U2S() + '),' + value + ')'; } ),
+/* storew */ 225: opcode_builder( Opcode, function( array, index, value ) { return 'e.ram.setUint16(e.S2U(' + array + '+2*' + index.U2S() + '),' + value + ')'; } ),
+/* storeb */ 226: opcode_builder( Opcode, function( array, index, value ) { return 'e.ram.setUint8(e.S2U(' + array + '+' + index.U2S() + '),' + value + ')'; } ),
 /* put_prop */ 227: opcode_builder( Opcode, function() { return 'e.put_prop(' + this.args() + ')'; } ),
 /* read */ 228: version3 ?
 	opcode_builder( Stopper, function() { return 'e.pc=' + this.next + ';e.read(0,' + this.args() + ');e.stop=1'; } ) :
@@ -2011,8 +2188,8 @@ return {
 /* call_vs2 */ 236: CallerStorer,
 /* erase_window */ 237: opcode_builder( Opcode, function( win ) { return 'e.erase_window(' + win.U2S() + ')'; } ),
 /* erase_line */ 238: opcode_builder( Opcode, function( a ) { return 'e.erase_line(' + a + ')'; } ),
-/* set_cursor */ 239: opcode_builder( Opcode, function() { return 'e.set_cursor(' + this.args() + ')'; } ),
-/* get_cursor */ 240: opcode_builder( Pauser, function( addr ) { return 'e.get_cursor(' + addr + ')'; } ),
+/* set_cursor */ 239: opcode_builder( Opcode, function( row, col ) { return 'e.set_cursor(' + row + '-1,' + col + '-1)'; } ),
+/* get_cursor */ 240: opcode_builder( Opcode, function( addr ) { return 'e.get_cursor(' + addr + ')'; } ),
 /* set_text_style */ 241: opcode_builder( Opcode, function( stylebyte ) { return 'e.set_style(' + stylebyte + ')'; } ),
 /* buffer_mode */ 242: Opcode, // We don't support non-buffered output
 /* output_stream */ 243: opcode_builder( Opcode, function() { return 'e.output_stream(' + this.args() + ')'; } ),
@@ -2060,6 +2237,8 @@ http://github.com/curiousdannii/ifvms.js
 
 */
 
+'use strict';
+
 /*
 
 TODO:
@@ -2074,9 +2253,12 @@ var utils = require( '../common/utils.js' ),
 extend = utils.extend,
 U2S = utils.U2S16,
 S2U = utils.S2U16,
-byte_to_word = utils.byte_to_word,
+byte_to_word = utils.Uint8toUint16Array,
 
-file = require( '../common/file.js' );
+file = require( '../common/file.js' ),
+
+filemode_Read = 0x02,
+filemode_Write = 0x01;
 
 module.exports = {
 
@@ -2133,13 +2315,13 @@ module.exports = {
 	clear_attr: function( object, attribute )
 	{
 		var addr = this.objects + ( this.version3 ? 9 : 14 ) * object + ( attribute / 8 ) | 0;
-		this.m.setUint8( addr, this.m.getUint8( addr ) & ~( 0x80 >> attribute % 8 ) );
+		this.ram.setUint8( addr, this.m.getUint8( addr ) & ~( 0x80 >> attribute % 8 ) );
 	},
 
 	copy_table: function( first, second, size )
 	{
 		size = U2S( size );
-		var memory = this.m,
+		var ram = this.ram,
 		i = 0,
 		allowcorrupt = size < 0;
 		size = Math.abs( size );
@@ -2149,7 +2331,7 @@ module.exports = {
 		{
 			while ( i < size )
 			{
-				memory.setUint8( first + i++, 0 );
+				ram.setUint8( first + i++, 0 );
 			}
 			return;
 		}
@@ -2158,18 +2340,18 @@ module.exports = {
 		{
 			while ( i < size )
 			{
-				memory.setUint8( second + i, memory.getUint8( first + i++ ) );
+				ram.setUint8( second + i, this.m.getUint8( first + i++ ) );
 			}
 		}
 		else
 		{
-			memory.setBuffer8( second, memory.getBuffer8( first, size ) );
+			ram.setUint8Array( second, this.m.getUint8Array( first, size ) );
 		}
 	},
 
 	encode_text: function( zscii, length, from, target )
 	{
-		this.m.setBuffer8( target, this.encode( this.m.getBuffer8( zscii + from, length ) ) );
+		this.ram.setUint8Array( target, this.encode( this.m.getUint8Array( zscii + from, length ) ) );
 	},
 
 	// Access the extension table
@@ -2185,7 +2367,7 @@ module.exports = {
 		{
 			return this.m.getUint16( addr );
 		}
-		this.e.setUint16( addr, value );
+		this.ram.setUint16( addr, value );
 	},
 
 	// Find the address of a property, or given the previous property, the number of the next
@@ -2352,52 +2534,6 @@ module.exports = {
 		return value & 0x40 ? 2 : 1;
 	},
 
-	// Handle line input
-	handle_input: function( data )
-	{
-		var memory = this.m,
-		options = this.read_data,
-
-		// Echo the response (7.1.1.1)
-		response = data.response;
-		this._print( response + '\r' );
-
-		// Convert the response to lower case and then to ZSCII
-		response = this.text_to_zscii( response.toLowerCase() );
-
-		// Check if the response is too long, and then set its length
-		if ( response.length > options.len )
-		{
-			response = response.slice( 0, options.len );
-		}
-
-		if ( this.version3 )
-		{
-			// Append zero terminator
-			response.push( 0 );
-
-			// Store the response in the buffer
-			memory.setBuffer8( options.buffer + 1, response );
-		}
-		else
-		{
-			// Store the response length
-			memory.setUint8( options.buffer + 1, response.length );
-
-			// Store the response in the buffer
-			memory.setBuffer8( options.buffer + 2, response );
-
-			// Store the terminator
-			this.variable( options.storer, isNaN( data.terminator ) ? 13 : data.terminator );
-		}
-
-		if ( options.parse )
-		{
-			// Tokenise the response
-			this.tokenise( options.buffer, options.parse );
-		}
-	},
-
 	// Quick hack for @inc/@dec/@inc_chk/@dec_chk
 	incdec: function( varnum, change )
 	{
@@ -2416,7 +2552,7 @@ module.exports = {
 		{
 			offset = this.globals + ( varnum - 15 ) * 2;
 			result = this.m.getUint16( offset ) + change;
-			this.m.setUint16( offset, result );
+			this.ram.setUint16( offset, result );
 			return result;
 		}
 	},
@@ -2500,25 +2636,23 @@ module.exports = {
 		{
 			var data = this.streams[2].shift(),
 			text = this.text_to_zscii( data[1] );
-			this.m.setUint16( data[0], text.length );
-			this.m.setBuffer8( data[0] + 2, text );
+			this.ram.setUint16( data[0], text.length );
+			this.ram.setUint8Array( data[0] + 2, text );
 		}
 	},
 
 	put_prop: function( object, property, value )
 	{
-		var memory = this.m,
-
 		// Try to find the property
-		addr = this.find_prop( object, property ),
+		var addr = this.find_prop( object, property ),
 		len;
 
 		if ( addr )
 		{
-			len = memory.getUint8( addr - 1 );
+			len = this.m.getUint8( addr - 1 );
 
 			// Assume we're being called for a valid short property
-			memory[ ( this.version3 ? len >> 5 : len & 0x40 ) ? 'setUint16' : 'setUint8' ]( addr, value );
+			this.ram[ ( this.version3 ? len >> 5 : len & 0x40 ) ? 'setUint16' : 'setUint8' ]( addr, value );
 		}
 	},
 
@@ -2590,31 +2724,21 @@ module.exports = {
 	// (Re)start the VM
 	restart: function()
 	{
-		// Set up the memory
-		var memory = utils.MemoryView( this.data.buffer.slice() ),
-
-		version = memory.getUint8( 0x00 ),
+		var ram = this.ram,
+		version = ram.getUint8( 0x00 ),
 		version3 = version === 3,
 		addr_multipler = version3 ? 2 : ( version === 5 ? 4 : 8 ),
-		property_defaults = memory.getUint16( 0x0A ),
-		extension = memory.getUint16( 0x36 );
+		flags2 = ram.getUint8( 0x11 ),
+		property_defaults = ram.getUint16( 0x0A ),
+		extension = ram.getUint16( 0x36 );
 
-		// Check if the version is supported
-		if ( version !== 3 && version !== 5 && version !== 8 )
-		{
-			throw new Error( 'Unsupported Z-Machine version: ' + version );
-		}
-
-		// Preserve flags 2 - the fixed pitch bit is surely the lamest part of the Z-Machine spec!
-		if ( this.m )
-		{
-			memory.setUint8( 0x11, this.m.getUint8( 0x11 ) );
-		}
+		// Reset the RAM, but preserve flags 2
+		ram.setUint8Array( 0, this.origram );
+		ram.setUint8( 0x11, flags2 );
 
 		extend( this, {
 
-			// Memory, locals and stacks of various kinds
-			m: memory,
+			// Locals and stacks of various kinds
 			s: [],
 			l: [],
 			call_stack: [],
@@ -2625,15 +2749,15 @@ module.exports = {
 
 			// Get some header variables
 			version: version,
-			version3: version === 3,
-			pc: memory.getUint16( 0x06 ),
+			version3: version3,
+			pc: ram.getUint16( 0x06 ),
 			properties: property_defaults,
 			objects: property_defaults + ( version3 ? 53 : 112 ), // 62-9 or 126-14 - if we take this now then we won't need to always decrement the object number
-			globals: memory.getUint16( 0x0C ),
-			staticmem: memory.getUint16( 0x0E ),
-			eof: ( memory.getUint16( 0x1A ) || 65536 ) * addr_multipler,
+			globals: ram.getUint16( 0x0C ),
+			// staticmem: set in prepare()
+			eof: ( ram.getUint16( 0x1A ) || 65536 ) * addr_multipler,
 			extension: extension,
-			extension_count: extension ? memory.getUint16( extension ) : 0,
+			extension_count: extension ? ram.getUint16( extension ) : 0,
 
 			// Routine and string multiplier
 			addr_multipler: addr_multipler,
@@ -2644,7 +2768,7 @@ module.exports = {
 		});
 
 		this.init_text();
-		this.init_ui();
+		this.init_io();
 
 		// Update the header
 		this.update_header();
@@ -2653,25 +2777,27 @@ module.exports = {
 	// Request a restore
 	restore: function( pc )
 	{
-		this.save_restore_pc = pc;
-		this.act( 'restore' );
+		this.pc = pc;
+		this.save_mode = filemode_Read;
+		this.glk.glk_fileref_create_by_prompt( 0x01, filemode_Read, 0 );
 	},
 
 	restore_file: function( data )
 	{
-		var memory = this.m,
+		var ram = this.ram,
 		quetzal = new file.Quetzal( data ),
 		qmem = quetzal.memory,
 		qstacks = quetzal.stacks,
-		flags2 = memory.getUint8( 0x11 ),
+		flags2 = ram.getUint8( 0x11 ),
 		temp,
 		i = 0, j = 0,
 		call_stack = [],
 		newlocals = [],
 		newstack;
-
+		
 		// Memory chunk
-		memory.setBuffer8( 0, this.data.slice( 0, this.staticmem ) );
+		// Reset the RAM
+		ram.setUint8Array( 0, this.origram );
 		if ( quetzal.compressed )
 		{
 			while ( i < qmem.length )
@@ -2684,16 +2810,16 @@ module.exports = {
 				}
 				else
 				{
-					memory.setUint8( j, temp ^ this.data[j++] );
+					ram.setUint8( j, temp ^ this.origram[j++] );
 				}
 			}
 		}
 		else
 		{
-			memory.setBuffer8( 0, qmem );
+			ram.setUint8Array( 0, qmem );
 		}
 		// Preserve flags 1
-		memory.setUint8( 0x11, flags2 );
+		ram.setUint8( 0x11, flags2 );
 
 		// Stacks chunk
 		i = 6;
@@ -2727,13 +2853,9 @@ module.exports = {
 		this.call_stack = call_stack;
 		this.l = newlocals;
 		this.s = newstack;
+		this.pc = quetzal.pc;
 
-		// Update the header
 		this.update_header();
-
-		// Store or branch with the successful result
-		this.save_restore_pc = quetzal.pc;
-		this.save_restore_result( 2 );
 
 		// Collapse the upper window (8.6.1.3)
 		if ( this.version3 )
@@ -2752,7 +2874,7 @@ module.exports = {
 		this.pc = state[0];
 		// Preserve flags 2
 		state[2][0x11] = this.m.getUint8( 0x11 );
-		this.m.setBuffer8( 0, state[2] );
+		this.ram.setUint8Array( 0, state[2] );
 		this.l = state[3];
 		this.s = state[4];
 		this.call_stack = state[5];
@@ -2782,6 +2904,13 @@ module.exports = {
 	// pc is the address of the storer operand (or branch in v3)
 	save: function( pc )
 	{
+		this.pc = pc;
+		this.save_mode = filemode_Write;
+		this.glk.glk_fileref_create_by_prompt( 0x01, filemode_Write, 0 );
+	},
+	
+	save_file: function( pc )
+	{
 		var memory = this.m,
 		stack = this.s,
 		locals = this.l,
@@ -2796,16 +2925,16 @@ module.exports = {
 		stacks = [ 0, 0, 0, 0, 0, 0 ]; // Dummy call frame
 
 		// IFhd chunk
-		quetzal.release = memory.getBuffer8( 0x02, 2 );
-		quetzal.serial = memory.getBuffer8( 0x12, 6 );
-		quetzal.checksum = memory.getBuffer8( 0x1C, 2 );
+		quetzal.release = memory.getUint16( 0x02 );
+		quetzal.serial = memory.getUint8Array( 0x12, 6 );
+		quetzal.checksum = memory.getUint16( 0x1C );
 		quetzal.pc = pc;
 
 		// Memory chunk
 		quetzal.compressed = 1;
 		for ( i = 0; i < this.staticmem; i++ )
 		{
-			abyte = memory.getUint8( i ) ^ this.data[i];
+			abyte = memory.getUint8( i ) ^ this.origram[i];
 			if ( abyte === 0 )
 			{
 				if ( ++zeroes === 256 )
@@ -2858,33 +2987,56 @@ module.exports = {
 		call_stack.reverse();
 		quetzal.stacks = stacks;
 
-		// Set up the callback function
-		this.save_restore_pc = pc;
-
-		// Send the event
-		this.act( 'save', {
-			data: quetzal.write(),
-		} );
+		return quetzal.write();
 	},
-
-	save_restore_result: function( success )
+	
+	// Handle the result of glk_fileref_create_by_prompt()
+	save_restore_handler: function( fref )
 	{
 		var memory = this.m,
-		pc = this.save_restore_pc,
+		Glk = this.glk,
+		str,
+		buffer,
+		result = 0,
 		temp, iftrue, offset;
-
+		
+		if ( fref )
+		{
+			str = Glk.glk_stream_open_file( fref, this.save_mode, 0 );
+			Glk.glk_fileref_destroy( fref );
+			if ( str )
+			{
+				// Save
+				if ( this.save_mode === filemode_Write )
+				{
+					Glk.glk_put_buffer_stream( str, new Uint8Array( this.save_file( this.pc ) ) );
+					result = 1;
+				}
+				// Restore
+				else
+				{
+					buffer = new Uint8Array( 128 * 1024 );
+					Glk.glk_get_buffer_stream( str, buffer );
+					this.restore_file( buffer.buffer );
+					result = 2;
+				}
+				Glk.glk_stream_close( str );
+			}
+		}
+		
+		// Store the result / branch in z3
 		if ( this.version3 )
 		{
 			// Calculate the branch
-			temp = memory.getUint8( pc++ );
+			temp = memory.getUint8( this.pc++ );
 			iftrue = temp & 0x80;
 			offset = temp & 0x40 ?
 				// single byte address
 				temp & 0x3F :
 				// word address, but first get the second byte of it
-				( temp << 8 | memory.getUint8( pc++ ) ) << 18 >> 18;
+				( temp << 8 | memory.getUint8( this.pc++ ) ) << 18 >> 18;
 
-			if ( !success === !iftrue )
+			if ( !result === !iftrue )
 			{
 				if ( offset === 0 || offset === 1 )
 				{
@@ -2892,18 +3044,13 @@ module.exports = {
 				}
 				else
 				{
-					this.pc = offset + pc - 2;
+					this.pc += offset - 2;
 				}
-			}
-			else
-			{
-				this.pc = pc;
 			}
 		}
 		else
 		{
-			this.variable( memory.getUint8( pc++ ), success );
-			this.pc = pc;
+			this.variable( memory.getUint8( this.pc++ ), result );
 		}
 	},
 
@@ -2912,7 +3059,7 @@ module.exports = {
 		this.undo.push( [
 			pc,
 			variable,
-			this.m.getBuffer8( 0, this.staticmem ),
+			this.m.getUint8Array( 0, this.staticmem ),
 			this.l.slice(),
 			this.s.slice(),
 			this.call_stack.slice(),
@@ -2941,95 +3088,54 @@ module.exports = {
 	set_attr: function( object, attribute )
 	{
 		var addr = this.objects + ( this.version3 ? 9 : 14 ) * object + ( attribute / 8 ) | 0;
-		this.m.setUint8( addr, this.m.getUint8( addr ) | 0x80 >> attribute % 8 );
+		this.ram.setUint8( addr, this.m.getUint8( addr ) | 0x80 >> attribute % 8 );
 	},
 
 	set_family: function( obj, newparent, parent, child, bigsis, lilsis )
 	{
-		var memory = this.m,
+		var ram = this.ram,
 		objects = this.objects;
 
 		if ( this.version3 )
 		{
 			// Set the new parent of the obj
-			memory.setUint8( objects + 9 * obj + 4, newparent );
+			ram.setUint8( objects + 9 * obj + 4, newparent );
 			// Update the parent's first child if needed
 			if ( parent )
 			{
-				memory.setUint8( objects + 9 * parent + 6, child );
+				ram.setUint8( objects + 9 * parent + 6, child );
 			}
 			// Update the little sister of a big sister
 			if ( bigsis )
 			{
-				memory.setUint8( objects + 9 * bigsis + 5, lilsis );
+				ram.setUint8( objects + 9 * bigsis + 5, lilsis );
 			}
 		}
 		else
 		{
 			// Set the new parent of the obj
-			memory.setUint16( objects + 14 * obj + 6, newparent );
+			ram.setUint16( objects + 14 * obj + 6, newparent );
 			// Update the parent's first child if needed
 			if ( parent )
 			{
-				memory.setUint16( objects + 14 * parent + 10, child );
+				ram.setUint16( objects + 14 * parent + 10, child );
 			}
 			// Update the little sister of a big sister
 			if ( bigsis )
 			{
-				memory.setUint16( objects + 14 * bigsis + 8, lilsis );
+				ram.setUint16( objects + 14 * bigsis + 8, lilsis );
 			}
 		}
 	},
 
 	test: function( bitmap, flag )
 	{
-		return bitmap & flag === flag;
+		return ( bitmap & flag ) === flag;
 	},
 
 	test_attr: function( object, attribute )
 	{
 		return ( this.m.getUint8( this.objects + ( this.version3 ? 9 : 14 ) * object + ( attribute / 8 ) | 0 ) << attribute % 8 ) & 0x80;
-	},
-
-	// Update the header after restarting or restoring
-	update_header: function()
-	{
-		var memory = this.m,
-		width = new this.glk.RefBox();
-
-		// Reset the Xorshift seed
-		this.xorshift_seed = 0;
-
-		// For version 3 we only set Flags 1
-		if ( this.version3 )
-		{
-			// Flags 1: Set bits 5, 6
-			// TODO: Can we tell from env if the font is fixed pitch?
-			return memory.setUint8( 0x01, memory.getUint8( 0x01 ) | 0x60 );
-		}
-
-		// Get the window width
-		this.glk.glk_window_get_size( this.ui.windows[0], width );
-		width = width.get_value();
-		
-		// Flags 1: Set bits (0), 2, 3, 4: typographic styles are OK
-		// Set bit 7 only if timed input is supported
-		memory.setUint8( 0x01, 0x1C | ( this.env.timed ? 0x80 : 0 ) );
-		// Flags 2: Clear bits 3, 5, 7: no character graphics, mouse or sound effects
-		// This is really a word, but we only care about the lower byte
-		memory.setUint8( 0x11, memory.getUint8( 0x11 ) & 0x57 );
-		// Screen settings
-		memory.setUint8( 0x20, 255 ); // Infinite height
-		memory.setUint8( 0x21, width );
-		memory.setUint16( 0x22, width );
-		memory.setUint16( 0x24, 255 );
-		memory.setUint16( 0x26, 0x0101 ); // Font height/width in "units"
-		// Z Machine Spec revision
-		memory.setUint16( 0x32, 0x0102 );
-		// Clear flags three, we don't support any of that stuff
-		this.extension_table( 4, 0 );
-
-		//TODO: this.ui.update_header();
 	},
 
 	// Read or write a variable
@@ -3064,7 +3170,7 @@ module.exports = {
 			offset = this.globals + ( variable - 15 ) * 2;
 			if ( havevalue )
 			{
-				this.m.setUint16( offset, value );
+				this.ram.setUint16( offset, value );
 			}
 			else
 			{
@@ -3106,27 +3212,6 @@ TODO:
 	Consider quote suggestions from 1.1 spec
 
 */
-
-// Key codes accepted by the Z-Machine
-var ZSCII_keyCodes = {
-	8: 8, // delete/backspace
-	13: 13, // enter
-	27: 27, // escape
-	37: 131, // arrow keys
-	38: 129,
-	39: 132,
-	40: 130,
-},
-i = 96;
-while ( i < 106 )
-{
-	ZSCII_keyCodes[i] = 49 + i++; // keypad
-}
-i = 112;
-while ( i < 124 )
-{
-	ZSCII_keyCodes[i] = 21 + i++; // function keys
-}
 
 module.exports = {
 
@@ -3177,12 +3262,12 @@ module.exports = {
 		}
 
 		// Check for custom alphabets
-		make_alphabet( alphabet_addr ? memory.getBuffer8( alphabet_addr, 78 )
+		make_alphabet( alphabet_addr ? memory.getUint8Array( alphabet_addr, 78 )
 			// Or use the standard alphabet
 			: this.text_to_zscii( 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ \r0123456789.,!?_#\'"/\\-:()', 1 ) );
 
 		// Check for a custom unicode table
-		make_unicode( unicode_addr ? memory.getBuffer16( unicode_addr, unicode_len )
+		make_unicode( unicode_addr ? memory.getUint16Array( unicode_addr, unicode_len )
 			// Or use the default
 			: this.text_to_zscii( unescape( '%E4%F6%FC%C4%D6%DC%DF%BB%AB%EB%EF%FF%CB%CF%E1%E9%ED%F3%FA%FD%C1%C9%CD%D3%DA%DD%E0%E8%EC%F2%F9%C0%C8%CC%D2%D9%E2%EA%EE%F4%FB%C2%CA%CE%D4%DB%E5%C5%F8%D8%E3%F1%F5%C3%D1%D5%E6%C6%E7%C7%FE%F0%DE%D0%A3%u0153%u0152%A1%BF' ), 1 ) );
 
@@ -3440,7 +3525,7 @@ module.exports = {
 
 		// Support: IE, Safari, Firefox<38, Chrome<45, Opera<32, Node<4
 		// These browsers don't support Uint8Array.indexOf() so convert to a normal array
-		dict.separators = Array.prototype.slice.call( memory.getBuffer8( addr, seperators_len ) );
+		dict.separators = Array.prototype.slice.call( memory.getUint8Array( addr, seperators_len ) );
 
 		addr += seperators_len;
 
@@ -3450,7 +3535,7 @@ module.exports = {
 		addr += 2;
 		while ( addr < endaddr )
 		{
-			dict[ Array.prototype.toString.call( memory.getBuffer8( addr, this.version3 ? 4 : 6 ) ) ] = addr;
+			dict[ Array.prototype.toString.call( memory.getUint8Array( addr, this.version3 ? 4 : 6 ) ) ] = addr;
 			addr += entry_len;
 		}
 		this.dictionaries[addr_start] = dict;
@@ -3465,7 +3550,7 @@ module.exports = {
 	},
 
 	// Tokenise a text
-	tokenise: function( text, buffer, dictionary, flag )
+	tokenise: function( bufaddr, parseaddr, dictionary, flag )
 	{
 		// Use the default dictionary if one wasn't provided
 		dictionary = dictionary || this.dict;
@@ -3474,6 +3559,7 @@ module.exports = {
 		dictionary = this.dictionaries[dictionary] || this.parse_dict( dictionary );
 
 		var memory = this.m,
+		ram = this.ram,
 		bufferlength = 1e3,
 		i = 1,
 		letter,
@@ -3487,13 +3573,13 @@ module.exports = {
 		// In versions 5 and 8 we can get the actual buffer length
 		if ( !this.version3 )
 		{
-			bufferlength = memory.getUint8( text + i++ ) + 2;
+			bufferlength = memory.getUint8( bufaddr + i++ ) + 2;
 		}
 
 		// Find the words, separated by the separators, but as well as the separators themselves
 		while ( i < bufferlength )
 		{
-			letter = memory.getUint8( text + i );
+			letter = memory.getUint8( bufaddr + i );
 			if ( letter === 0 )
 			{
 				break;
@@ -3519,7 +3605,7 @@ module.exports = {
 		}
 
 		// Go through the text until we either have reached the max number of words, or we're out of words
-		max_words = Math.min( words.length, memory.getUint8( buffer ) );
+		max_words = Math.min( words.length, memory.getUint8( parseaddr ) );
 		while ( wordcount < max_words )
 		{
 			dictword = dictionary['' + this.encode( words[wordcount][0] )];
@@ -3528,22 +3614,15 @@ module.exports = {
 			if ( !flag || dictword )
 			{
 				// Fill out the buffer
-				memory.setUint16( buffer + 2 + wordcount * 4, dictword || 0 );
-				memory.setUint8( buffer + 4 + wordcount * 4, words[wordcount][0].length );
-				memory.setUint8( buffer + 5 + wordcount * 4, words[wordcount][1] );
+				ram.setUint16( parseaddr + 2 + wordcount * 4, dictword || 0 );
+				ram.setUint8( parseaddr + 4 + wordcount * 4, words[wordcount][0].length );
+				ram.setUint8( parseaddr + 5 + wordcount * 4, words[wordcount][1] );
 			}
 			wordcount++;
 		}
 
 		// Update the number of found words
-		memory.setUint8( buffer + 1, wordcount );
-	},
-
-	// Handle key input
-	keyinput: function( data )
-	{
-		// Handle key codes first, then check the character table, or return a '?' if nothing is found
-		return ZSCII_keyCodes[ data.keyCode ] || this.reverse_unicode_table[ data.charCode ] || 63;
+		ram.setUint8( parseaddr + 1, wordcount );
 	},
 
 };
