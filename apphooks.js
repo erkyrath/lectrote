@@ -31,7 +31,7 @@ function load_named_game(arg)
         arr = new Array(buf.length);
         for (var ix=0; ix<buf.length; ix++)
             arr[ix] = buf[ix];
-        sigfunc = GiLoad.get_game_signature;
+        sigfunc = function() { return 'XXXXX'; }; /*###*/
     }
     else if (arg.engine == 'inkjs') {
         var buf = fs.readFileSync(path);
