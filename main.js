@@ -456,6 +456,16 @@ function select_load_game()
         ]
     };
 
+    if (process.platform != 'darwin') {
+        /* On Win/Linux, the file dialog can only show one filter-row at a
+           time. So we construct one that has a union of the types, and
+           push it onto the beginning of the filters list. */
+        var arr = [];
+        for (var ix=0; ix<opts.filters.length; ix++)
+            arr = arr.concat(opts.filters[ix].extensions);
+        opts.filters.unshift({ name: 'All IF Files', extensions: arr });
+    }
+
     gamedialog = true;
     electron.dialog.showOpenDialog(null, opts, function(ls) {
         gamedialog = false;
