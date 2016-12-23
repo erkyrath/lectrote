@@ -137,7 +137,6 @@ function load_run(optobj, image, image_format) {
        these do nothing, but game_options can still supply these entries.) */
     all_options.vm = window.engine = new window.ZVM();
     all_options.io = window.Glk;
-    all_options.glk = window.Glk;
     all_options.Glk = window.Glk;
     
     if (!optobj)
@@ -530,13 +529,13 @@ function find_data_chunk(val) {
 }
 
 /* Look through a Blorb file (provided as a byte array) and return the
-   Glulx game file chunk (ditto). If no such chunk is found, returns 
-   null.
+   game file chunk (ditto). If no such chunk is found, returns null.
+   The gamechunktype argument should be 'ZCOD' or 'GLUL'.
 
    This also loads the IFID metadata into the metadata object, and
    caches DATA chunks where we can reach them later.
 */
-function unpack_blorb(image) {
+function unpack_blorb(image, gamechunktype) {
     var len = image.length;
     var ix;
     var rindex = [];
@@ -627,7 +626,7 @@ function unpack_blorb(image) {
         el.len = chunklen;
         el.content = null;
 
-        if (el.usage == "Exec" && el.num == 0 && chunktype == "ZCOD") {
+        if (el.usage == "Exec" && el.num == 0 && chunktype == gamechunktype) {
             result = image.slice(pos, pos+chunklen);
         }
         else {
@@ -907,7 +906,7 @@ function start_game(image) {
         }
 
         try {
-            image = unpack_blorb(image);
+            image = unpack_blorb(image, 'ZCOD');
         }
         catch (ex) {
             all_options.io.fatal_error("Blorb file could not be parsed: " + ex);
