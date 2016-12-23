@@ -130,14 +130,63 @@ var alttexts = {}; /* Indexed by "USE:NUMBER" -- loaded from Blorb */
    it takes care of starting the Glk and Quixe modules, when the game
    file is available.
 */
-function load_run(optobj, image, image_format) {
+function load_run(optobj, image, imageoptions) {
+
+    /* There are a couple of different calling conventions that we have
+       to distinguish here. */
+
+    if (!imageoptions) {
+        // None provided. (There should be no image argument either.)
+        imageoptions = {};
+    }
+    else if (typeof(imageoptions) == 'string') {
+        // An image_format string. (Old calling format.)
+        imageoptions = { format:imageoptions };
+    }
+    else {
+        // A map of image options, including image_format.
+    }
+
+    /* Now look at the provided arguments. */
+
+    var image_format = imageoptions.format;
+    if (!image_format)
+        image_format = 'array';
 
     /* Set the default entries for the interface objects that come from
        other libraries. (If no such libraries have been loaded, then
-       these do nothing, but game_options can still supply these entries.) */
-    all_options.vm = window.engine = new window.ZVM();
+       these do nothing, but game_options can still supply these entries.)
+
+       We also set some other options which will be used during the loading
+       process.
+    */
     all_options.io = window.Glk;
-    all_options.Glk = window.Glk;
+
+    switch (imageoptions.engine) {
+
+    case 'quixe':
+    case null:
+    case undefined:
+        /* Quixe is the default if no engine is specified. */
+        all_options.engine_name = 'Quixe';
+        all_options.blorb_gamechunk_type = 'GLUL';
+        all_options.game_format_name = 'Glulx';
+        all_options.vm = window.Quixe;
+        break;
+
+    case 'ifvms':
+        all_options.engine_name = 'IFVMS';
+        all_options.blorb_gamechunk_type = 'ZCOD';
+        all_options.game_format_name = 'Z-code';
+        all_options.vm = window.engine = new window.ZVM();
+        all_options.Glk = window.Glk;
+        break;
+
+    default:
+        all_options.io.fatal_error("Engine not recognized: " + imageoptions.engine);
+        return;
+
+    }
     
     if (!optobj)
         optobj = window.game_options;
@@ -207,7 +256,6 @@ function load_run(optobj, image, image_format) {
     /* If an image file was passed in, we didn't use it. So we might as
        well free its memory at this point. */
     image = null;
-    image_format = null;
 
     /* The logic of the following code is adapted from Parchment's
        file.js. It's probably obsolete at this point -- I suspect
@@ -896,7 +944,7 @@ function start_game(image) {
         var formtype = String.fromCharCode(image[8], image[9], image[10], image[11]);
 
         if (formtype == 'IFZS') {
-            all_options.io.fatal_error("This is a saved-game file, not a Glulx game file. You must launch the game first, then restore your save.");
+            all_options.io.fatal_error("This is a saved-game file, not a "+all_options.game_format_name+" game file. You must launch the game first, then restore your save.");
             return;
         }
 
@@ -906,14 +954,14 @@ function start_game(image) {
         }
 
         try {
-            image = unpack_blorb(image, 'ZCOD');
+            image = unpack_blorb(image, all_options.blorb_gamechunk_type);
         }
         catch (ex) {
             all_options.io.fatal_error("Blorb file could not be parsed: " + ex);
             return;
         }
         if (!image) {
-            all_options.io.fatal_error("Blorb file contains no Glulx game!");
+            all_options.io.fatal_error("Blorb file contains no "+all_options.game_format_name+" game!");
             return;
         }
     }
@@ -933,7 +981,7 @@ function start_game(image) {
             all_options.recording_label = title;
 
         if (all_options.set_page_title)
-            document.title = title + " - Quixe";
+            document.title = title + " - " + all_options.engine_name;
     }
 
     /* Pass the game image file along to the VM engine. */
