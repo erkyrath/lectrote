@@ -16,6 +16,7 @@ function load_named_game(arg)
 
     var arr = null;
     var sigfunc = null;
+    var load_options = { format:'array', engine:arg.engine };
 
     if (arg.engine == 'quixe') {
         var buf = fs.readFileSync(path);
@@ -41,7 +42,7 @@ function load_named_game(arg)
         throw(new Error('Unrecognized engine case: ' + arg.engine));
     }
 
-    GiLoad.load_run(null, arr, 'array');
+    GiLoad.load_run(null, arr, load_options);
 
     /* Pass some metadata back to the app */
     var obj = {
