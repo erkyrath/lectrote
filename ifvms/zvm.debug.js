@@ -954,17 +954,17 @@ api = {
 			
 			// Initiate the engine, run, and wait for our first Glk event
 			this.restart();
-                        this.glk_block_call = null;
+			this.glk_block_call = null;
 			this.run();
 			if ( !this.quit )
 			{
 				this.glk_event = new Glk.RefStruct();
-                                if (!this.glk_block_call) {
-                                    Glk.glk_select( this.glk_event );
-                                }
-                                else {
-                                    this.glk_event.push_field(this.glk_block_call);
-                                }
+				if (!this.glk_block_call) {
+					Glk.glk_select( this.glk_event );
+				}
+				else {
+					this.glk_event.push_field(this.glk_block_call);
+				}
 				Glk.update();
 			}
 		}
@@ -1013,7 +1013,7 @@ api = {
 				run = 1;
 			}
 			
-                        this.glk_block_call = null;
+			this.glk_block_call = null;
 			if ( run )
 			{
 				this.run();
@@ -1022,13 +1022,13 @@ api = {
 			// Wait for another event
 			if ( !this.quit )
 			{
-                                this.glk_event = new Glk.RefStruct();
-                                if (!this.glk_block_call) {
-                                    Glk.glk_select( this.glk_event );
-                                }
-                                else {
-                                    this.glk_event.push_field(this.glk_block_call);
-                                }
+				this.glk_event = new Glk.RefStruct();
+				if (!this.glk_block_call) {
+					Glk.glk_select( this.glk_event );
+				}
+				else {
+					this.glk_event.push_field(this.glk_block_call);
+				}
 				Glk.update();
 			}
 		}
@@ -2791,7 +2791,7 @@ module.exports = {
 	{
 		this.pc = pc;
 		this.save_mode = filemode_Read;
-                this.glk_block_call = 'fileref_create_by_prompt';
+		this.glk_block_call = 'fileref_create_by_prompt';
 		this.glk.glk_fileref_create_by_prompt( 0x01, filemode_Read, 0 );
 	},
 
@@ -2919,7 +2919,7 @@ module.exports = {
 	{
 		this.pc = pc;
 		this.save_mode = filemode_Write;
-                this.glk_block_call = 'fileref_create_by_prompt';
+		this.glk_block_call = 'fileref_create_by_prompt';
 		this.glk.glk_fileref_create_by_prompt( 0x01, filemode_Write, 0 );
 	},
 	
