@@ -889,7 +889,6 @@ https://github.com/erkyrath/quixe/wiki/Quixe-Without-GlkOte#quixes-api
 
 ZVM willfully ignores the standard in these ways:
 	Non-buffered output is not supported
-	Output streams 2 and 4 and input stream 1 are not supported
 	Saving tables is not supported (yet?)
 	No interpreter number or version is set
 
@@ -909,7 +908,6 @@ api = {
 	{
 		// Create this here so that it won't be cleared on restart
 		this.jit = {};
-		this.env = {};
 		
 		// The Quixe API expects the start function to be named init
 		this.init = this.start;
@@ -922,13 +920,14 @@ api = {
 		{
 			throw new Error( 'A reference to Glk is required' );
 		}
-		this.glk = options.Glk;
+		this.Glk = options.Glk;
 		this.data = storydata;
+		this.env = options;
 	},
 
 	start: function()
 	{
-		var Glk = this.glk,
+		var Glk = this.Glk,
 		data;
 		try
 		{
@@ -981,7 +980,7 @@ api = {
 
 	resume: function(resumearg)
 	{
-		var Glk = this.glk,
+		var Glk = this.Glk,
 		glk_event = this.glk_event,
 		event_type,
 		run;
@@ -1009,7 +1008,7 @@ api = {
 			// glk_fileref_create_by_prompt handler
 			if ( event_type === 'fileref_create_by_prompt' )
 			{
-				this.save_restore_handler( resumearg );
+				this.handle_create_fileref( resumearg );
 				run = 1;
 			}
 			
@@ -1090,7 +1089,7 @@ api = {
 
 		if ( context.pc < this.staticmem )
 		{
-			this.warn( 'Caching a JIT function in dynamic memory: ' + context.pc );
+			this.log( 'Caching a JIT function in dynamic memory: ' + context.pc );
 		}
 	},
 
@@ -1355,8 +1354,12 @@ TODO:
 
 */
 
+var utils = require( '../common/utils.js' ),
+U2S = utils.U2S16,
+//S2U = utils.S2U16,
+
 // Glulx key codes accepted by the Z-Machine
-var ZSCII_keyCodes = (function()
+ZSCII_keyCodes = (function()
 {
 	var codes = {
 		0xfffffff9: 8, // delete/backspace
@@ -1407,16 +1410,16 @@ module.exports = {
 			reverse: 0,
 			bold: 0,
 			italic: 0,
-			fg: undefined,
-			bg: undefined,
-			
-			// Version 3 time header bit
-			time: this.m.getUint8( 0x01 ) & 0x02,
 			
 			// A variable for whether we are outputing in a monospaced font. If non-zero then we are
 			// Bit 0 is for @set_style, bit 1 for the header, and bit 2 for @set_font
 			mono: this.m.getUint8( 0x11 ) & 0x02,
-			
+
+			// A variable for checking whether the transcript bit has been changed
+			transcript: this.m.getUint8( 0x11 ) & 0x01,
+
+			streams: [ 1, 0, [], 0 ],
+
 			currentwin: 0,
 			
 			width: 0,
@@ -1430,12 +1433,11 @@ module.exports = {
 		// Construct the windows if they do not already exist
 		if ( !this.mainwin )
 		{
-			this.mainwin = this.glk.glk_window_open( 0, 0, 0, 3, 201 );
+			this.mainwin = this.Glk.glk_window_open( 0, 0, 0, 3, 201 );
 			if ( this.version3 )
 			{
-				this.statuswin = this.glk.glk_window_open( this.mainwin, 0x12, 1, 4, 202 );
+				this.statuswin = this.Glk.glk_window_open( this.mainwin, 0x12, 1, 4, 202 );
 			}
-			this.upperwin = this.glk.glk_window_open( this.mainwin, 0x12, 0, 4, 203 );
 		}
 		this.set_window( 0 );
 	},
@@ -1456,13 +1458,13 @@ module.exports = {
 	{
 		if ( window < 1 )
 		{
-			this.glk.glk_window_clear( this.mainwin );
+			this.Glk.glk_window_clear( this.mainwin );
 		}
 		if ( window === 1 || window === -2 )
 		{
 			if ( this.upperwin )
 			{
-				this.glk.glk_window_clear( this.upperwin );
+				this.Glk.glk_window_clear( this.upperwin );
 				this.set_cursor( 0, 0 );
 			}
 		}
@@ -1472,9 +1474,16 @@ module.exports = {
 		}
 	},
 
+	fileref_create_by_prompt: function( data )
+	{
+		this.fileref_data = data;
+		this.glk_block_call = 'fileref_create_by_prompt';
+		this.Glk.glk_fileref_create_by_prompt( data.usage, data.mode, data.rock || 0 );
+	},
+
 	format: function()
 	{
-		this.glk.glk_set_style( style_mappings[ this.io.currentwin ][ !!this.io.mono | this.io.italic | this.io.bold | this.io.reverse ] );
+		this.Glk.glk_set_style( style_mappings[ this.io.currentwin ][ !!this.io.mono | this.io.italic | this.io.bold | this.io.reverse ] );
 	},
 
 	get_cursor: function( array )
@@ -1489,16 +1498,56 @@ module.exports = {
 		this.variable( this.read_data.storer, ZSCII_keyCodes[ charcode ] || this.reverse_unicode_table[ charcode ] || 63 );
 	},
 
+	// Handle the result of glk_fileref_create_by_prompt()
+	handle_create_fileref: function( fref )
+	{
+		var Glk = this.Glk,
+		data = this.fileref_data,
+		str;
+
+		if ( fref )
+		{
+			if ( data.unicode )
+			{
+				str = Glk.glk_stream_open_file_uni( fref, data.mode, data.rock || 0 );
+			}
+			else
+			{
+				str = Glk.glk_stream_open_file( fref, data.mode, data.rock || 0 );
+			}
+			Glk.glk_fileref_destroy( fref );
+		}
+		if ( data.func === 'restore' || data.func === 'save' )
+		{
+			this.save_restore_handler( str );
+		}
+		if ( data.func === 'output_stream' )
+		{
+			this.output_stream_handler( str );
+		}
+	},
+
 	// Handle line input
 	handle_line_input: function( len, terminator )
 	{
 		var ram = this.ram,
 		options = this.read_data,
 		
+		// Convert the response back to a string, cut to len, convert to lower case, and then to a ZSCII array
+		command = String.fromCharCode.apply( null, options.buffer ),
+		response = this.text_to_zscii( command.slice( 0, len ).toLowerCase() );
+		
 		// 7.1.1.1: The response must be echoed, Glk will handle this
 		
-		// Cut the response array to len, convert back to a string, convert to lower case, and then to a ZSCII array
-		response = this.text_to_zscii( String.fromCharCode.apply( null, options.buffer.slice( 0, len ) ).toLowerCase() );
+		// But we do have to echo to the transcript
+		if ( this.io.streams[1] )
+		{
+			this.Glk.glk_put_jstring_stream( this.io.streams[1], command + '\n' );
+		}
+		if ( this.io.streams[3] )
+		{
+			this.Glk.glk_put_jstring_stream( this.io.streams[3], command + '\n' );
+		}
 
 		// Store the response
 		if ( this.version3 )
@@ -1528,22 +1577,141 @@ module.exports = {
 		}
 	},
 
+	// Manage output streams
+	output_stream: function( stream, addr_text )
+	{
+		var ram = this.ram,
+		io = this.io,
+		data, text;
+		stream = U2S( stream );
+
+		if ( stream === 1 )
+		{
+			io.streams[0] = 1;
+		}
+		if ( stream === -1 )
+		{
+			io.streams[0] = 0;
+		}
+		if ( stream === 2 )
+		{
+			this.fileref_create_by_prompt({
+				func: 'output_stream',
+				mode: 0x05,
+				rock: 210,
+				str: 2,
+				text: addr_text,
+				unicode: 1,
+				usage: 0x102,
+			});
+			this.stop = 1;
+		}
+		if ( stream === -2 )
+		{
+			ram.setUint8( 0x11, ( ram.getUint8( 0x11 ) & 0xFE ) );
+			if ( io.streams[1] )
+			{
+				this.Glk.glk_stream_close( io.streams[1] );
+			}
+			io.streams[1] = io.transcript = 0;
+			if ( addr_text )
+			{
+				this._print( addr_text );
+			}
+		}
+		if ( stream === 3 )
+		{
+			io.streams[2].unshift( [ addr_text, '' ] );
+		}
+		if ( stream === -3 )
+		{
+			data = io.streams[2].shift();
+			text = this.text_to_zscii( data[1] );
+			ram.setUint16( data[0], text.length );
+			ram.setUint8Array( data[0] + 2, text );
+		}
+		if ( stream === 4 )
+		{
+			this.fileref_create_by_prompt({
+				func: 'output_stream',
+				mode: 0x05,
+				rock: 211,
+				str: 4,
+				unicode: 1,
+				usage: 0x103,
+			});
+			this.stop = 1;
+		}
+		if ( stream === -4 )
+		{
+			if ( io.streams[3] )
+			{
+				this.Glk.glk_stream_close( io.streams[3] );
+			}
+			io.streams[3] = 0;
+		}
+	},
+	
+	output_stream_handler: function( str )
+	{
+		var ram = this.ram,
+		io = this.io,
+		data = this.fileref_data;
+
+		if ( data.str === 2 )
+		{
+			ram.setUint8( 0x11, ( ram.getUint8( 0x11 ) & 0xFE ) | ( str ? 1 : 0 ) );
+			if ( str )
+			{
+				io.streams[1] = str;
+				io.transcript = 1;
+			}
+			else
+			{
+				io.streams[1] = io.transcript = 0;
+			}
+			if ( data.text )
+			{
+				this._print( data.text );
+			}
+		}
+
+		if ( data.str === 4 )
+		{
+			if ( str )
+			{
+				io.streams[3] = str;
+			}
+			else
+			{
+				io.streams[3] = 0;
+			}
+		}
+	},
+
 	// Print text!
 	_print: function( text )
 	{
-		var io = this.io,
+		var Glk = this.Glk,
+		io = this.io,
 		i = 0;
 		
 		// Stream 3 gets the text first
-		if ( this.streams[2].length )
+		if ( io.streams[2].length )
 		{
-			this.streams[2][0][1] += text;
+			io.streams[2][0][1] += text;
 		}
-		// Don't print if stream 1 was switched off (why would you do that?!)
-		else if ( this.streams[0] )
+		else
 		{
 			// Convert CR into LF
 			text = text.replace( /\r/g, '\n' );
+			
+			// Check the transcript bit
+			// Because it might need to prompt for a file name, we return here, and will print again in the handler
+			if ( ( this.m.getUint8( 0x11 ) & 0x01 ) !== io.transcript )
+			{
+				return this.output_stream( io.transcript ? -2 : 2, text );
+			}
 			
 			// Check if the monospace font bit has changed
 			// Unfortunately, even now Inform changes this bit for the font statement, even though the 1.1 standard depreciated it :(
@@ -1560,7 +1728,7 @@ module.exports = {
 				// If we confirm that games do need this then we can implement it later
 				while ( i < text.length && io.row < io.height )
 				{
-					this.glk.glk_put_jstring( text[i++] );
+					Glk.glk_put_jstring( text[i++] );
 					io.col++;
 					if ( io.col === io.width )
 					{
@@ -1571,7 +1739,15 @@ module.exports = {
 			}
 			else
 			{
-				this.glk.glk_put_jstring( text );
+				if ( io.streams[0]  )
+				{
+					Glk.glk_put_jstring( text );
+				}
+				// Transcript
+				if ( io.streams[1]  )
+				{
+					Glk.glk_put_jstring_stream( io.streams[1], text );
+				}
 			}
 		}
 	},
@@ -1730,7 +1906,7 @@ module.exports = {
 		};
 		
 		// TODO: pre-existing input
-		this.glk.glk_request_line_event_uni( this.mainwin, buffer, initiallen );
+		this.Glk.glk_request_line_event_uni( this.mainwin, buffer, initiallen );
 	},
 
 	// Request character input
@@ -1741,7 +1917,7 @@ module.exports = {
 			storer: storer,
 			time: time,
 		};
-		this.glk.glk_request_char_event_uni( this.mainwin );
+		this.Glk.glk_request_char_event_uni( this.mainwin );
 	},
 
 	set_colour: function( /*foreground, background*/ )
@@ -1770,7 +1946,7 @@ module.exports = {
 		var io = this.io;
 		if ( this.upperwin && row >= 0 && row < io.height && col >= 0 && col < io.width )
 		{
-			this.glk.glk_window_move_cursor( this.upperwin, col, row );
+			this.Glk.glk_window_move_cursor( this.upperwin, col, row );
 			io.row = row;
 			io.col = col;
 		}
@@ -1862,7 +2038,7 @@ module.exports = {
 
 	set_window: function( window )
 	{
-		this.glk.glk_set_window( this.upperwin && window ? this.upperwin : this.mainwin );
+		this.Glk.glk_set_window( this.upperwin && window ? this.upperwin : this.mainwin );
 		this.io.currentwin = window;
 		this.format();
 		
@@ -1875,9 +2051,19 @@ module.exports = {
 
 	split_window: function( lines )
 	{
-		if ( this.upperwin )
+		var Glk = this.Glk;
+		if ( lines === 0 && this.upperwin )
 		{
-			this.glk.glk_window_set_arrangement( this.glk.glk_window_get_parent( this.upperwin ), 0x12, lines, null );
+			Glk.glk_window_close( this.upperwin );
+			this.upperwin = null;
+		}
+		else if ( !this.upperwin )
+		{
+			this.upperwin = Glk.glk_window_open( this.mainwin, 0x12, lines, 4, 203 );
+		}
+		if ( lines && this.upperwin )
+		{
+			Glk.glk_window_set_arrangement( Glk.glk_window_get_parent( this.upperwin ), 0x12, lines, null );
 			this.io.height = lines;
 			if ( this.io.row >= lines )
 			{
@@ -1887,7 +2073,7 @@ module.exports = {
 			// 8.6.1.1.2: In version three the upper window is always cleared
 			if ( this.version3 )
 			{
-				this.glk.glk_window_clear( this.upperwin );
+				Glk.glk_window_clear( this.upperwin );
 			}
 		}
 	},
@@ -1909,7 +2095,7 @@ module.exports = {
 			return ram.setUint8( 0x01,
 				( ram.getUint8( 0x01 ) & 0x8F ) // Keep all except bits 4-6
 				| ( this.statuswin ? 0 : 0x10 ) // Status win not available
-				| ( this.upperwin ? 0x20 : 0 ) // Upper win is available
+				| ( this.statuswin ? 0x20 : 0 ) // Upper win is available
 				| 0x40 // Variable pitch font is default - Or can we tell from env if the font is fixed pitch?
 			);
 		}
@@ -1945,8 +2131,15 @@ module.exports = {
 
 	update_width: function()
 	{
-		var width, box = new this.glk.RefBox();
-		this.glk.glk_window_get_size( this.upperwin || this.mainwin, box );
+		var Glk = this.Glk,
+		tempwin = Glk.glk_window_open( this.mainwin, 0x12, 0, 4, 204 ),
+		box = new Glk.RefBox(),
+		width;
+		Glk.glk_window_get_size( tempwin || this.mainwin, box );
+		if ( tempwin )
+		{
+			Glk.glk_window_close( tempwin );
+		}
 		this.io.width = width = box.get_value();
 		if ( !this.version3 )
 		{
@@ -1967,17 +2160,18 @@ module.exports = {
 			return;
 		}
 
-		var Glk = this.glk,
+		var Glk = this.Glk,
+		memory = this.m,
 		io = this.io,
 		width = io.width,
-		hours_score = this.m.getUint16( this.globals + 2 ),
-		mins_turns = this.m.getUint16( this.globals + 4 ),
-		proptable = this.m.getUint16( this.objects + 9 * this.m.getUint16( this.globals ) + 7 ),
-		shortname = '' + this.decode( proptable + 1, this.m.getUint8( proptable ) * 2 ),
+		hours_score = memory.getUint16( this.globals + 2 ),
+		mins_turns = memory.getUint16( this.globals + 4 ),
+		proptable = memory.getUint16( this.objects + 9 * memory.getUint16( this.globals ) + 7 ),
+		shortname = '' + this.decode( proptable + 1, memory.getUint8( proptable ) * 2 ),
 		rhs;
 
 		// Handle the turns/score or time
-		if ( io.time )
+		if ( memory.getUint8( 0x01 ) & 0x02 )
 		{
 			rhs = 'Time: ' + ( hours_score % 12 === 0 ? 12 : hours_score % 12 ) + ':' + ( mins_turns < 10 ? '0' : '' ) + mins_turns + ' ' + ( hours_score > 11 ? 'PM' : 'AM' );
 		}
@@ -2007,7 +2201,7 @@ module.exports = {
 
 };
 
-},{}],7:[function(require,module,exports){
+},{"../common/utils.js":3}],7:[function(require,module,exports){
 /*
 
 Z-Machine opcodes
@@ -2176,7 +2370,7 @@ return {
 185: version3 ?
 	/* pop (v3) */ opcode_builder( Opcode, function() { return 's.pop()'; } ) :
 	/* catch (v5/8) */ opcode_builder( Storer, function() { return 'e.call_stack.length'; } ),
-/* quit */ 186: opcode_builder( Pauser, function() { return 'e.quit=1;e.glk.glk_exit()'; } ),
+/* quit */ 186: opcode_builder( Pauser, function() { return 'e.quit=1;e.Glk.glk_exit()'; } ),
 /* new_line */ 187: opcode_builder( Opcode, function() { return 'e.print(1,13)'; } ),
 188: version3 ?
 	/* show_status (v3) */ opcode_builder( Stopper, function() { return 'e.pc=' + this.next + ';e.v3_status()'; } ) :
@@ -2204,7 +2398,7 @@ return {
 /* get_cursor */ 240: opcode_builder( Opcode, function( addr ) { return 'e.get_cursor(' + addr + ')'; } ),
 /* set_text_style */ 241: opcode_builder( Opcode, function( stylebyte ) { return 'e.set_style(' + stylebyte + ')'; } ),
 /* buffer_mode */ 242: Opcode, // We don't support non-buffered output
-/* output_stream */ 243: opcode_builder( Opcode, function() { return 'e.output_stream(' + this.args() + ')'; } ),
+/* output_stream */ 243: opcode_builder( Stopper, function() { return 'e.output_stream(' + this.args() + ')'; } ),
 /* input_stream */ 244: Opcode, // We don't support changing the input stream
 /* sound_effect */ 245: Opcode, // We don't support sounds
 /* read_char */ 246: opcode_builder( Pauser, function() { return 'e.read_char(' + this.storer.v + ',' + ( this.args() || '1' ) + ');e.stop=1'; } ),
@@ -2267,10 +2461,7 @@ U2S = utils.U2S16,
 S2U = utils.S2U16,
 byte_to_word = utils.Uint8toUint16Array,
 
-file = require( '../common/file.js' ),
-
-filemode_Read = 0x02,
-filemode_Write = 0x01;
+file = require( '../common/file.js' );
 
 module.exports = {
 
@@ -2614,43 +2805,17 @@ module.exports = {
 		return this.get_parent( child ) === parent;
 	},
 
-	log: function()
+	log: function( message )
 	{
-		if ( this.env.debug && typeof console !== 'undefined' && console.log )
+		if ( this.env.GlkOte )
 		{
-			console.log.apply( console, arguments );
+			this.env.GlkOte.log( message );
 		}
 	},
 
 	log_shift: function( number, places )
 	{
 		return places > 0 ? number << places : number >>> -places;
-	},
-
-	// Manage output streams
-	output_stream: function( stream, addr )
-	{
-		stream = U2S( stream );
-		if ( stream === 1 )
-		{
-			this.streams[0] = 1;
-		}
-		if ( stream === -1 )
-		{
-			this.log( 'Disabling stream one - it actually happened!' );
-			this.streams[0] = 0;
-		}
-		if ( stream === 3 )
-		{
-			this.streams[2].unshift( [ addr, '' ] );
-		}
-		if ( stream === -3 )
-		{
-			var data = this.streams[2].shift(),
-			text = this.text_to_zscii( data[1] );
-			this.ram.setUint16( data[0], text.length );
-			this.ram.setUint8Array( data[0] + 2, text );
-		}
 	},
 
 	put_prop: function( object, property, value )
@@ -2756,9 +2921,6 @@ module.exports = {
 			call_stack: [],
 			undo: [],
 
-			// IO stuff
-			streams: [ 1, 0, [], 0 ],
-
 			// Get some header variables
 			version: version,
 			version3: version3,
@@ -2790,9 +2952,11 @@ module.exports = {
 	restore: function( pc )
 	{
 		this.pc = pc;
-		this.save_mode = filemode_Read;
-		this.glk_block_call = 'fileref_create_by_prompt';
-		this.glk.glk_fileref_create_by_prompt( 0x01, filemode_Read, 0 );
+		this.fileref_create_by_prompt({
+			func: 'restore',
+			mode: 0x02,
+			usage: 0x01,
+		});
 	},
 
 	restore_file: function( data )
@@ -2808,6 +2972,20 @@ module.exports = {
 		newlocals = [],
 		newstack;
 		
+		// Check this is a savefile for this story
+		if ( ram.getUint16( 0x02 ) !== quetzal.release || ram.getUint16( 0x1C ) !== quetzal.checksum )
+		{
+			return 0;
+		}
+		while ( i < 6 )
+		{
+			if ( ram.getUint8( 0x12 + i ) !== quetzal.serial[i++] )
+			{
+				return 0;
+			}
+		}
+		i = 0;
+
 		// Memory chunk
 		// Reset the RAM
 		ram.setUint8Array( 0, this.origram );
@@ -2838,7 +3016,7 @@ module.exports = {
 		i = 6;
 		// Dummy call frame
 		temp = qstacks[i++] << 8 | qstacks[i++];
-		newstack = byte_to_word( qstacks.slice( i, temp ) );
+		newstack = Array.prototype.slice.apply( byte_to_word( qstacks.slice( i, temp ) ) );
 		// Regular frames
 		while ( i < qstacks.length )
 		{
@@ -2860,7 +3038,7 @@ module.exports = {
 				temp >>= 1;
 			}
 			temp = ( qstacks[i++] << 8 | qstacks[i++] ) * 2; // "eval" stack length
-			newlocals = byte_to_word( qstacks.slice( i, ( i += call_stack[0][2] * 2 ) ) ).concat( newlocals );
+			newlocals = Array.prototype.slice.apply( byte_to_word( qstacks.slice( i, ( i += call_stack[0][2] * 2 ) ) ) ).concat( newlocals );
 			newstack = newstack.concat( byte_to_word( qstacks.slice( i, ( i += temp ) ) ) );
 		}
 		this.call_stack = call_stack;
@@ -2875,6 +3053,8 @@ module.exports = {
 		{
 			this.split_window( 0 );
 		}
+
+		return 2;
 	},
 
 	restore_undo: function()
@@ -2918,9 +3098,11 @@ module.exports = {
 	save: function( pc )
 	{
 		this.pc = pc;
-		this.save_mode = filemode_Write;
-		this.glk_block_call = 'fileref_create_by_prompt';
-		this.glk.glk_fileref_create_by_prompt( 0x01, filemode_Write, 0 );
+		this.fileref_create_by_prompt({
+			func: 'save',
+			mode: 0x01,
+			usage: 0x01,
+		});
 	},
 	
 	save_file: function( pc )
@@ -3004,38 +3186,30 @@ module.exports = {
 		return quetzal.write();
 	},
 	
-	// Handle the result of glk_fileref_create_by_prompt()
-	save_restore_handler: function( fref )
+	save_restore_handler: function( str )
 	{
 		var memory = this.m,
-		Glk = this.glk,
-		str,
-		buffer,
+		Glk = this.Glk,
 		result = 0,
+		buffer = [],
 		temp, iftrue, offset;
 		
-		if ( fref )
+		if ( str )
 		{
-			str = Glk.glk_stream_open_file( fref, this.save_mode, 0 );
-			Glk.glk_fileref_destroy( fref );
-			if ( str )
+			// Save
+			if ( this.fileref_data.func === 'save' )
 			{
-				// Save
-				if ( this.save_mode === filemode_Write )
-				{
-					Glk.glk_put_buffer_stream( str, new Uint8Array( this.save_file( this.pc ) ) );
-					result = 1;
-				}
-				// Restore
-				else
-				{
-					buffer = new Uint8Array( 128 * 1024 );
-					Glk.glk_get_buffer_stream( str, buffer );
-					this.restore_file( buffer.buffer );
-					result = 2;
-				}
-				Glk.glk_stream_close( str );
+				Glk.glk_put_buffer_stream( str, new Uint8Array( this.save_file( this.pc ) ) );
+				result = 1;
 			}
+			// Restore
+			else
+			{
+				buffer = new Uint8Array( 128 * 1024 );
+				Glk.glk_get_buffer_stream( str, buffer );
+				result = this.restore_file( buffer.buffer );
+			}
+			Glk.glk_stream_close( str );
 		}
 		
 		// Store the result / branch in z3
@@ -3192,14 +3366,6 @@ module.exports = {
 			}
 		}
 		return value;
-	},
-
-	warn: function()
-	{
-		if ( this.env.debug && typeof console !== 'undefined' && console.warn )
-		{
-			console.warn.apply( console, arguments );
-		}
 	},
 
 	// Utilities for signed arithmetic
