@@ -70,6 +70,7 @@ appfiles = [
     './zplay.js',
     './ifvms/zvm.debug.js',
     './ifvms/zvm_dispatch.js',
+    './ifvms/package.json',
     './inkplay.html',
     './inkplay.js',
     './inkjs/ink.min.js',
