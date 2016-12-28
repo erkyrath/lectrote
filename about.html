@@ -104,6 +104,13 @@ function onready()
     }
     catch (ex) { }
     try {
+      var path = path_mod.join(__dirname, 'ifvms', 'package.json');
+      var val = fs.readFileSync(path, { encoding:'utf8' });
+      var package = JSON.parse(val);
+      update('ifvms_version', package.version);
+    }
+    catch (ex) { }
+    try {
       var path = path_mod.join(__dirname, 'inkjs', 'package.json');
       var val = fs.readFileSync(path, { encoding:'utf8' });
       var package = JSON.parse(val);
@@ -148,7 +155,7 @@ function openrecent()
 <p>
 Quixe version <span id="quixe_version">???</span>;
 inkjs version <span id="inkjs_version">???</span>;
-Parchment 2016-07-21
+ZVM:IFVMS version <span id="ifvms_version">???</span>
 <br>
 Electron version <span id="electron_version">???</span>
 (Node <span id="node_version">???</span>,
