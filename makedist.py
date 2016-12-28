@@ -68,9 +68,8 @@ appfiles = [
     './quixe/media/waiting.gif',
     './zplay.html',
     './zplay.js',
-    './parchment/parchment-bare.min.js',
-    './parchment/zvm.min.js',
-    './parchment/parchment.min.css',
+    './ifvms/zvm.debug.js',
+    './ifvms/zvm_dispatch.js',
     './inkplay.html',
     './inkplay.js',
     './inkjs/ink.min.js',
@@ -95,8 +94,8 @@ def install(resourcedir, pkg):
     os.makedirs(qdir, exist_ok=True)
     os.makedirs(os.path.join(qdir, 'lib'), exist_ok=True)
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
-    inkdir = os.path.join(appdir, 'parchment')
-    os.makedirs(inkdir, exist_ok=True)
+    zvmdir = os.path.join(appdir, 'ifvms')
+    os.makedirs(zvmdir, exist_ok=True)
     inkdir = os.path.join(appdir, 'inkjs')
     os.makedirs(inkdir, exist_ok=True)
 
