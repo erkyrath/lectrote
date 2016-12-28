@@ -30,7 +30,11 @@ function load_named_game(arg)
         var buf = fs.readFileSync(path);
         /* Convert to a Uint8Array. */
         arr = Uint8Array.from(buf);
-        sigfunc = function() { return 'XXXXX'; }; /*###*/
+        /* window.engine won't exist until we call load_run, so we
+           create a function that uses it. */
+        sigfunc = function() {
+            return window.engine.get_signature();
+        };
     }
     else if (arg.engine == 'inkjs') {
         var buf = fs.readFileSync(path);
