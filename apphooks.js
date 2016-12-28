@@ -124,7 +124,8 @@ function set_font(obj)
 
     var fontclass = '.BufferWindow';
     /* In Parchment the buffer-div class is different, so check the
-       game options for that. */
+       game options for that. (Parchment is not part of Lectrote any
+       more, but we keep the option.) */
     if (game_options.lectrote_font_class)
         fontclass = game_options.lectrote_font_class;
 
