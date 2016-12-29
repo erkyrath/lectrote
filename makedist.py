@@ -67,7 +67,6 @@ appfiles = [
     './quixe/lib/quixe.min.js',
     './quixe/media/waiting.gif',
     './zplay.html',
-    './zplay.js',
     './ifvms/zvm.debug.js',
     './ifvms/zvm_dispatch.js',
     './ifvms/package.json',
