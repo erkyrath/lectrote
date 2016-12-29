@@ -68,7 +68,7 @@ appfiles = [
     './quixe/media/waiting.gif',
     './zplay.html',
     './ifvms/zvm.debug.js',
-    './ifvms/zvm_dispatch.js',
+    './ifvms/zvm_dispload.min.js',
     './ifvms/package.json',
     './inkplay.html',
     './inkplay.js',
