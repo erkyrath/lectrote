@@ -16,6 +16,7 @@ function load_named_game(arg)
 
     var arr = null;
     var sigfunc = null;
+    var load_options = { format:'array', engine:arg.engine };
 
     if (arg.engine == 'quixe') {
         var buf = fs.readFileSync(path);
@@ -25,13 +26,15 @@ function load_named_game(arg)
             arr[ix] = buf[ix];
         sigfunc = Quixe.get_signature;
     }
-    else if (arg.engine == 'parchment') {
+    else if (arg.engine == 'ifvms') {
         var buf = fs.readFileSync(path);
-        /* Convert to a generic Array of byte values. */
-        arr = new Array(buf.length);
-        for (var ix=0; ix<buf.length; ix++)
-            arr[ix] = buf[ix];
-        sigfunc = GiLoad.get_game_signature;
+        /* Convert to a Uint8Array. */
+        arr = Uint8Array.from(buf);
+        /* window.engine won't exist until we call load_run, so we
+           create a function that uses it. */
+        sigfunc = function() {
+            return window.engine.get_signature();
+        };
     }
     else if (arg.engine == 'inkjs') {
         var buf = fs.readFileSync(path);
@@ -43,7 +46,7 @@ function load_named_game(arg)
         throw(new Error('Unrecognized engine case: ' + arg.engine));
     }
 
-    GiLoad.load_run(null, arr, 'array');
+    GiLoad.load_run(null, arr, load_options);
 
     /* Pass some metadata back to the app */
     var obj = {
@@ -121,7 +124,8 @@ function set_font(obj)
 
     var fontclass = '.BufferWindow';
     /* In Parchment the buffer-div class is different, so check the
-       game options for that. */
+       game options for that. (Parchment is not part of Lectrote any
+       more, but we keep the option.) */
     if (game_options.lectrote_font_class)
         fontclass = game_options.lectrote_font_class;
 

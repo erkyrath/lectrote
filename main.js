@@ -360,12 +360,12 @@ function game_file_discriminate(path)
         if (gametype == 'GLUL')
             return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
         else if (gametype == 'ZCOD')
-            return { engine:'parchment', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
+            return { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
     }
 
     if (buf[0] >= 3 && buf[0] <= 8) {
         /* Z-machine file, probably */
-        return { engine:'parchment', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
+        return { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
     }
 
     /* Ink is a text (JSON) format, which is harder to check. We skip
@@ -451,7 +451,7 @@ function select_load_game()
         filters: [ 
             { name: 'Blorbed Game File', extensions: ['blorb', 'blb'] },
             { name: 'Glulx Game File', extensions: ['ulx', 'gblorb', 'glb'] },
-            { name: 'Z-Code Game File', extensions: ['z5', 'z8', 'zblorb', 'zlb'] },
+            { name: 'Z-Code Game File', extensions: ['z3', 'z5', 'z8', 'zblorb', 'zlb'] },
             { name: 'Ink JSON File', extensions: [ 'json' ] },
         ]
     };

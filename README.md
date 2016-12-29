@@ -15,7 +15,7 @@ When launched, it prompts you to select a game file to play. You can play severa
 Lectrote currently supports:
 
 - [Glulx][] games (`.ulx` or `.gblorb`), as produced by [Inform 7][i7].
-- [Z-code][] games (`.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
+- [Z-code][] games (`.z3/.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
 - [Ink][] compiled game files (`.json`), as produced by the [Ink][] scripting language.
 
 [i7]: http://inform7.com/
@@ -33,14 +33,12 @@ Because this relies on the [Quixe][] interpreter, sound is not supported. It's a
 
 ## Z-code support
 
-Lectrote contains a version of the [Parchment][] interpreter for Z-machine support. However, Parchment's interface does not fit the environment perfectly; you will see some bugs.
+Lectrote uses the [ZVM][] interpreter for Z-machine support. This is a work in progress:
 
 - *Auto-save is not supported!* You must save your game explicitly or you will lose your position.
-- The margins preference does not work.
-- Window resizing and the font-size preference can mess up the status line.
-- The search widget can be partially or completely hidden behind the status line.
+- Version 4 (Trinity, AMFV, Bureaucracy) and version 6 (Journey, etc) are not supported.
 
-[Parchment]: https://github.com/curiousdannii/parchment
+[ZVM]: https://github.com/curiousdannii/ifvms.js
 
 ## Ink support
 
