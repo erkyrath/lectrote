@@ -50,6 +50,9 @@ function load_run(optobj, buf)
         checksum += (buf[ix] & 0xFF);
     signature = 'ink_' + checksum + '_' + buf.length;
 
+    /* Load the appropriate version of the ink engine, based on the
+       story file's inkVersion. (This logic is derived from the
+       inkVersionMinimumCompatible defined in inkjs.) */
     try {
         var str = buf.toString('utf8');
         /* First we strip the BOM, if there is one. Dunno why JSON.parse
