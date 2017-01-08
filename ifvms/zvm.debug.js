@@ -1948,7 +1948,13 @@ module.exports = {
 	set_cursor: function( row, col )
 	{
 		var io = this.io;
-		if ( this.upperwin && row >= 0 && row < io.height && col >= 0 && col < io.width )
+		if ( row >= io.height )
+		{
+			// Moving the cursor to a row forces the upper window
+			// to open enough for that line to exist
+			this.split_window( row+1 );
+		}
+		if ( this.upperwin && row >= 0 && col >= 0 && col < io.width )
 		{
 			this.Glk.glk_window_move_cursor( this.upperwin, col, row );
 			io.row = row;
@@ -2042,15 +2048,17 @@ module.exports = {
 
 	set_window: function( window )
 	{
-		this.Glk.glk_set_window( this.upperwin && window ? this.upperwin : this.mainwin );
 		this.io.currentwin = window;
-		this.format();
 		
-		// Focusing the upper window resets the cursor to the top left
+		// Focusing the upper window resets the cursor to the top left;
+		// it also opens the upper window if it's not open
 		if ( window )
 		{
 			this.set_cursor( 0, 0 );
 		}
+
+		this.Glk.glk_set_window( this.upperwin && window ? this.upperwin : this.mainwin );
+		this.format();
 	},
 
 	split_window: function( lines )
@@ -2060,6 +2068,7 @@ module.exports = {
 		{
 			Glk.glk_window_close( this.upperwin );
 			this.upperwin = null;
+			this.io.height = 0;
 		}
 		else if ( !this.upperwin )
 		{
