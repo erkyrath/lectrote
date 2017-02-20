@@ -72,6 +72,23 @@ to line-height, but I'm doing what I can here.
 }
 
 /* Reverse */
+
+.GridWindow .Style_normal {
+	background: #FFFCEE;
+}
+
+.SepiaTheme .GridWindow .Style_normal {
+	background: #F4F0E4;
+}
+
+.SlateTheme .GridWindow .Style_normal {
+	background: #424244;
+}
+
+.DarkTheme .GridWindow .Style_normal {
+	background: #282018;
+}
+
 .BufferWindow .Style_header,
 .BufferWindow .Style_note,
 .BufferWindow .Style_user1,
