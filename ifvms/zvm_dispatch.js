@@ -1,50 +1,104 @@
-GiDispa = function() {
+/*
 
-var class_map = {
-    'window': {},
-    'stream': {},
-    'fileref': {}
-};
-var last_used_id = 101;
+ZVM Glk dispatch layer
+======================
 
-function set_vm(vm) {
-    //console.log('### set_vm', vm);
+Copyright (c) 2017 The ifvms.js team
+MIT licenced
+https://github.com/curiousdannii/ifvms.js
+
+*/
+
+const dummyArgInt = {
+	serialize: () => ({}),
 }
 
-function class_register(clas, obj, usedisprock) {
-    //console.log('### class_register', clas, obj);
+class ZVMDispatch
+{
+	constructor()
+	{
+		this.class_map = {
+			'fileref': {},
+			'stream': {},
+			'window': {},
+		}
+		this.last_used_id = 101
+	}
 
-    if (obj.disprock)
-        throw new Error('class_register: object is already registered');
-    obj.disprock = last_used_id;
-    last_used_id++;
+	check_autosave()
+	{
+		return !this.vm.glk_blocking_call
+	}
 
-    //### or autorestore case
+	class_obj_from_id( clas, val )
+	{
+		return this.class_map[clas][val]
+	}
 
-    class_map[clas][obj.disprock] = obj;
+	class_register( clas, obj, usedisprock )
+	{
+		if ( usedisprock )
+		{
+			if ( obj.disprock !== usedisprock )
+			{
+				throw new Error( 'class_register: object is not already registered' )
+			}
+			if ( this.last_used_id <= usedisprock )
+			{
+				this.last_used_id = usedisprock + 1
+			}
+		}
+		else
+		{
+			if ( obj.disprock )
+			{
+				throw new Error( 'class_register: object is already registered' )
+			}
+			obj.disprock = this.last_used_id++
+		}
+		this.class_map[clas][obj.disprock] = obj
+	}
+
+	class_unregister( clas, obj )
+	{
+		if ( !obj.disprock || this.class_map[clas][obj.disprock] == null )
+		{
+			throw new Error( 'class_unregister: object is not registered' )
+		}
+		delete this.class_map[clas][obj.disprock]
+		obj.disprock = null
+	}
+
+	get_retained_array( arr )
+	{
+		return {
+			arg: dummyArgInt,
+			arr: arr.slice(),
+			len: arr.length,
+		}
+	}
+
+	prepare_resume()
+	{}
+
+	retain_array()
+	{}
+
+	set_vm( vm )
+	{
+		this.vm = vm
+	}
+
+	unretain_array()
+	{}
 }
 
-function class_unregister(clas, obj) {
-    //console.log('### class_unregister', clas, obj);
-
-    if (!obj.disprock || class_map[clas][obj.disprock] === undefined)
-        throw new Error('class_unregister: object is not registered');
-    
-    delete class_map[clas][obj.disprock];
-    obj.disprock = undefined;
+// Export the class and an instance
+if ( typeof module === 'object' && module.exports )
+{
+	module.exports = ZVMDispatch
 }
-
-function prepare_resume(glka0) {
-    //console.log('### prepare_resume', glka0);
+if ( typeof window !== 'undefined' )
+{
+	window.GiDispa = new ZVMDispatch()
 }
-
-return {
-    set_vm: set_vm,
-    prepare_resume: prepare_resume,
-    class_register: class_register,
-    class_unregister: class_unregister,
-    retain_array: function() {},
-    unretain_array: function() {},
-};
-
-}();
