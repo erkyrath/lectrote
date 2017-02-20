@@ -451,7 +451,7 @@ function select_load_game()
         filters: [ 
             { name: 'Blorbed Game File', extensions: ['blorb', 'blb'] },
             { name: 'Glulx Game File', extensions: ['ulx', 'gblorb', 'glb'] },
-            { name: 'Z-Code Game File', extensions: ['z3', 'z5', 'z8', 'zblorb', 'zlb'] },
+            { name: 'Z-Code Game File', extensions: ['z3', 'z4', 'z5', 'z8', 'zblorb', 'zlb'] },
             { name: 'Ink JSON File', extensions: [ 'json' ] },
         ]
     };
