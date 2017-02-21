@@ -3,9 +3,9 @@
 ZVM - the ifvms.js Z-Machine
 ============================
 
-Copyright (c) 2016 The ifvms.js team
-BSD licenced
-http://github.com/curiousdannii/ifvms.js
+Copyright (c) 2017 The ifvms.js team
+MIT licenced
+https://github.com/curiousdannii/ifvms.js
 
 */
 
@@ -17,28 +17,18 @@ This spreadsheet shows how the Z-Machine formatting is mapped to Glk styles
 
 http://docs.google.com/spreadsheets/d/1Nvwyb_twC3_fPYDrjQu86b3KRAmLFDllIUvPUpMz108
 
-This stylesheet is to be used in addition to a GlkOte stylesheet. The DarkTheme class is for Lectrote's dark theme
-
-Modified by Andrew Plotkin:
-- Added SepiaTheme and SlateTheme.
-- Turned off reverse-coloring in the status line. (The status line
-coloring will therefore be consistent with Glulx games.)
-
-This will break any games that rely on the difference between normal
-and reverse whitespace in the status line, but I can't think of any
-offhand. Some games use this difference for decorative effect, and
-that will be lost, but it shouldn't generally be fatal.
-
-Jigsaw is a classic example that relies on the difference between
-normal and reverse whitespace in the story window. We allow that,
-albeit with muted colors (instead of the hard black/white from the
-original zvm.css). Jigsaw's puzzle pieces still don't look right, due
-to line-height, but I'm doing what I can here.
+This stylesheet is to be used in addition to a (recent) GlkOte stylesheet, and depends on the theme variables it defines.
 
 */
 
 /* Clear some default GlkOte styles */
-.BufferWindow .Style_header
+.GridWindow
+{
+	background: var(--main-bg-color);
+	color: var(--main-fg-color);
+}
+
+.BufferWindow .Style_header, .BufferWindow .Style_preformatted
 {
 	font-size: inherit;
 	font-weight: normal;
@@ -54,7 +44,17 @@ to line-height, but I'm doing what I can here.
 .BufferWindow .Style_blockquote,
 .Style_user2
 {
-	font-family: "Source Code Pro", Monaco, Courier, monospace;
+	font-family: var(--mono-font);
+}
+
+/* Remove the default line-height */
+.BufferWindow .BufferLine
+{
+	line-height: normal;
+}
+.BufferWindow .BufferLine span:not(.Style_preformatted):not(.Style_header):not(.Style_blockquote):not(.Style_user2)
+{
+	line-height: var(--base-line-height);
 }
 
 /* Italic styles */
@@ -72,56 +72,20 @@ to line-height, but I'm doing what I can here.
 }
 
 /* Reverse */
-
-.GridWindow .Style_normal {
-	background: #FFFCEE;
-}
-
-.SepiaTheme .GridWindow .Style_normal {
-	background: #F4F0E4;
-}
-
-.SlateTheme .GridWindow .Style_normal {
-	background: #424244;
-}
-
-.DarkTheme .GridWindow .Style_normal {
-	background: #282018;
-}
-
 .BufferWindow .Style_header,
 .BufferWindow .Style_note,
 .BufferWindow .Style_user1,
 .BufferWindow .Style_user2
 {
-	background: #888;
-	color: #FFF;
+	background: var(--main-fg-color);
+	color: var(--main-bg-color);
 }
 
-.SepiaTheme .BufferWindow .Style_header,
-.SepiaTheme .BufferWindow .Style_note,
-.SepiaTheme .BufferWindow .Style_user1,
-.SepiaTheme .BufferWindow .Style_user2
+.GridWindow .Style_header,
+.GridWindow .Style_note,
+.GridWindow .Style_blockquote,
+.GridWindow .Style_user1
 {
-	background: #888;
-	color: #FFF;
+	background: var(--grid-bg-color);
+	color: var(--grid-fg-color);
 }
-
-.SlateTheme .BufferWindow .Style_header,
-.SlateTheme .BufferWindow .Style_note,
-.SlateTheme .BufferWindow .Style_user1,
-.SlateTheme .BufferWindow .Style_user2
-{
-	background: #AAA;
-	color: #222;
-}
-
-.DarkTheme .BufferWindow .Style_header,
-.DarkTheme .BufferWindow .Style_note,
-.DarkTheme .BufferWindow .Style_user1,
-.DarkTheme .BufferWindow .Style_user2
-{
-	background: #888;
-	color: #000;
-}
-

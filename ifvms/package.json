@@ -1,7 +1,7 @@
 {
   "name": "ifvms",
   "title": "ifvms.js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The Interactive Fiction Virtual Machines Suite - in Javascript",
   "author": "Dannii Willis <curiousdannii@gmail.com>",
   "license": "MIT",
