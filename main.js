@@ -7,6 +7,8 @@ const path_mod = require('path');
 var package_json = {}; /* parsed form of our package.json file */
 var main_extension = {}; /* extra code for bound games */
 
+var appicon = path_mod.join(__dirname, 'icon-128.png')
+
 var isbound = false; /* true if we're a single-game app */
 var bound_game_path = null;
 var gamewins = {}; /* maps window ID to a game structure */
@@ -27,7 +29,7 @@ var prefs = {
 var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
 var prefstimer = null;
 var prefswriting = false;
-console.log(prefspath)
+
 var app_ready = false; /* true once the ready event occurs */
 var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
@@ -519,7 +521,8 @@ function launch_game(path)
         minWidth: 400, minHeight: 400,
         webPreferences: {
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
-        }
+        },
+        icon: appicon
     };
 
     if (process.platform == 'win32' && !isbound) {
@@ -631,7 +634,8 @@ function reset_game(game)
         type: 'question',
         message: 'Are you sure you want to reset the game to the beginning? This will discard all your progress since your last SAVE command.',
         buttons: ['Reset', 'Cancel'],
-        cancelId: 0
+        cancelId: 0,
+        icon: appicon
     };
     /* We use a synchronous showMessageBox call, which blocks (is modal for)
        the entire app. The async call would only block the game window, but
@@ -655,7 +659,8 @@ function open_about_window()
     var winopts = {
         width: 600, height: 420,
         useContentSize: true,
-        resizable: false
+        resizable: false,
+        icon: appicon
     };
     window_position_prefs(winopts, 'aboutwin');
 
@@ -691,7 +696,8 @@ function open_prefs_window()
     var winopts = {
         width: 600, height: 500,
         useContentSize: true,
-        resizable: false
+        resizable: false,
+        icon: appicon
     };
     window_position_prefs(winopts, 'prefswin');
 
@@ -722,7 +728,8 @@ function open_card_window()
     var winopts = {
         width: 810, height: 600,
         useContentSize: true,
-        javascript: false
+        javascript: false,
+        icon: appicon
     };
     window_position_prefs(winopts, 'cardwin');
 
