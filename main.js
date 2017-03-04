@@ -27,7 +27,7 @@ var prefs = {
 var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
 var prefstimer = null;
 var prefswriting = false;
-
+console.log(prefspath)
 var app_ready = false; /* true once the ready event occurs */
 var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
@@ -63,7 +63,7 @@ function game_for_webcontents(webcontents)
         var game = gamewins[id];
         if (game.win && game.win.webContents === webcontents)
             return game;
-    }    
+    }
     return undefined;
 }
 
@@ -74,7 +74,7 @@ function construct_recent_game_menu()
     if (isbound)
         return res;
 
-    /* This requires a utility function because of Javascript's lousy 
+    /* This requires a utility function because of Javascript's lousy
        closures. */
     var add = function(path) {
         var opts = {
@@ -85,7 +85,7 @@ function construct_recent_game_menu()
         };
         res.push(opts);
     };
-    
+
     var recents = prefs.recent_games;
     if (recents && recents.length) {
         for (var ix=0; ix<recents.length; ix++) {
@@ -182,7 +182,7 @@ function load_prefs()
     catch (ex) {
         /* console.error('load_prefs: unable to load preferences: %s: %s', prefspath, ex); */
     }
-    
+
     /* Check to make sure the recent files still exist. */
     var recents = prefs.recent_games;
     if (recents && recents.length) {
@@ -283,7 +283,7 @@ function window_size_prefs_handler(key, win)
     }
 }
 
-/* Called whenever we update the prefs object. This waits five seconds 
+/* Called whenever we update the prefs object. This waits five seconds
    (to consolidate writes) and then launches an async file-write.
 */
 function note_prefs_dirty()
@@ -335,7 +335,7 @@ function invoke_app_hook(win, func, arg)
 }
 
 /* Given a pathname, figure out what kind of game it is. Currently
-   understands Glulx, Zcode, Blorb (with Glulx or Zcode), and 
+   understands Glulx, Zcode, Blorb (with Glulx or Zcode), and
    JSON-with-ink.
 
    Returns null if the game type is not recognized. Throws an exception
@@ -376,7 +376,7 @@ function game_file_discriminate(path)
         var ch = buf[ix];
         if (!(ch > 32 && ch < 127))
             continue;
-        if (ch != checkascii[pos]) 
+        if (ch != checkascii[pos])
             break;
         pos++;
         if (pos >= checkascii.length) {
@@ -429,7 +429,7 @@ function parse_blorb(path)
     return res;
 }
 
-/* Bring up the select-a-game dialog. 
+/* Bring up the select-a-game dialog.
 */
 function select_load_game()
 {
@@ -448,7 +448,7 @@ function select_load_game()
     var opts = {
         title: 'Select an IF game file',
         properties: ['openFile'],
-        filters: [ 
+        filters: [
             { name: 'Blorbed Game File', extensions: ['blorb', 'blb'] },
             { name: 'Glulx Game File', extensions: ['ulx', 'gblorb', 'glb'] },
             { name: 'Z-Code Game File', extensions: ['z3', 'z4', 'z5', 'z8', 'zblorb', 'zlb'] },
@@ -652,7 +652,7 @@ function reset_game(game)
 */
 function open_about_window()
 {
-    var winopts = { 
+    var winopts = {
         width: 600, height: 420,
         useContentSize: true,
         resizable: false
@@ -666,7 +666,7 @@ function open_about_window()
         var menu = electron.Menu.buildFromTemplate(template);
         aboutwin.setMenu(menu);
     }
-    
+
     aboutwin.on('closed', function() {
             aboutwin = null;
         });
@@ -688,7 +688,7 @@ function open_about_window()
 */
 function open_prefs_window()
 {
-    var winopts = { 
+    var winopts = {
         width: 600, height: 500,
         useContentSize: true,
         resizable: false
@@ -702,7 +702,7 @@ function open_prefs_window()
         var menu = electron.Menu.buildFromTemplate(template);
         prefswin.setMenu(menu);
     }
-    
+
     prefswin.on('closed', function() {
             prefswin = null;
         });
@@ -719,7 +719,7 @@ function open_prefs_window()
 */
 function open_card_window()
 {
-    var winopts = { 
+    var winopts = {
         width: 810, height: 600,
         useContentSize: true,
         javascript: false
@@ -733,7 +733,7 @@ function open_card_window()
         var menu = electron.Menu.buildFromTemplate(template);
         cardwin.setMenu(menu);
     }
-    
+
     cardwin.on('closed', function() {
             cardwin = null;
         });
@@ -1093,7 +1093,7 @@ function construct_menu_template(special)
                 submenu.splice(0, 1);
         }
     }
-    
+
     if (process.platform == 'darwin') {
         var stanza = find_in_template(template, 'menu_window');
         if (stanza) {
@@ -1175,7 +1175,7 @@ function construct_menu_template(special)
 
     if (main_extension.construct_menu_template)
         template = main_extension.construct_menu_template(template, special);
-    
+
     return template;
 }
 
@@ -1237,7 +1237,7 @@ app.on('before-quit', function() {
 });
 
 /* Called when the app is quitting, either because the last window
-   closed or the user hit cmd-Q. 
+   closed or the user hit cmd-Q.
 */
 app.on('will-quit', function() {
     write_prefs_now();
@@ -1341,7 +1341,7 @@ app.on('will-finish-launching', function() {
         if (main_extension.launch)
             main_extension.launch(package_json);
     }
-        
+
     var boundpath = package_json.lectrotePackagedGame;
     if (boundpath) {
         /* We're in single-game mode. Do not handle command-line
@@ -1350,13 +1350,13 @@ app.on('will-finish-launching', function() {
         isbound = true;
         bound_game_path = path_mod.join(__dirname, boundpath);
         launch_paths.push(bound_game_path);
-        return;        
+        return;
     }
 
     /* open-file events can come from the dock/taskbar, or (on MacOS)
-       from the Finder handing us a double-clicked file. See 
+       from the Finder handing us a double-clicked file. See
        Lectrote.app/Contents/Info.plist for the definition of what
-       file types the Finder will hand us. 
+       file types the Finder will hand us.
 
        This event can be received before ready time. If it is, then
        we have to stash the path for later use.
@@ -1376,7 +1376,7 @@ app.on('will-finish-launching', function() {
        throws in. */
     for (var ix=1; ix<process.argv.length; ix++) {
         var path = process.argv[ix];
-        if (path_mod.basename(path) == 'main.js')
+        if (path_mod.basename(path) == 'main.js' || path_mod.basename(path) == '.')
             continue;
         if (process.platform == 'darwin' && path.startsWith('-psn'))
             continue;
@@ -1384,13 +1384,13 @@ app.on('will-finish-launching', function() {
     }
 });
 
-/* Called when Electron is initialized and ready to run. 
+/* Called when Electron is initialized and ready to run.
 */
 app.on('ready', function() {
     app_ready = true;
 
     load_prefs();
-    
+
     var template = construct_menu_template();
     var menu = electron.Menu.buildFromTemplate(template);
     electron.Menu.setApplicationMenu(menu);
