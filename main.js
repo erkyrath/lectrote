@@ -1191,7 +1191,7 @@ var secondary = app.makeSingleInstance(function(argv, cwd) {
     var count = 0;
     for (var ix=1; ix<argv.length; ix++) {
         var path = argv[ix];
-        if (path_mod.basename(path) == 'main.js')
+        if (path_mod.basename(path) == 'main.js' || path_mod.basename(path) == '.')
             continue;
         if (process.platform == 'darwin' && path.startsWith('-psn'))
             continue;
@@ -1376,7 +1376,7 @@ app.on('will-finish-launching', function() {
        throws in. */
     for (var ix=1; ix<process.argv.length; ix++) {
         var path = process.argv[ix];
-        if (path_mod.basename(path) == 'main.js')
+        if (path_mod.basename(path) == 'main.js' || path_mod.basename(path) == '.')
             continue;
         if (process.platform == 'darwin' && path.startsWith('-psn'))
             continue;
