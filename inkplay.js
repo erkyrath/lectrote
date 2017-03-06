@@ -60,9 +60,14 @@ function load_run(optobj, buf)
         str = str.replace(/^\uFEFF/, '');
         var json = JSON.parse(str);
         var version = parseInt(json["inkVersion"]);
-        if (version >= 15) {
+        if (version >= 16) {
             /* current version of inkjs */
             story = new Story(json);
+        }
+        else if (version >= 15) {
+            console.log('Game version', version, '; loading inkjs 1.4.6');
+            const OldStory = require('./inkjs/ink-146.min.js').Story;
+            story = new OldStory(json);
         }
         else {
             console.log('Game version', version, '; loading inkjs 1.3.0');
