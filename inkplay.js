@@ -80,6 +80,10 @@ function load_run(optobj, buf)
         return;
     }
 
+    /* We can't support external functions, but we can make sure the
+       callbacks get called, at least. */
+    story.allowExternalFunctionFallbacks = true;
+
     /* Pull out the story's global tag info. This may include title
        and author. */
     try {
