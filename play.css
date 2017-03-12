@@ -5,6 +5,49 @@
    #gameport is styled by el-glkote.css.
 */
 
+/* Theme definitions */
+:root {
+  --mono-font: "Source Code Pro", Monaco, Courier, monospace;
+  --base-line-height: 1.4;
+  --main-bg-color: white;
+  --main-fg-color: black;
+  --grid-bg-color: #EEEBDD;
+  --grid-fg-color: #864;
+  --more-bg-color: #603010;
+  --more-fg-color: #FFFFCC;
+  --input-fg-color: #060;
+  --link-fg-color: #00E;
+  --blockquote-bg-color: #FFF0C0;
+}
+.SepiaTheme {
+  --main-bg-color: #F4EDE1;
+  --grid-bg-color: #FFFFF4;
+  --input-fg-color: #040;
+  --blockquote-bg-color: #E4DDC0;
+}
+.SlateTheme {
+  --main-bg-color: #4D4D4F;
+  --main-fg-color: white;
+  --grid-bg-color: #333333;
+  --grid-fg-color: #DDDDEE;
+  --input-fg-color: #DFD;
+  --link-fg-color: #BBF;
+  --blockquote-bg-color: #667;
+}
+.DarkTheme {
+  --main-bg-color: black;
+  --main-fg-color: #FFF4EE;
+  --grid-bg-color: #432;
+  --grid-fg-color: #DDDACC;
+  --input-fg-color: #CFC;
+  --link-fg-color: #AAF;
+  --blockquote-bg-color: #404010;
+}
+.SlateTheme, .DarkTheme {
+  --more-bg-color: #FDA;
+  --more-fg-color: #420;
+}
+
 body {
   margin: 0px;
   height: 100%;
@@ -14,7 +57,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: white;
+  background: var(--main-bg-color);
 }
 
 #gameport {
