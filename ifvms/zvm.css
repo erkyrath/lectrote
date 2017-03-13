@@ -38,7 +38,7 @@ to line-height, but I'm doing what I can here.
 */
 
 /* Clear some default GlkOte styles */
-.BufferWindow .Style_header
+.BufferWindow .Style_header, .BufferWindow .Style_preformatted
 {
 	font-size: inherit;
 	font-weight: normal;
@@ -60,11 +60,11 @@ to line-height, but I'm doing what I can here.
 /* Remove the standard line-height for the buffer preformatted styles. */
 .BufferWindow .BufferLine
 {
-        line-height: normal;
+	line-height: normal;
 }
 .BufferWindow .BufferLine span:not(.Style_preformatted):not(.Style_header):not(.Style_blockquote):not(.Style_user2)
 {
-        line-height: 1.4;
+	line-height: 1.4;
 }
 
 /* Italic styles */
