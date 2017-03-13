@@ -32,6 +32,7 @@ var app_ready = false; /* true once the ready event occurs */
 var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
 var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
+var window_icon = null; /* icon to apply to all windows (only used on Linux) */
 
 var search_string = ''; /* recent text search in a game window */
 
@@ -522,6 +523,8 @@ function launch_game(path)
         }
     };
 
+    if (window_icon)
+        winopts.icon = window_icon;
     if (process.platform == 'win32' && !isbound) {
         /* On Windows, set the window icon to an appropriate document icon.
            (But not in the bound version -- we leave that as the
@@ -633,6 +636,9 @@ function reset_game(game)
         buttons: ['Reset', 'Cancel'],
         cancelId: 0
     };
+    if (window_icon)
+        winopts.icon = window_icon;
+
     /* We use a synchronous showMessageBox call, which blocks (is modal for)
        the entire app. The async call would only block the game window, but
        that causes weird results (e.g., cmd-Q fails to shut down the blocked
@@ -658,6 +664,8 @@ function open_about_window()
         resizable: false
     };
     window_position_prefs(winopts, 'aboutwin');
+    if (window_icon)
+        winopts.icon = window_icon;
 
     aboutwin = new electron.BrowserWindow(winopts);
 
@@ -694,6 +702,8 @@ function open_prefs_window()
         resizable: false
     };
     window_position_prefs(winopts, 'prefswin');
+    if (window_icon)
+        winopts.icon = window_icon;
 
     prefswin = new electron.BrowserWindow(winopts);
 
@@ -725,6 +735,8 @@ function open_card_window()
         javascript: false
     };
     window_position_prefs(winopts, 'cardwin');
+    if (window_icon)
+        winopts.icon = window_icon;
 
     cardwin = new electron.BrowserWindow(winopts);
 
@@ -1390,6 +1402,13 @@ app.on('ready', function() {
     app_ready = true;
 
     load_prefs();
+
+    if (process.platform != 'darwin' && process.platform != 'win32') {
+        /* Mac windows don't have icons; Windows windows inherit their
+           icon from the app's .ico resource. On Linux, we want to
+           apply a generic icon. */
+        window_icon = path_mod.join(__dirname, 'icon-128.png');
+    }
     
     var template = construct_menu_template();
     var menu = electron.Menu.buildFromTemplate(template);
