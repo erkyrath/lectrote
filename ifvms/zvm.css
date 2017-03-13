@@ -32,8 +32,7 @@ that will be lost, but it shouldn't generally be fatal.
 Jigsaw is a classic example that relies on the difference between
 normal and reverse whitespace in the story window. We allow that,
 albeit with muted colors (instead of the hard black/white from the
-original zvm.css). Jigsaw's puzzle pieces still don't look right, due
-to line-height, but I'm doing what I can here.
+original zvm.css).
 
 */
 
