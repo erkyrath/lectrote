@@ -43,29 +43,29 @@ original zvm.css).
 	--main-bg-color: white;
 	--main-fg-color: black;
 	--grid-bg-color: #FFFCEE;
-	--blockquote-bg-color: #888;
-	--blockquote-fg-color: white;
+	--reverse-bg-color: #665;
+	--reverse-fg-color: white;
 }
 .SepiaTheme {
 	--main-bg-color: #F4EDE1;
 	--main-fg-color: black;
 	--grid-bg-color: #F4F0E4;
-	--blockquote-bg-color: #888;
-	--blockquote-fg-color: white;
+	--reverse-bg-color: #887;
+	--reverse-fg-color: white;
 }
 .SlateTheme {
 	--main-bg-color: #4D4D4F;
 	--main-fg-color: white;
 	--grid-bg-color: #424244;
-	--blockquote-bg-color: #AAA;
-	--blockquote-fg-color: #222;
+	--reverse-bg-color: #AAA;
+	--reverse-fg-color: black;
 }
 .DarkTheme {
 	--main-bg-color: black;
 	--main-fg-color: #FFF4EE;
 	--grid-bg-color: #282018;
-	--blockquote-bg-color: #AAA;
-	--blockquote-fg-color: black;
+	--reverse-bg-color: #AA9;
+	--reverse-fg-color: black;
 }
 
 /* Clear some default GlkOte styles */
@@ -123,6 +123,6 @@ original zvm.css).
 .BufferWindow .Style_user1,
 .BufferWindow .Style_user2
 {
-	background: var(--blockquote-bg-color);
-	color: var(--blockquote-fg-color);
+	background: var(--reverse-bg-color);
+	color: var(--reverse-fg-color);
 }
