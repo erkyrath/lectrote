@@ -37,35 +37,35 @@ original zvm.css).
 */
 
 :root {
-  --mono-font: "Source Code Pro", Monaco, Courier, monospace;
-  --base-line-height: 1.4;
+	--mono-font: "Source Code Pro", Monaco, Courier, monospace;
+	--base-line-height: 1.4;
 
-  --main-bg-color: white;
-  --main-fg-color: black;
-  --grid-bg-color: #FFFCEE;
-  --blockquote-bg-color: #888;
-  --blockquote-fg-color: white;
+	--main-bg-color: white;
+	--main-fg-color: black;
+	--grid-bg-color: #FFFCEE;
+	--blockquote-bg-color: #888;
+	--blockquote-fg-color: white;
 }
 .SepiaTheme {
-  --main-bg-color: #F4EDE1;
-  --main-fg-color: black;
-  --grid-bg-color: #F4F0E4;
-  --blockquote-bg-color: #888;
-  --blockquote-fg-color: white;
+	--main-bg-color: #F4EDE1;
+	--main-fg-color: black;
+	--grid-bg-color: #F4F0E4;
+	--blockquote-bg-color: #888;
+	--blockquote-fg-color: white;
 }
 .SlateTheme {
-  --main-bg-color: #4D4D4F;
-  --main-fg-color: white;
-  --grid-bg-color: #424244;
-  --blockquote-bg-color: #AAA;
-  --blockquote-fg-color: #222;
+	--main-bg-color: #4D4D4F;
+	--main-fg-color: white;
+	--grid-bg-color: #424244;
+	--blockquote-bg-color: #AAA;
+	--blockquote-fg-color: #222;
 }
 .DarkTheme {
-  --main-bg-color: black;
-  --main-fg-color: #FFF4EE;
-  --grid-bg-color: #282018;
-  --blockquote-bg-color: #AAA;
-  --blockquote-fg-color: black;
+	--main-bg-color: black;
+	--main-fg-color: #FFF4EE;
+	--grid-bg-color: #282018;
+	--blockquote-bg-color: #AAA;
+	--blockquote-fg-color: black;
 }
 
 /* Clear some default GlkOte styles */
