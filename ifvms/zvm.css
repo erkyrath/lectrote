@@ -36,6 +36,38 @@ original zvm.css).
 
 */
 
+:root {
+  --mono-font: "Source Code Pro", Monaco, Courier, monospace;
+  --base-line-height: 1.4;
+
+  --main-bg-color: white;
+  --main-fg-color: black;
+  --grid-bg-color: #FFFCEE;
+  --blockquote-bg-color: #888;
+  --blockquote-fg-color: white;
+}
+.SepiaTheme {
+  --main-bg-color: #F4EDE1;
+  --main-fg-color: black;
+  --grid-bg-color: #F4F0E4;
+  --blockquote-bg-color: #888;
+  --blockquote-fg-color: white;
+}
+.SlateTheme {
+  --main-bg-color: #4D4D4F;
+  --main-fg-color: white;
+  --grid-bg-color: #424244;
+  --blockquote-bg-color: #AAA;
+  --blockquote-fg-color: #222;
+}
+.DarkTheme {
+  --main-bg-color: black;
+  --main-fg-color: #FFF4EE;
+  --grid-bg-color: #282018;
+  --blockquote-bg-color: #AAA;
+  --blockquote-fg-color: black;
+}
+
 /* Clear some default GlkOte styles */
 .BufferWindow .Style_header, .BufferWindow .Style_preformatted
 {
@@ -53,7 +85,7 @@ original zvm.css).
 .BufferWindow .Style_blockquote,
 .Style_user2
 {
-	font-family: "Source Code Pro", Monaco, Courier, monospace;
+	font-family: var(--mono-font);
 }
 
 /* Remove the standard line-height for the buffer preformatted styles. */
@@ -63,7 +95,7 @@ original zvm.css).
 }
 .BufferWindow .BufferLine span:not(.Style_preformatted):not(.Style_header):not(.Style_blockquote):not(.Style_user2)
 {
-	line-height: 1.4;
+	line-height: var(--base-line-height);
 }
 
 /* Italic styles */
@@ -83,19 +115,7 @@ original zvm.css).
 /* Reverse */
 
 .GridWindow .Style_normal {
-	background: #FFFCEE;
-}
-
-.SepiaTheme .GridWindow .Style_normal {
-	background: #F4F0E4;
-}
-
-.SlateTheme .GridWindow .Style_normal {
-	background: #424244;
-}
-
-.DarkTheme .GridWindow .Style_normal {
-	background: #282018;
+	background: var(--grid-bg-color);
 }
 
 .BufferWindow .Style_header,
@@ -103,34 +123,6 @@ original zvm.css).
 .BufferWindow .Style_user1,
 .BufferWindow .Style_user2
 {
-	background: #888;
-	color: #FFF;
+	background: var(--blockquote-bg-color);
+	color: var(--blockquote-fg-color);
 }
-
-.SepiaTheme .BufferWindow .Style_header,
-.SepiaTheme .BufferWindow .Style_note,
-.SepiaTheme .BufferWindow .Style_user1,
-.SepiaTheme .BufferWindow .Style_user2
-{
-	background: #888;
-	color: #FFF;
-}
-
-.SlateTheme .BufferWindow .Style_header,
-.SlateTheme .BufferWindow .Style_note,
-.SlateTheme .BufferWindow .Style_user1,
-.SlateTheme .BufferWindow .Style_user2
-{
-	background: #AAA;
-	color: #222;
-}
-
-.DarkTheme .BufferWindow .Style_header,
-.DarkTheme .BufferWindow .Style_note,
-.DarkTheme .BufferWindow .Style_user1,
-.DarkTheme .BufferWindow .Style_user2
-{
-	background: #888;
-	color: #000;
-}
-
