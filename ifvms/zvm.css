@@ -34,30 +34,38 @@ http://docs.google.com/spreadsheets/d/1Nvwyb_twC3_fPYDrjQu86b3KRAmLFDllIUvPUpMz1
 
 	--main-bg-color: white;
 	--main-fg-color: black;
-	--grid-bg-color: #FFFCEE;
+	--grid-bg-color: #EEEBDD;
+	--grid-fg-color: #864;
 	--reverse-bg-color: #665;
 	--reverse-fg-color: white;
+	--grid-pad-color: #FFFCEE;
 }
 .SepiaTheme {
 	--main-bg-color: #F4EDE1;
 	--main-fg-color: black;
-	--grid-bg-color: #F4F0E4;
+	--grid-bg-color: #FFFFF4;
+	--grid-fg-color: #864;
 	--reverse-bg-color: #887;
 	--reverse-fg-color: white;
+	--grid-pad-color: #F4F0E4;
 }
 .SlateTheme {
 	--main-bg-color: #4D4D4F;
 	--main-fg-color: white;
-	--grid-bg-color: #424244;
+	--grid-bg-color: #333333;
+	--grid-fg-color: #DDDDEE;
 	--reverse-bg-color: #AAA;
 	--reverse-fg-color: black;
+	--grid-pad-color: #424244;
 }
 .DarkTheme {
 	--main-bg-color: black;
 	--main-fg-color: #FFF4EE;
-	--grid-bg-color: #282018;
+	--grid-bg-color: #432;
+	--grid-fg-color: #DDDACC;
 	--reverse-bg-color: #AA9;
 	--reverse-fg-color: black;
+	--grid-pad-color: #282018;
 }
 
 /* Clear some default GlkOte styles */
@@ -108,10 +116,6 @@ http://docs.google.com/spreadsheets/d/1Nvwyb_twC3_fPYDrjQu86b3KRAmLFDllIUvPUpMz1
 
 /* Reverse */
 
-.GridWindow .Style_normal {
-	background: var(--grid-bg-color);
-}
-
 .BufferWindow .Style_header,
 .BufferWindow .Style_note,
 .BufferWindow .Style_user1,
@@ -119,4 +123,18 @@ http://docs.google.com/spreadsheets/d/1Nvwyb_twC3_fPYDrjQu86b3KRAmLFDllIUvPUpMz1
 {
 	background: var(--reverse-bg-color);
 	color: var(--reverse-fg-color);
+}
+
+.GridWindow .Style_normal
+{
+	background: var(--grid-pad-color);
+}
+
+.GridWindow .Style_header,
+.GridWindow .Style_note,
+.GridWindow .Style_blockquote,
+.GridWindow .Style_user1
+{
+	background: var(--grid-bg-color);
+	color: var(--grid-fg-color);
 }
