@@ -364,6 +364,11 @@ function game_file_discriminate(path)
             return { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
     }
 
+    if (path.match(/[.]hex$/i)) {
+        /* Hugo file */
+        return { engine:'hugoem', basehtml:'hugoplay.html', docicon:'docicon-hugo.ico' };
+    }
+
     if (buf[0] >= 3 && buf[0] <= 8) {
         /* Z-machine file, probably */
         return { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
