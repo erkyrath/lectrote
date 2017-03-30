@@ -16,7 +16,7 @@ function load_named_game(arg)
 
     var arr = null;
     var sigfunc = null;
-    var load_options = { format:'array', engine:arg.engine };
+    var load_options = { format:'array' };
 
     if (arg.engine == 'quixe') {
         var buf = fs.readFileSync(path);
@@ -25,6 +25,8 @@ function load_named_game(arg)
         for (var ix=0; ix<buf.length; ix++)
             arr[ix] = buf[ix];
         sigfunc = Quixe.get_signature;
+        game_options.vm = Quixe;
+        /* Further Glulx options are set up by gi_load.js. */
     }
     else if (arg.engine == 'ifvms') {
         var buf = fs.readFileSync(path);
@@ -35,6 +37,12 @@ function load_named_game(arg)
         sigfunc = function() {
             return window.engine.get_signature();
         };
+        game_options.engine_name = 'IFVMS';
+        game_options.blorb_gamechunk_type = 'ZCOD';
+        game_options.game_format_name = 'Z-code';
+        game_options.vm = window.engine = new window.ZVM();
+        game_options.Glk = window.Glk;
+        game_options.Dialog = window.Dialog;
     }
     else if (arg.engine == 'hugoem') {
         var buf = fs.readFileSync(path);
@@ -45,18 +53,25 @@ function load_named_game(arg)
         sigfunc = function() {
             return window.engine.get_signature();
         };
+        game_options.engine_name = 'Hugo';
+        game_options.game_format_name = 'Hugo';
+        game_options.memdir = 'hugoem';
+        game_options.vm = window.engine = window.Hugo;
+        game_options.Glk = window.Glk;
+        game_options.GiDispa = window.GiDispa;
     }
     else if (arg.engine == 'inkjs') {
         var buf = fs.readFileSync(path);
         /* Pass the Buffer directly to the load_run function. */
         var arr = buf;
         sigfunc = GiLoad.get_game_signature;
+        /* Does not use gi_load.js, so no additional options needed */
     }
     else {
         throw(new Error('Unrecognized engine case: ' + arg.engine));
     }
 
-    GiLoad.load_run(null, arr, load_options);
+    GiLoad.load_run(game_options, arr, load_options);
 
     /* Pass some metadata back to the app */
     var obj = {
