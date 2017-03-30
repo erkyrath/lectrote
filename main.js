@@ -665,7 +665,7 @@ function reset_game(game)
 function open_about_window()
 {
     var winopts = { 
-        width: 600, height: 420,
+        width: 600, height: 450,
         useContentSize: true,
         resizable: false
     };
