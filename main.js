@@ -458,6 +458,7 @@ function select_load_game()
             { name: 'Blorbed Game File', extensions: ['blorb', 'blb'] },
             { name: 'Glulx Game File', extensions: ['ulx', 'gblorb', 'glb'] },
             { name: 'Z-Code Game File', extensions: ['z3', 'z4', 'z5', 'z8', 'zblorb', 'zlb'] },
+            { name: 'Hugo Game File', extensions: [ 'hex' ] },
             { name: 'Ink JSON File', extensions: [ 'json' ] },
         ]
     };
