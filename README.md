@@ -16,10 +16,12 @@ Lectrote currently supports:
 
 - [Glulx][] games (`.ulx` or `.gblorb`), as produced by [Inform 7][i7].
 - [Z-code][] games (`.z3/.z4/.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
+- [Hugo][] games (`.hex`).
 - [Ink][] compiled game files (`.json`), as produced by the [Ink][] scripting language.
 
 [i7]: http://inform7.com/
 [Glulx]: http://eblong.com/zarf/glulx/
+[Hugo]: http://www.generalcoffee.com/hugo/gethugo.html
 [Ink]: http://www.inklestudios.com/ink
 [Z-code]: http://inform-fiction.org/zmachine/standards/z1point1
 
@@ -36,6 +38,10 @@ Because this relies on the [Quixe][] interpreter, sound is not supported. It's a
 Lectrote uses the [ZVM][] interpreter for Z-machine support. (V3/4/5 and V8 only.)
 
 [ZVM]: https://github.com/curiousdannii/ifvms.js
+
+## Hugo support
+
+The Hugo engine does not currently support autosave.
 
 ## Ink support
 
