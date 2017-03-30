@@ -103,6 +103,8 @@ def install(resourcedir, pkg):
     os.makedirs(os.path.join(qdir, 'media'), exist_ok=True)
     zvmdir = os.path.join(appdir, 'ifvms')
     os.makedirs(zvmdir, exist_ok=True)
+    hugodir = os.path.join(appdir, 'hugoem')
+    os.makedirs(hugodir, exist_ok=True)
     inkdir = os.path.join(appdir, 'inkjs')
     os.makedirs(inkdir, exist_ok=True)
 
