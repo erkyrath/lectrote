@@ -168,6 +168,7 @@ def builddir(dir, pack, pkg):
             '--icon='+iconpath,
             '--extra-resource=resources/icon-glulx.icns',
             '--extra-resource=resources/icon-zcode.icns',
+            '--extra-resource=resources/icon-hugo.icns',
             '--extra-resource=resources/icon-blorb.icns',
             '--extra-resource=resources/icon-gblorb.icns',
             '--extra-resource=resources/icon-zblorb.icns',

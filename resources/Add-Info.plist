@@ -30,6 +30,18 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
+			<string>Hugo Story File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.hugo</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-hugo.icns</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
 			<string>Blorbed IF Story File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -129,6 +141,28 @@
 			</dict>
 			<key>UTTypeIconFile</key>
 			<string>icon-zcode.icns</string>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.hugo</string>
+			<key>UTTypeDescription</key>
+			<string>Hugo Story File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.generalcoffee.com/hugo/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>hex</string>
+				<key>public.mime-type</key>
+				<string>application/x-hugo</string>
+			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-hugo.icns</string>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
