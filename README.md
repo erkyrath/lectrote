@@ -3,7 +3,7 @@
 
 ### The IF interpreter in an [Electron][] shell
 
-- Version 1.2.4
+- Version 1.2.5
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
 [Electron]: http://electron.atom.io

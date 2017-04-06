@@ -76,6 +76,8 @@ appfiles = [
     './hugoem/hugo.js',
     './hugoem/hugo.js.mem',
     './hugoem/emglken_dispload.min.js',
+    './hugoem/package.js',
+    './hugoem/versions.js',
     './inkplay.html',
     './inkplay.js',
     './inkjs/ink.min.js',
