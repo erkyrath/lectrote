@@ -111,6 +111,13 @@ function onready()
     }
     catch (ex) { }
     try {
+      var path = path_mod.join(__dirname, 'hugoem', 'versions.json');
+      var val = fs.readFileSync(path, { encoding:'utf8' });
+      var package = JSON.parse(val);
+      update('hugo_version', package.hugo);
+    }
+    catch (ex) { }
+    try {
       var path = path_mod.join(__dirname, 'inkjs', 'package.json');
       var val = fs.readFileSync(path, { encoding:'utf8' });
       var package = JSON.parse(val);
@@ -153,12 +160,12 @@ function openrecent()
 <h3>Constructed by Andrew Plotkin</h3>
 
 <p>
-Quixe version <span id="quixe_version">???</span>;
-inkjs version <span id="inkjs_version">???</span>;
-ZVM:IFVMS version <span id="ifvms_version">???</span>;
-Hugo-Emscripten experimental
+Quixe <span id="quixe_version">???</span>;
+inkjs <span id="inkjs_version">???</span>;
+ZVM (ifvms) <span id="ifvms_version">???</span>;
+Hugo (emglken) <span id="hugo_version">???</span>
 <br>
-Electron version <span id="electron_version">???</span>
+Electron <span id="electron_version">???</span>
 (Node <span id="node_version">???</span>,
 Chrome <span id="chrome_version">???</span>)
 </p>
