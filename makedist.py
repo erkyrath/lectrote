@@ -58,6 +58,7 @@ appfiles = [
     './fonts.css',
     './play.css',
     './el-glkote.css',
+    './font',  # all files
     './icon-128.png',
     './docicon-glulx.ico',
     './docicon-zcode.ico',
@@ -83,7 +84,6 @@ appfiles = [
     './inkjs/ink-130.min.js',
     './inkjs/ink-146.min.js',
     './inkjs/package.json',
-    './font',  # all files
 ]
 
 rootfiles = [
