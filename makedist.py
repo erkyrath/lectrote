@@ -112,9 +112,13 @@ def install(resourcedir, pkg):
     appdir = resourcedir
     print('Installing to: ' + appdir)
 
+    soleterp = pkg.get('lectroteSoleInterpreter')
+
     appfilesused = []
     for val in appfiles:
         if type(val) is dict:
+            if soleterp and val != soleterp:
+                continue
             for filename in val['files']:
                 appfilesused.append(filename)
         else:
