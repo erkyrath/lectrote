@@ -676,6 +676,12 @@ function open_about_window()
         useContentSize: true,
         resizable: false
     };
+    if (main_extension.about_window_size) {
+        if (main_extension.about_window_size.width)
+            winopts.width = main_extension.about_window_size.width;
+        if (main_extension.about_window_size.height)
+            winopts.height = main_extension.about_window_size.height;
+    }
     window_position_prefs(winopts, 'aboutwin');
     if (window_icon)
         winopts.icon = window_icon;
