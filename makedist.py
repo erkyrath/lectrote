@@ -117,7 +117,7 @@ def install(resourcedir, pkg):
     appfilesused = []
     for val in appfiles:
         if type(val) is dict:
-            if soleterp and val != soleterp:
+            if soleterp and val['key'] != soleterp:
                 continue
             for filename in val['files']:
                 appfilesused.append(filename)
