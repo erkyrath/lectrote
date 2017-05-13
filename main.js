@@ -344,6 +344,13 @@ function invoke_app_hook(win, func, arg)
 */
 function game_file_discriminate(path)
 {
+    var format_info = {
+        glulx: { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' },
+        zcode: { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' },
+        hugo: { engine:'hugoem', basehtml:'hugoplay.html', docicon:'docicon-hugo.ico' },
+        ink: { engine:'inkjs', basehtml:'inkplay.html', docicon:'docicon-json.ico' }
+    };
+
     var fd = fs.openSync(path, 'r');
     var buf = new Buffer(16);
     var len = fs.readSync(fd, buf, 0, 16, 0);
@@ -351,7 +358,7 @@ function game_file_discriminate(path)
 
     if (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C) {
         /* Glulx file */
-        return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
+        return format_info.glulx;
     }
 
     if (buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
@@ -359,19 +366,19 @@ function game_file_discriminate(path)
         /* Blorb file */
         var gametype = parse_blorb(path);
         if (gametype == 'GLUL')
-            return { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' };
+            return format_info.glulx;
         else if (gametype == 'ZCOD')
-            return { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
+            return format_info.zcode;
     }
 
     if (path.match(/[.]hex$/i)) {
         /* Hugo file */
-        return { engine:'hugoem', basehtml:'hugoplay.html', docicon:'docicon-hugo.ico' };
+        return format_info.hugo;
     }
 
     if (buf[0] >= 3 && buf[0] <= 8) {
         /* Z-machine file, probably */
-        return { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' };
+        return format_info.zcode;
     }
 
     /* Ink is a text (JSON) format, which is harder to check. We skip
@@ -386,7 +393,7 @@ function game_file_discriminate(path)
             break;
         pos++;
         if (pos >= checkascii.length) {
-            return { engine:'inkjs', basehtml:'inkplay.html', docicon:'docicon-json.ico' };
+            return format_info.ink;
         }
     }
 
