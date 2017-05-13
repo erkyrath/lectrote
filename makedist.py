@@ -68,22 +68,37 @@ appfiles = [
     './quixe/lib/jquery-1.12.4.min.js',
     './quixe/lib/quixe.min.js',
     './quixe/media/waiting.gif',
-    './zplay.html',
-    './ifvms/zvm.min.js',
-    './ifvms/zvm_dispload.min.js',
-    './ifvms/zvm.css',
-    './ifvms/package.json',
-    './hugoplay.html',
-    './hugoem/hugo.js',
-    './hugoem/hugo.js.mem',
-    './hugoem/emglken_dispload.min.js',
-    './hugoem/versions.json',
-    './inkplay.html',
-    './inkplay.js',
-    './inkjs/ink.min.js',
-    './inkjs/ink-130.min.js',
-    './inkjs/ink-146.min.js',
-    './inkjs/package.json',
+    {
+        'key': 'ifvms',
+        'files': [
+            './zplay.html',
+            './ifvms/zvm.min.js',
+            './ifvms/zvm_dispload.min.js',
+            './ifvms/zvm.css',
+            './ifvms/package.json',
+        ]
+    },
+    {
+        'key': 'hugo',
+        'files': [
+            './hugoplay.html',
+            './hugoem/hugo.js',
+            './hugoem/hugo.js.mem',
+            './hugoem/emglken_dispload.min.js',
+            './hugoem/versions.json',
+        ]
+    },
+    {
+        'key': 'inkjs',
+        'files': [
+            './inkplay.html',
+            './inkplay.js',
+            './inkjs/ink.min.js',
+            './inkjs/ink-130.min.js',
+            './inkjs/ink-146.min.js',
+            './inkjs/package.json',
+        ]
+    },
 ]
 
 rootfiles = [
@@ -96,6 +111,14 @@ def install(resourcedir, pkg):
         raise Exception('path does not exist: ' + resourcedir)
     appdir = resourcedir
     print('Installing to: ' + appdir)
+
+    appfilesused = []
+    for val in appfiles:
+        if type(val) is dict:
+            for filename in val['files']:
+                appfilesused.append(filename)
+        else:
+            appfilesused.append(val)
     
     os.makedirs(appdir, exist_ok=True)
     qdir = os.path.join(appdir, 'quixe')
@@ -109,7 +132,7 @@ def install(resourcedir, pkg):
     inkdir = os.path.join(appdir, 'inkjs')
     os.makedirs(inkdir, exist_ok=True)
 
-    for filename in appfiles:
+    for filename in appfilesused:
         srcfilename = filename
         if opts.gamedir:
             val = os.path.join(opts.gamedir, filename)
