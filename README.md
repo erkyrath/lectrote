@@ -101,6 +101,7 @@ You will need to create a separate directory for your game's files. Copy `packag
 - `author`: You, the game's author.
 - `description`: One-line description of your game.
 - `lectrotePackagedGame`: Pathname to the game file.
+- `lectroteSoleInterpreter`: Set to `"glulx"`, `"ifvms"`, `"hugo"`, or `"inkjs"` to include just one of Lectrote's interpreter engines. (Optional, but it saves a little bit of space.)
 - `lectroteExtraFiles`: An array of extra files to include. These are assumed to be in the game directory, so you do not have to include the directory prefix. (This list must include the game file -- yes, it's redundant with `lectrotePackagedGame`.)
 - `lectroteMacAppID`: If you plan to build a MacOS app, a reverse-DNS ID string to uniquely identify it.
 - `lectroteCopyright`: Copyright string (applied to Windows binaries).
@@ -140,6 +141,7 @@ This file can define new functionality by exporting any of the following Javascr
 - `exports.construct_menu_template(template, special)`: Called to customize the app menu template. The `template` argument is a Javascript data structure as described in [the Electron Menu docs][elemenu]. `special` is null for the game window, or one of the strings `"about", "prefs", "card"` for one of Lectrote's special windows. Modify `template` and return it.
 - `exports.set_zoom_factor(val)`: Called when the app's zoom level changes. The argument is suitable for Electron's `setZoomFactor()` method.
 - `exports.export_game_path()`: The bound app normally has an "Export Portable Game File..." menu option, which lets the user extract your game file for use in other interpreters. You can implement this function and return null to suppress this menu option. You can also return the pathname of a different game file, which is not actually a useful thing to do.
+- `exports.about_window_size`: An object `{ width:W, height:H }` which customizes the size of the about.html window. (Defaults to `{ width:600, height:450 }`.)
 
 [elemenu]: http://electron.atom.io/docs/latest/api/menu/
 
