@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # If we are in the lectrote package directory, run the app locally.
 # If not, run it from the global node directory. I think this is
