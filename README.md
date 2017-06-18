@@ -5,11 +5,13 @@
 
 - Version 1.2.5
 - Created by Andrew Plotkin <erkyrath@eblong.com>
+- [Download the latest Lectrote app][releases]
 
 [Electron]: http://electron.atom.io
 [Node]: http://nodejs.org
+[releases]: https://github.com/erkyrath/lectrote/releases
 
-Lectrote packages up IF interpreters with the Chromium browser as a Mac/Win/Linux app.
+Lectrote packages up IF interpreters with the Chromium browser as a [Mac/Win/Linux app][releases].
 
 When launched, it prompts you to select a game file to play. You can play several games at the same time in separate windows. Your position is always autosaved; when you launch a game, your last play session will automatically be resumed.
 
