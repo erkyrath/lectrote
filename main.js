@@ -535,6 +535,8 @@ function launch_game(path)
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         }
     };
+    /* The webPreferences.zoomFactor doesn't seem to take effect in
+       Electron 1.6.11, so we'll send it over via IPC later. */
 
     if (window_icon)
         winopts.icon = window_icon;
@@ -584,6 +586,7 @@ function launch_game(path)
         var game = game_for_webcontents(ev.sender);
         if (!game)
             return;
+        invoke_app_hook(win, 'set_zoom_factor', winopts.webPreferences.zoomFactor);
         invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
         invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
         invoke_app_hook(win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
