@@ -7,70 +7,48 @@ const path_mod = require('path');
 const fs = require('fs');
 
 const fonts = require('./fonts.js');
+const formats = require('./formats.js');
 
 function load_named_game(arg)
 {
     var path = arg.path;
-
-    game_options.default_page_title = path_mod.basename(path);
-
-    var arr = null;
-    var sigfunc = null;
-    var load_options = { format:'array' };
-
-    if (arg.engine == 'quixe') {
-        var buf = fs.readFileSync(path);
-        /* Convert to a generic Array of byte values. */
-        arr = new Array(buf.length);
-        for (var ix=0; ix<buf.length; ix++)
-            arr[ix] = buf[ix];
-        sigfunc = Quixe.get_signature;
-        game_options.vm = Quixe;
-        /* Further Glulx options are set up by gi_load.js. */
+    const engine = formats[arg.engine];
+    
+    if ( !engine )
+    {
+        throw new Error( 'Unrecognized engine: ' + arg.engine );
     }
-    else if (arg.engine == 'ifvms') {
-        var buf = fs.readFileSync(path);
-        /* Convert to a Uint8Array. */
-        arr = Uint8Array.from(buf);
-        /* window.engine won't exist until we call load_run, so we
-           create a function that uses it. */
-        sigfunc = function() {
-            return window.engine.get_signature();
-        };
-        game_options.engine_name = 'IFVMS';
-        game_options.blorb_gamechunk_type = 'ZCOD';
-        game_options.game_format_name = 'Z-code';
-        game_options.vm = window.engine = new window.ZVM();
-        game_options.Glk = window.Glk;
-        game_options.Dialog = window.Dialog;
+
+    // Assign various properties to game_options
+    const default_options = {
+        Dialog: window.Dialog,
+        GiDispa: window.GiDispa,
+        Glk: window.Glk,
+        default_page_title: path_mod.basename(path),
+        engine_name: engine.name,
+        game_format_name: arg.format.shortname,
+        vm: engine.get_vm(),
+    };
+    const format_options = engine.options ? engine.options() : {};
+    Object.assign( game_options, default_options, format_options );
+    window.engine = game_options.vm;
+
+    // Get the game and prepar the buffer in whichever format the engine requires
+    var buf = fs.readFileSync(path);
+    var arr = buf;
+    if ( engine.prepare_buffer )
+    {
+        arr = engine.prepare_buffer( buf );
     }
-    else if (arg.engine == 'hugoem') {
-        var buf = fs.readFileSync(path);
-        /* Convert to a Uint8Array. */
-        arr = Uint8Array.from(buf);
-        /* window.engine won't exist until we call load_run, so we
-           create a function that uses it. */
-        sigfunc = function() {
-            return window.engine.get_signature();
-        };
-        game_options.engine_name = 'Hugo';
-        game_options.game_format_name = 'Hugo';
-        game_options.memdir = 'hugoem';
-        game_options.vm = window.engine = window.Hugo;
-        game_options.Glk = window.Glk;
-        game_options.GiDispa = window.GiDispa;
-    }
-    else if (arg.engine == 'inkjs') {
-        var buf = fs.readFileSync(path);
-        /* Pass the Buffer directly to the load_run function. */
-        var arr = buf;
+
+    /* For many VMs, window.engine won't exist until we call load_run,
+       so we create a function that uses it. */
+    var sigfunc = () => window.engine.get_signature();
+    if (arg.engine == 'inkjs') {
         sigfunc = GiLoad.get_game_signature;
-        /* Does not use gi_load.js, so no additional options needed */
-    }
-    else {
-        throw(new Error('Unrecognized engine case: ' + arg.engine));
     }
 
+    var load_options = { format:'array' };
     GiLoad.load_run(game_options, arr, load_options);
 
     /* Pass some metadata back to the app */

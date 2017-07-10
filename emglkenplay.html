@@ -21,15 +21,13 @@ game_options = {
 window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
 if (!game_options.use_unminified_js) {
   require('./quixe/lib/elkote.min.js');
-  require('./hugoem/emglken_dispload.min.js');
-  require('./hugoem/hugo.js');
+  require('./emglken/emglken_dispload.min.js');
 }
 else {
   require('./quixe/src/glkote/glkote.js');
   require('./quixe/src/glkote/electrofs.js');
   require('./quixe/src/glkote/glkapi.js');
-  require('./hugoem/hugo.js');
-  require('./hugoem/emglken_dispatch.js');
+  require('./emglken/emglken_dispatch.js');
   require('./quixe/src/quixe/gi_load.js');
 }
 require('./apphooks.js');

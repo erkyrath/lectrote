@@ -4,6 +4,8 @@ const app = electron.app;
 const fs = require('fs');
 const path_mod = require('path');
 
+const formats = require('./formats.js');
+
 var package_json = {}; /* parsed form of our package.json file */
 var main_extension = {}; /* extra code for bound games */
 
@@ -344,56 +346,38 @@ function invoke_app_hook(win, func, arg)
 */
 function game_file_discriminate(path)
 {
-    var format_info = {
-        glulx: { engine:'quixe', basehtml:'play.html', docicon:'docicon-glulx.ico' },
-        zcode: { engine:'ifvms', basehtml:'zplay.html', docicon:'docicon-zcode.ico' },
-        hugo: { engine:'hugoem', basehtml:'hugoplay.html', docicon:'docicon-hugo.ico' },
-        ink: { engine:'inkjs', basehtml:'inkplay.html', docicon:'docicon-json.ico' }
-    };
-
     var fd = fs.openSync(path, 'r');
     var buf = new Buffer(16);
     var len = fs.readSync(fd, buf, 0, 16, 0);
     fs.closeSync(fd);
 
-    if (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C) {
-        /* Glulx file */
-        return format_info.glulx;
-    }
-
+    // Try Blorbs first
     if (buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
         && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53) {
         /* Blorb file */
         var gametype = parse_blorb(path);
         if (gametype == 'GLUL')
-            return format_info.glulx;
+            return formats.glulx;
         else if (gametype == 'ZCOD')
-            return format_info.zcode;
+            return formats.zcode;
     }
 
-    if (path.match(/[.]hex$/i)) {
-        /* Hugo file */
-        return format_info.hugo;
+    // Use custom identify functions
+    for ( let i = 0; i < formats.length; i++ )
+    {
+        if ( formats[i].identify && formats[i].identify( buf ) )
+        {
+            return formats[i];
+        }
     }
 
-    if (buf[0] >= 3 && buf[0] <= 8) {
-        /* Z-machine file, probably */
-        return format_info.zcode;
-    }
-
-    /* Ink is a text (JSON) format, which is harder to check. We skip
-       whitespace and non-ASCII characters and look for '{"ink'. */
-    var checkascii = [ 0x7B, 0x22, 0x69, 0x6E, 0x6B ];
-    var pos = 0;
-    for (var ix=0; ix<buf.length; ix++) {
-        var ch = buf[ix];
-        if (!(ch > 32 && ch < 127))
-            continue;
-        if (ch != checkascii[pos]) 
-            break;
-        pos++;
-        if (pos >= checkascii.length) {
-            return format_info.ink;
+    // Fall back to checking file extensions
+    for ( let i = 0; i < formats.length; i++ )
+    {
+        let regex = new RegExp( `\.(${ formats[i].extensions.join( '|' ) })$`, 'i' );
+        if ( formats[i].engines && regex.test( path ) )
+        {
+            return formats[i];
         }
     }
 
@@ -458,27 +442,26 @@ function select_load_game()
         return;
     }
 
+    var formats_with_union = formats.slice();
+    
+    if ( process.platform !== 'darwin' )
+    {
+    	/* On Win/Linux, the file dialog can only show one filter-row at a
+    	   time. So we construct one that has a union of the types, and
+    	   push it onto the beginning of the filters list. */
+    	var arr = [];
+    	for ( let i = 0; i < formats_with_union.length; i++ )
+    	{
+    		arr = arr.concat( formats_with_union[i].extensions );
+    	}
+    	formats_with_union.unshift({ name: 'All IF Files', extensions: arr });
+    }
+
     var opts = {
         title: 'Select an IF game file',
         properties: ['openFile'],
-        filters: [ 
-            { name: 'Blorbed Game File', extensions: ['blorb', 'blb'] },
-            { name: 'Glulx Game File', extensions: ['ulx', 'gblorb', 'glb'] },
-            { name: 'Z-Code Game File', extensions: ['z3', 'z4', 'z5', 'z8', 'zblorb', 'zlb'] },
-            { name: 'Hugo Game File', extensions: [ 'hex' ] },
-            { name: 'Ink JSON File', extensions: [ 'json' ] },
-        ]
+        filters: formats_with_union,
     };
-
-    if (process.platform != 'darwin') {
-        /* On Win/Linux, the file dialog can only show one filter-row at a
-           time. So we construct one that has a union of the types, and
-           push it onto the beginning of the filters list. */
-        var arr = [];
-        for (var ix=0; ix<opts.filters.length; ix++)
-            arr = arr.concat(opts.filters[ix].extensions);
-        opts.filters.unshift({ name: 'All IF Files', extensions: arr });
-    }
 
     gamedialog = true;
     electron.dialog.showOpenDialog(null, opts, function(ls) {
@@ -521,8 +504,8 @@ function launch_game(path)
     var win = null;
     var game = {
         path: path,
-        basehtml: kind.basehtml,
-        engine: kind.engine,
+        basehtml: kind.engines[0].html,
+        engineid: kind.engines[0].id,
         title: null,
         signature: null
     };
@@ -594,7 +577,7 @@ function launch_game(path)
             invoke_app_hook(win, 'set_clear_autosave', true);
             game.suppress_autorestore = false;
         }
-        invoke_app_hook(win, 'load_named_game', { path: game.path, engine: game.engine } );
+        invoke_app_hook(win, 'load_named_game', { path: game.path, format: kind.id, engine: game.engineid } );
     });
 
     win.webContents.on('found-in-page', function(ev, res) {
