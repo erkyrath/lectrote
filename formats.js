@@ -1,5 +1,10 @@
 'use strict';
 
+/* This module is used by both the main process (main.js) and the game
+   process (apphooks.js). It contains all the information about the game
+   formats which Lectrote understands.
+ */
+
 const emglken_options = () => ({
     dirname: 'emglken',
 });
@@ -11,6 +16,8 @@ const formats = [
         id: 'blorb',
         name: 'Blorbed Game File',
         extensions: ['blorb', 'blb'],
+        /* No engine; this exists solely to supply file suffixes for the
+           open-game dialog. */
     },
 
     {
@@ -19,7 +26,7 @@ const formats = [
         shortname: 'Glulx',
         extensions: ['ulx', 'gblorb', 'glb'],
         docicon: 'docicon-glulx.ico',
-        identify: buf => buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C,
+        identify: buf => (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C),
         engines: [
             {
                 id: 'quixe',
@@ -45,7 +52,7 @@ const formats = [
         shortname: 'Z-Code',
         extensions: ['z3', 'z4', 'z5', 'z8', 'zblorb', 'zlb'],
         docicon: 'docicon-zcode.ico',
-        identify: buf => buf[0] >= 3 && buf[0] <= 8,
+        identify: buf => (buf[0] >= 3 && buf[0] <= 8),
         engines: [
             {
                 id: 'zvm',
