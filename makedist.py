@@ -48,6 +48,7 @@ appfiles = [
     './package.json',
     './main.js',
     './apphooks.js',
+    './formats.js',
     './play.html',
     './prefs.html',
     './prefs.js',
@@ -83,9 +84,9 @@ appfiles = [
         'files': [
             './emglkenplay.html',
             './emglken/hugo.js',
-            './emglken/hugo.js.mem',
+            './emglken/hugo-core.js.mem',
             './emglken/git.js',
-            './emglken/git.js.mem',
+            './emglken/git-core.js.mem',
             './emglken/emglken_dispload.min.js',
             './emglken/versions.json',
         ]
