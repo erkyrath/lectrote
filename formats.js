@@ -101,12 +101,11 @@ const formatlist = [
         extensions: [ 'json' ],
         docicon: 'docicon-json.ico',
         identify: buf => {
-            /* Ink is a text (JSON) format, which is harder to check. We skip
+            /* Ink is a text (JSON) format, which is hard to check. We skip
                whitespace and non-ASCII characters and look for '{"ink'. */
             var checkascii = [ 0x7B, 0x22, 0x69, 0x6E, 0x6B ];
             var pos = 0;
-            for ( var ix=0; ix<buf.length; ix++ )
-            {
+            for (var ix=0; ix<buf.length; ix++) {
                 var ch = buf[ix];
                 if (!(ch > 32 && ch < 127))
                     continue;
@@ -114,9 +113,7 @@ const formatlist = [
                     break;
                 pos++;
                 if (pos >= checkascii.length)
-                {
                     return true;
-                }
             }
         },
         engines: [
