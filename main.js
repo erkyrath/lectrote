@@ -363,23 +363,25 @@ function game_file_discriminate(path)
     }
 
     /* Use custom identify functions. */
-    for (let i = 0; i < formats.formatlist.length; i++)
-    {
+    for (let i = 0; i < formats.formatlist.length; i++) {
         var format = formats.formatlist[i];
-        if ( format.identify && format.identify( buf ) )
-        {
+        if (format.identify && format.identify(buf)) {
             return format;
         }
     }
 
     /* Fall back to checking file extensions. */
-    for (let i = 0; i < formats.formatlist.length; i++)
-    {
+    var pathsuffix = path_mod.extname(path).toLowerCase();
+    if (pathsuffix.startsWith('.'))
+        pathsuffix = pathsuffix.slice(1);
+
+    for (let i = 0; i < formats.formatlist.length; i++) {
         var format = formats.formatlist[i];
-        let regex = new RegExp( `\.(${ format.extensions.join( '|' ) })$`, 'i' );
-        if ( format.engines && regex.test( path ) )
-        {
-            return format;
+        if ((!format.extensions) || (!format.engines))
+            continue;
+        for (var jx=0; jx<format.extensions.length; jx++) {
+            if (format.extensions[jx] == pathsuffix)
+                return format;
         }
     }
 
