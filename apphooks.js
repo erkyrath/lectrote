@@ -30,13 +30,18 @@ function load_named_game(arg)
 
     /* Pass some metadata back to the app */
     var obj = {
-        title: default_name,
-        signature: engine.get_signature()
+        title: default_name
     };
 
     var title = GiLoad.get_metadata('title');
     if (title)
         obj.title = title;
+
+    if (engine.get_signature) {
+        var signature = engine.get_signature();
+        if (signature)
+            obj.signature = signature;
+    }
 
     electron.ipcRenderer.send('game_metadata', obj);
 }
