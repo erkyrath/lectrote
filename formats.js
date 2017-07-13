@@ -8,7 +8,6 @@
 function emglken_options(opts) {
     opts.dirname = 'emglken';
 }
-const Uint8Array_from = buf => Uint8Array.from( buf ); //###
 
 const formatlist = [
 
