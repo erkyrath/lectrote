@@ -22,6 +22,8 @@ function load_named_game(arg)
     var load_options = { format:'array' };
 
     game_options.default_page_title = default_name;
+    game_options.game_format_name = engine.short_name; /* label used for loading error messages */
+    game_options.engine_name = engine.name; /* label used in page title */
     var arr = null;
     if (engine.load)
         arr = engine.load(arg, buf, game_options);

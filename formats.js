@@ -48,9 +48,15 @@ const formatlist = [
                 id: 'git',
                 name: 'Git',
                 html: 'emglkenplay.html',
-                get_vm: () => new ( require('./emglken/git.js') )(),
-                prepare_buffer: Uint8Array_from,
-                options: emglken_options,
+                load: (arg, buf, opts) => {
+                    emglken_options(opts);
+                    var engine = new ( require('./emglken/git.js') )();
+                    opts.vm = window.engine = engine;
+                    opts.Glk = window.Glk;
+                    opts.GiDispa = window.GiDispa;
+                    return Uint8Array.from(buf);
+                },
+                get_signature: () => window.engine.get_signature(),
             },
         ],
     },
@@ -68,9 +74,7 @@ const formatlist = [
                 name: 'ZVM',
                 html: 'zplay.html',
                 load: (arg, buf, opts) => {
-                    opts.engine_name = 'IFVMS';
                     opts.blorb_gamechunk_type = 'ZCOD';
-                    opts.game_format_name = 'Z-code';
                     opts.vm = window.engine = new window.ZVM();
                     opts.Glk = window.Glk;
                     opts.Dialog = window.Dialog;
@@ -97,9 +101,6 @@ const formatlist = [
                 html: 'emglkenplay.html',
                 load: (arg, buf, opts) => {
                     emglken_options(opts);
-                    opts.engine_name = 'Hugo';
-                    opts.game_format_name = 'Hugo';
-                    opts.memdir = 'hugoem';
                     var engine = new ( require('./emglken/hugo.js') )();
                     opts.vm = window.engine = engine;
                     opts.Glk = window.Glk;
