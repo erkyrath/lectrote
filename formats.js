@@ -106,6 +106,7 @@ const formatlist = [
                     opts.GiDispa = window.GiDispa;
                     return Uint8Array.from(buf);
                 },
+                get_signature: () => window.engine.get_signature(),
             },
         ],
     },
