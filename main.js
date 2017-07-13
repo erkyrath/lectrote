@@ -444,6 +444,7 @@ function select_load_game()
         return;
     }
 
+    //#### nope
     var formats_with_union = formats.formatlist.slice();
     
     if ( process.platform !== 'darwin' )
