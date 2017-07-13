@@ -42,7 +42,7 @@ const formatlist = [
                         arr[ix] = buf[ix];
                     return arr;
                 },
-                get_signature: () => Quixe.get_signature,
+                get_signature: () => Quixe.get_signature(),
             },
             {
                 id: 'git',
