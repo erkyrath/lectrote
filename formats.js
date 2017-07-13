@@ -84,6 +84,7 @@ const formatlist = [
                     opts.vm = window.engine = engine;
                     opts.Glk = window.Glk;
                     opts.GiDispa = window.GiDispa;
+                    opts.blorb_gamechunk_type = 'GLUL';
                     return Uint8Array.from(buf);
                 },
                 get_signature: () => window.engine.get_signature(),
