@@ -362,7 +362,7 @@ function game_file_discriminate(path)
             return formats.formatmap.zcode;
     }
 
-    /* Use custom identify functions. */
+    /* Try the format identify functions. */
     for (let i = 0; i < formats.formatlist.length; i++) {
         var format = formats.formatlist[i];
         if (format.identify && format.identify(buf)) {
