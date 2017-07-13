@@ -124,6 +124,12 @@ const formatlist = [
                 id: 'inkjs',
                 name: 'InkJS',
                 html: 'inkplay.html',
+                load: (arg, buf, opts) => {
+                    /* Does not use gi_load.js, so no additional options needed */
+                    /* Pass the Buffer directly to the load_run function. */
+                    return buf;
+                },
+                get_signature: () => GiLoad.get_game_signature(),
             },
         ],
     },
