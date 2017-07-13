@@ -351,33 +351,35 @@ function game_file_discriminate(path)
     var len = fs.readSync(fd, buf, 0, 16, 0);
     fs.closeSync(fd);
 
-    // Try Blorbs first
+    /* Try Blorbs first. */
     if (buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
         && buf[8] == 0x49 && buf[9] == 0x46 && buf[10] == 0x52 && buf[11] == 0x53) {
         /* Blorb file */
         var gametype = parse_blorb(path);
         if (gametype == 'GLUL')
-            return formats.glulx;
+            return formats.formatmap.glulx;
         else if (gametype == 'ZCOD')
-            return formats.zcode;
+            return formats.formatmap.zcode;
     }
 
-    // Use custom identify functions
-    for ( let i = 0; i < formats.length; i++ )
+    /* Use custom identify functions. */
+    for (let i = 0; i < formats.formatlist.length; i++)
     {
-        if ( formats[i].identify && formats[i].identify( buf ) )
+        var format = formats.formatlist[i];
+        if ( format.identify && format.identify( buf ) )
         {
-            return formats[i];
+            return format;
         }
     }
 
-    // Fall back to checking file extensions
-    for ( let i = 0; i < formats.length; i++ )
+    /* Fall back to checking file extensions. */
+    for (let i = 0; i < formats.formatlist.length; i++)
     {
-        let regex = new RegExp( `\.(${ formats[i].extensions.join( '|' ) })$`, 'i' );
-        if ( formats[i].engines && regex.test( path ) )
+        var format = formats.formatlist[i];
+        let regex = new RegExp( `\.(${ format.extensions.join( '|' ) })$`, 'i' );
+        if ( format.engines && regex.test( path ) )
         {
-            return formats[i];
+            return format;
         }
     }
 
@@ -442,7 +444,7 @@ function select_load_game()
         return;
     }
 
-    var formats_with_union = formats.slice();
+    var formats_with_union = formats.formatlist.slice();
     
     if ( process.platform !== 'darwin' )
     {
