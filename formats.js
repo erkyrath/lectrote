@@ -32,8 +32,17 @@ const formatlist = [
                 id: 'quixe',
                 name: 'Quixe',
                 html: 'play.html',
-                get_vm: () => window.Quixe,
-                prepare_buffer: buf => Array.from( buf ),
+                load: (arg, buf, opts) => {
+                    opts.vm = Quixe;
+                    /* Further Glulx options are set up by gi_load.js. */
+
+                    /* Convert to a generic Array of byte values. */
+                    var arr = new Array(buf.length);
+                    for (var ix=0; ix<buf.length; ix++)
+                        arr[ix] = buf[ix];
+                    return arr;
+                },
+                get_signature: () => Quixe.get_signature,
             },
             {
                 id: 'git',

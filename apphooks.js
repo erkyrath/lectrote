@@ -11,50 +11,27 @@ const formats = require('./formats.js');
 
 function load_named_game(arg)
 {
-    var path = arg.path;
     const engine = formats.formatmap[arg.engine];
-    
-    if ( !engine )
-    {
-        throw new Error( 'Unrecognized engine: ' + arg.engine );
+    if (!engine) {
+        throw new Error('Unrecognized engine: ' + arg.engine);
     }
 
-    // Assign various properties to game_options
-    const default_options = {
-        Dialog: window.Dialog,
-        GiDispa: window.GiDispa,
-        Glk: window.Glk,
-        default_page_title: path_mod.basename(path),
-        engine_name: engine.name,
-        game_format_name: arg.format.shortname,
-        vm: engine.get_vm(),
-    };
-    const format_options = engine.options ? engine.options() : {};
-    Object.assign( game_options, default_options, format_options );
-    window.engine = game_options.vm;
-
-    // Get the game and prepar the buffer in whichever format the engine requires
+    var path = arg.path;
+    var default_name = path_mod.basename(path);
     var buf = fs.readFileSync(path);
-    var arr = buf;
-    if ( engine.prepare_buffer )
-    {
-        arr = engine.prepare_buffer( buf );
-    }
-
-    /* For many VMs, window.engine won't exist until we call load_run,
-       so we create a function that uses it. */
-    var sigfunc = () => window.engine.get_signature();
-    if (arg.engine == 'inkjs') {
-        sigfunc = GiLoad.get_game_signature;
-    }
-
     var load_options = { format:'array' };
+
+    game_options.default_page_title = default_name;
+    var arr = null;
+    if (engine.load)
+        arr = engine.load(arg, buf, game_options);
+
     GiLoad.load_run(game_options, arr, load_options);
 
     /* Pass some metadata back to the app */
     var obj = {
-        title: path_mod.basename(path),
-        signature: sigfunc()
+        title: default_name,
+        signature: window.engine.get_signature()
     };
 
     var title = GiLoad.get_metadata('title');
