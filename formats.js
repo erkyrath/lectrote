@@ -8,7 +8,7 @@
 const emglken_options = () => ({
     dirname: 'emglken',
 });
-const Uint8Array_from = buf => Uint8Array.from( buf );
+const Uint8Array_from = buf => Uint8Array.from( buf ); //###
 
 const formatlist = [
 
@@ -67,11 +67,16 @@ const formatlist = [
                 id: 'zvm',
                 name: 'ZVM',
                 html: 'zplay.html',
-                get_vm: () => new window.ZVM(),
-                prepare_buffer: Uint8Array_from,
-                options: () => ({
-                    blorb_gamechunk_type: 'ZCOD',
-                }),
+                load: (arg, buf, opts) => {
+                    opts.engine_name = 'IFVMS';
+                    opts.blorb_gamechunk_type = 'ZCOD';
+                    opts.game_format_name = 'Z-code';
+                    opts.vm = window.engine = new window.ZVM();
+                    opts.Glk = window.Glk;
+                    opts.Dialog = window.Dialog;
+                    return Uint8Array.from(buf);
+                },
+                get_signature: () => window.engine.get_signature(),
             },
         ],
     },
