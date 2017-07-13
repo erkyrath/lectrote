@@ -111,7 +111,7 @@ function onready()
     }
     catch (ex) { }
     try {
-      var path = path_mod.join(__dirname, 'hugoem', 'versions.json');
+      var path = path_mod.join(__dirname, 'emglken', 'versions.json');
       var val = fs.readFileSync(path, { encoding:'utf8' });
       var package = JSON.parse(val);
       update('hugo_version', package.hugo);
