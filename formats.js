@@ -1,11 +1,9 @@
-// Game formats and VM definitions for Lectrote
-
-'use strict'
+'use strict';
 
 const emglken_options = () => ({
     dirname: 'emglken',
-})
-const Uint8Array_from = buf => Uint8Array.from( buf )
+});
+const Uint8Array_from = buf => Uint8Array.from( buf );
 
 const formats = [
 
@@ -114,7 +112,7 @@ const formats = [
         ],
     },
 
-]
+];
 
 // Add shortcut properties
 for ( let i = 0; i < formats.length; i++ )
@@ -129,4 +127,4 @@ for ( let i = 0; i < formats.length; i++ )
     }
 }
 
-module.exports = formats
+module.exports = formats;
