@@ -3,6 +3,37 @@
 /* This module is used by both the main process (main.js) and the game
    process (apphooks.js). It contains all the information about the game
    formats which Lectrote understands.
+
+   The bulk of this module is a list of format entries, each of which
+   contains (zero or more) engine entries.
+
+   A format entry contains:
+
+   - id: key
+   - name: long description of file type (used in Windows file dialogs)
+   - shortname: one-word description of file type (used in loading error
+     messages)
+   - extensions: list of file suffixes
+   - docicon: Windows document icon filename
+   - identify: function which looks at the first 16 bytes of the file and
+     returns whether that file matches this format
+   - engines: list of engines
+
+   An engine entry contains:
+   
+   - id: key
+   - name: engine name (used in page titles)
+   - html: HTML file used for the game page
+   - load: function which takes the loading args, the loaded file (as an
+     array), and an options object. The function must add any needed options
+     to the options object, and then return the loaded file with any
+     modifications needed for load_run().
+   - get_signature: function which returns the signature of the loaded
+     file (as a string).
+
+   Note that the load() and get_signature() functions are only called in
+   the game process. They may require modules which are not available in
+   the main process.
  */
 
 function emglken_options(opts) {
