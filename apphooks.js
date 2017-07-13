@@ -11,7 +11,7 @@ const formats = require('./formats.js');
 
 function load_named_game(arg)
 {
-    const engine = formats.formatmap[arg.engine];
+    const engine = formats.enginemap[arg.engine];
     if (!engine) {
         throw new Error('Unrecognized engine: ' + arg.engine);
     }

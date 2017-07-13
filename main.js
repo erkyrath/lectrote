@@ -337,9 +337,9 @@ function invoke_app_hook(win, func, arg)
     win.webContents.send(func, arg);
 }
 
-/* Given a pathname, figure out what kind of game it is. Currently
-   understands Glulx, Zcode, Blorb (with Glulx or Zcode), and 
-   JSON-with-ink.
+/* Given a pathname, figure out what kind of game it is. This relies on
+   the format list in formats.js. It returns a format object from that
+   file.
 
    Returns null if the game type is not recognized. Throws an exception
    if the file is unreadable.

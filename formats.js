@@ -183,6 +183,7 @@ const formatlist = [
 
 /* Create the maps. */
 const formatmap = {};
+const enginemap = {};
 
 for (let i = 0; i < formatlist.length; i++) {
     var entry = formatlist[i];
@@ -190,11 +191,11 @@ for (let i = 0; i < formatlist.length; i++) {
     if (entry.engines) {
         for (let j = 0; j < entry.engines.length; j++) {
             var engine = entry.engines[j];
-            formatmap[engine.id] = engine;
+            enginemap[engine.id] = engine;
         }
     }
 }
 
 exports.formatlist = formatlist;
 exports.formatmap = formatmap;
-
+exports.enginemap = enginemap;
