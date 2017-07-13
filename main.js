@@ -446,26 +446,26 @@ function select_load_game()
         return;
     }
 
-    //#### nope
-    var formats_with_union = formats.formatlist.slice();
+    var filters = [];
+    for (var ix=0; ix<formats.formatlist.length; ix++) {
+        var format = formats.formatlist[ix];
+        filters.push({ name:format.name, extensions:format.extensions });
+    }
     
-    if ( process.platform !== 'darwin' )
-    {
+    if (process.platform !== 'darwin') {
         /* On Win/Linux, the file dialog can only show one filter-row at a
            time. So we construct one that has a union of the types, and
            push it onto the beginning of the filters list. */
         var arr = [];
-        for ( let i = 0; i < formats_with_union.length; i++ )
-        {
-            arr = arr.concat( formats_with_union[i].extensions );
-        }
-        formats_with_union.unshift({ name: 'All IF Files', extensions: arr });
+        for (var ix=0; ix<filters.length; ix++)
+            arr = arr.concat(filters[ix].extensions);
+        filters.unshift({ name: 'All IF Files', extensions: arr });
     }
 
     var opts = {
         title: 'Select an IF game file',
         properties: ['openFile'],
-        filters: formats_with_union,
+        filters: filters,
     };
 
     gamedialog = true;
