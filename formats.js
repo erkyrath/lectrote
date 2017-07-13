@@ -10,7 +10,7 @@ const emglken_options = () => ({
 });
 const Uint8Array_from = buf => Uint8Array.from( buf );
 
-const formats = [
+const formatlist = [
 
     {
         id: 'blorb',
@@ -121,17 +121,20 @@ const formats = [
 
 ];
 
-// Add shortcut properties
-for ( let i = 0; i < formats.length; i++ )
-{
-    formats[ formats[i].id ] = formats[i]
-    if ( formats[i].engines )
-    {
-        for ( let j = 0; j < formats[i].engines.length; j++ )
-        {
-            formats[ formats[i].engines[j].id ] = formats[i].engines[j]
+/* Create the maps. */
+const formatmap = {};
+
+for (let i = 0; i < formatlist.length; i++) {
+    var entry = formatlist[i];
+    formatmap[entry.id] = entry;
+    if (entry.engines) {
+        for (let j = 0; j < entry.engines.length; j++) {
+            var engine = entry.engines[j];
+            formatmap[engine.id] = engine;
         }
     }
 }
 
-module.exports = formats;
+exports.formatlist = formatlist;
+exports.formatmap = formatmap;
+

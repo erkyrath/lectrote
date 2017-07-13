@@ -12,7 +12,7 @@ const formats = require('./formats.js');
 function load_named_game(arg)
 {
     var path = arg.path;
-    const engine = formats[arg.engine];
+    const engine = formats.formatmap[arg.engine];
     
     if ( !engine )
     {
