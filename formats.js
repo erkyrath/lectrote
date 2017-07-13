@@ -5,9 +5,9 @@
    formats which Lectrote understands.
  */
 
-const emglken_options = () => ({
-    dirname: 'emglken',
-});
+function emglken_options(opts) {
+    opts.dirname = 'emglken';
+}
 const Uint8Array_from = buf => Uint8Array.from( buf ); //###
 
 const formatlist = [
@@ -76,6 +76,9 @@ const formatlist = [
                     opts.Dialog = window.Dialog;
                     return Uint8Array.from(buf);
                 },
+                /* ### this doesn't work, because the engine does not
+                   set its signature until some time after load_run is
+                   called. */
                 get_signature: () => window.engine.get_signature(),
             },
         ],
@@ -92,9 +95,17 @@ const formatlist = [
                 id: 'hugo',
                 name: 'Hugo',
                 html: 'emglkenplay.html',
-                get_vm: () => new ( require('./emglken/hugo.js') )(),
-                prepare_buffer: Uint8Array_from,
-                options: emglken_options,
+                load: (arg, buf, opts) => {
+                    emglken_options(opts);
+                    opts.engine_name = 'Hugo';
+                    opts.game_format_name = 'Hugo';
+                    opts.memdir = 'hugoem';
+                    var engine = new ( require('./emglken/hugo.js') )();
+                    opts.vm = window.engine = engine;
+                    opts.Glk = window.Glk;
+                    opts.GiDispa = window.GiDispa;
+                    return Uint8Array.from(buf);
+                },
             },
         ],
     },
