@@ -36,10 +36,6 @@
    the main process.
  */
 
-function emglken_options(opts) {
-    opts.dirname = 'emglken';
-}
-
 const formatlist = [
 
     {
@@ -79,7 +75,6 @@ const formatlist = [
                 name: 'Git',
                 html: 'emglkenplay.html',
                 load: (arg, buf, opts) => {
-                    emglken_options(opts);
                     var engine = new ( require('./emglken/git.js') )();
                     opts.vm = window.engine = engine;
                     opts.Glk = window.Glk;
@@ -131,7 +126,6 @@ const formatlist = [
                 name: 'Hugo',
                 html: 'emglkenplay.html',
                 load: (arg, buf, opts) => {
-                    emglken_options(opts);
                     var engine = new ( require('./emglken/hugo.js') )();
                     opts.vm = window.engine = engine;
                     opts.Glk = window.Glk;
