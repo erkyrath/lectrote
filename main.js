@@ -449,7 +449,7 @@ function select_load_game()
     var filters = [];
     for (var ix=0; ix<formats.formatlist.length; ix++) {
         var format = formats.formatlist[ix];
-        filters.push({ name:format.name, extensions:format.extensions });
+        filters.push({ name:format.longname, extensions:format.extensions });
     }
     
     if (process.platform !== 'darwin') {

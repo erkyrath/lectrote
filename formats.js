@@ -10,8 +10,8 @@
    A format entry contains:
 
    - id: key
-   - name: long description of file type (used in Windows file dialogs)
-   - shortname: one-word description of file type (used in loading error
+   - longname: long description of file type (used in Windows file dialogs)
+   - name: one-word description of file type (used in loading error
      messages)
    - extensions: list of file suffixes
    - docicon: Windows document icon filename
@@ -44,7 +44,7 @@ const formatlist = [
 
     {
         id: 'blorb',
-        name: 'Blorbed Game File',
+        longname: 'Blorbed Game File',
         extensions: ['blorb', 'blb'],
         /* No engine; this exists solely to supply file suffixes for the
            open-game dialog. */
@@ -52,8 +52,8 @@ const formatlist = [
 
     {
         id: 'glulx',
-        name: 'Glulx Game File',
-        shortname: 'Glulx',
+        longname: 'Glulx Game File',
+        name: 'Glulx',
         extensions: ['ulx', 'gblorb', 'glb'],
         docicon: 'docicon-glulx.ico',
         identify: buf => (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C),
@@ -94,8 +94,8 @@ const formatlist = [
 
     {
         id: 'zcode',
-        name: 'Z-Code Game File',
-        shortname: 'Z-Code',
+        longname: 'Z-Code Game File',
+        name: 'Z-Code',
         extensions: ['z3', 'z4', 'z5', 'z8', 'zblorb', 'zlb'],
         docicon: 'docicon-zcode.ico',
         identify: buf => (buf[0] >= 3 && buf[0] <= 8),
@@ -121,8 +121,8 @@ const formatlist = [
 
     {
         id: 'hugo',
-        name: 'Hugo Game File',
-        shortname: 'Hugo',
+        longname: 'Hugo Game File',
+        name: 'Hugo',
         extensions: [ 'hex' ],
         docicon: 'docicon-hugo.ico',
         engines: [
@@ -145,8 +145,8 @@ const formatlist = [
 
     {
         id: 'ink-json',
-        name: 'Ink JSON File',
-        shortname: 'Ink',
+        longname: 'Ink JSON File',
+        name: 'Ink',
         extensions: [ 'json' ],
         docicon: 'docicon-json.ico',
         identify: buf => {
