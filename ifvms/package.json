@@ -1,7 +1,7 @@
 {
   "name": "ifvms",
   "title": "ifvms.js",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "The Interactive Fiction Virtual Machines Suite - in Javascript",
   "author": "Dannii Willis <curiousdannii@gmail.com>",
   "license": "MIT",
@@ -26,14 +26,13 @@
   "homepage": "https://github.com/curiousdannii/ifvms.js",
   "bugs": "https://github.com/curiousdannii/ifvms.js/issues",
   "dependencies": {
-    "clone": "^2.1.0",
     "glkote-term": "^0.3.0",
-    "yargs": "^7.0.0"
+    "yargs": "^8.0.1"
   },
   "devDependencies": {
-    "babili": "0.0.12",
+    "babili": "^0.1.2",
     "browserify": "^14.0.0",
-    "eslint": "^3.5.0"
+    "eslint": "^4.1.0"
   },
   "scripts": {
     "build": "make dist/zvm.min.js",
