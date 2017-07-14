@@ -46,10 +46,14 @@ class EmglkenVM
 		if ( typeof process === 'object' )
 		{
 			const fs = require( 'fs' )
+			const path = require( 'path' )
 
 			moduleoptions.memoryInitializerPrefixURL = this.options.dirname + '/'
-			fs.readFile( this.options.dirname + '/' + this.options.emptfile, ( err, data ) =>
+			const empath = path.join( __dirname, this.options.emptfile )
+			fs.readFile( empath, ( err, data ) =>
 			{
+				if (err)
+					throw new Error( 'Unable to load file '+empath )
 				moduleoptions.emterpreterFile = data.buffer
 				this.vm = this.options.module( moduleoptions )
 				this.vm.then( () => this.start() )
