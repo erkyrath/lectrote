@@ -49,7 +49,7 @@ class EmglkenVM
 			const path = require( 'path' )
 
 			moduleoptions.memoryInitializerPrefixURL = this.options.dirname + '/'
-			const empath = path.join( __dirname, this.options.emptfile )
+			const empath = path.join( this.options.dirname, this.options.emptfile )
 			fs.readFile( empath, ( err, data ) =>
 			{
 				if (err)
