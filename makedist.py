@@ -258,7 +258,10 @@ def makezip(dir, unwrapped=False):
     if 'darwin' in zipfile:
         zipfile = zipfile.replace('darwin', 'macos')
         print('AppDMGing up: %s to %s' % (dir, zipfile))
-        subprocess.call('rm -f "dist/%s.dmg"; node_modules/.bin/appdmg resources/pack-dmg-spec.json "dist/%s.dmg"' % (zipfile, zipfile),
+        specfile = 'resources/pack-dmg-spec.json'
+        if opts.gamedir and os.path.exists(os.path.join(opts.gamedir, specfile)):
+            specfile = os.path.join(opts.gamedir, specfile)
+        subprocess.call('rm -f "dist/%s.dmg"; node_modules/.bin/appdmg "%s" "dist/%s.dmg"' % (zipfile, specfile, zipfile),
                         shell=True)
         return
     print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
