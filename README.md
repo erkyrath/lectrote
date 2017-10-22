@@ -52,6 +52,17 @@ This relies on the [inkjs][] interpreter. It is a deliberately non-fancy present
 
 [inkjs]: https://github.com/y-lohse/inkjs
 
+# License information
+
+- Lectrote is copyright (c) 2016, Andrew Plotkin ([MIT license][licensefile])
+- Electron is copyright (c) 2013-2017 GitHub Inc. ([MIT license][licensefile])
+- Quixe is copyright (c) 2010-2016, Andrew Plotkin ([MIT license][licensefile])
+- inkjs is copyright (c) 2017 Yannick Lohse ([MIT license][licensefile])
+- ifvms.js is copyright (c) 2016 Dannii Willis and other contributors ([MIT license][licensefile])
+- emglken is copyright (c) 2012-2017, Andrew Plotkin, Dannii Willis ([MIT license][licensefile])
+
+[licensefile]: LICENSE
+
 # For developers
 
 If you've just downloaded the source code for this puppy, it's easy to make a runnable version.
