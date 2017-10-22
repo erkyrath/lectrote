@@ -1,7 +1,13 @@
-The MIT License
+Lectrote is copyright (c) 2016, Andrew Plotkin [MIT license]
+Electron is copyright (c) 2013-2017 GitHub Inc. [MIT license]
+Quixe is copyright (c) 2010-2016, Andrew Plotkin [MIT license]
+inkjs is copyright (c) 2017 Yannick Lohse [MIT license]
+ifvms.js is copyright (c) 2016 Dannii Willis and other contributors [MIT license]
+emglken is copyright (c) 2012-2017, Andrew Plotkin, Dannii Willis [MIT license]
 
-Lectrote is copyright (c) 2016, Andrew Plotkin
-Electron is copyright (c) 2014 GitHub Inc.
+-------------------
+
+The MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,3 +26,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+-------------------
+
