@@ -61,6 +61,7 @@ This relies on the [inkjs][] interpreter. It is a deliberately non-fancy present
 - ifvms.js is copyright (c) 2016 Dannii Willis and other contributors ([MIT license][licensefile])
 - emglken is copyright (c) 2012-2017, Andrew Plotkin, Dannii Willis ([MIT license][licensefile])
 - Git (in emglken) is copyright (c) 2003 Iain Merrick ([MIT license][licensefile])
+- Glulxe (in emglken) is copyright (c) 1999-2016, Andrew Plotkin ([MIT license][licensefile])
 - Hugo (in emglken)  is copyright (c) 2011 by Kent Tessman ([BSD license][licensefile])
 
 [licensefile]: LICENSE

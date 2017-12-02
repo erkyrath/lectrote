@@ -84,6 +84,34 @@ const formatlist = [
                 },
                 get_signature: () => window.engine.get_signature(),
             },
+            {
+                id: 'glulxe',
+                name: 'Glulxe',
+                html: 'emglkenplay.html',
+                load: (arg, buf, opts) => {
+                    var engine = new ( require('./emglken/glulxe.js') )();
+                    opts.vm = window.engine = engine;
+                    opts.Glk = window.Glk;
+                    opts.GiDispa = window.GiDispa;
+                    opts.blorb_gamechunk_type = 'GLUL';
+                    return Uint8Array.from(buf);
+                },
+                get_signature: () => window.engine.get_signature(),
+            },
+            {
+                id: 'glulxe-profiler',
+                name: 'Glulxe (Profiler)',
+                html: 'emglkenplay.html',
+                load: (arg, buf, opts) => {
+                    var engine = new ( require('./emglken/glulxe-profiler.js') )();
+                    opts.vm = window.engine = engine;
+                    opts.Glk = window.Glk;
+                    opts.GiDispa = window.GiDispa;
+                    opts.blorb_gamechunk_type = 'GLUL';
+                    return Uint8Array.from(buf);
+                },
+                get_signature: () => window.engine.get_signature(),
+            },
         ],
     },
 
