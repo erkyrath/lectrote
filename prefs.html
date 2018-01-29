@@ -10,13 +10,30 @@
 body {
   background: #EEE;
   font-family: "Lora", Georgia, serif;
-  margin: 20px;
+  margin: 0px;
   font-size: 1.0em;
 }
 
 #content {
   max-width: 550px;
   margin: auto;
+}
+
+#tabheader {
+  background: #CCC;
+  margin: 0px;
+  text-align: center;
+}
+
+.TabButton {
+  display: inline-block;
+  margin: 0px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 1em;
+  padding-right: 1em;
+  border: 1px solid #888;
+  border-radius: 4px;
 }
 
 h2 {
@@ -111,6 +128,9 @@ require('./prefs.js');
 </head>
 
 <body>
+<div id="tabheader">
+<div class="TabButton">Appearance</div><div class="TabButton">Interpreters</div>
+</div>
 <div id="content">
 
 <h2>Story Font</h2>

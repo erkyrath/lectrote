@@ -707,7 +707,7 @@ function open_about_window()
 function open_prefs_window()
 {
     var winopts = { 
-        width: 600, height: 500,
+        width: 600, height: 530,
         useContentSize: true,
         resizable: false
     };
