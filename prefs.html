@@ -36,12 +36,22 @@ body {
   border-radius: 4px;
 }
 
+.TabContent {
+  display: none;
+}
+
 .CurrentTabAppear #tabbutton-appear {
   background: #AAA;
 }
-
 .CurrentTabTerp #tabbutton-terp {
   background: #AAA;
+}
+
+.CurrentTabAppear #tabcontent-appear {
+  display: block;
+}
+.CurrentTabTerp #tabcontent-terp {
+  display: block;
 }
 
 h2 {
@@ -140,6 +150,7 @@ require('./prefs.js');
 <div id="tabbutton-appear" class="TabButton">Appearance</div><div id="tabbutton-terp" class="TabButton">Interpreters</div>
 </div>
 <div id="content">
+<div id="tabcontent-appear" class="TabContent">
 
 <h2>Story Font</h2>
 
@@ -193,6 +204,21 @@ Around you is a forest. A small stream flows out of the building and
 down a gully.
 <i>(From Colossal Cave, Crowther & Woods)</i>
 </div>
+</div>
+
+</div>
+<div id="tabcontent-terp" class="TabContent">
+
+<h2>Glulxe Interpreter</h2>
+
+<div class="FormSection">
+
+<select disabled id="sel-glulxe-terp" name="glulxe-terp">
+<option>&nbsp;--&nbsp;</option>
+</select>
+
+</div>
+
 </div>
 
 </div>
