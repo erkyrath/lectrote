@@ -215,6 +215,7 @@ for (let i = 0; i < formatlist.length; i++) {
     if (entry.engines) {
         for (let j = 0; j < entry.engines.length; j++) {
             var engine = entry.engines[j];
+            engine.format = entry.id;
             enginemap[engine.id] = engine;
         }
     }
