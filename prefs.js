@@ -26,6 +26,7 @@ function setup_with_prefs(prefs)
     }
     set_tab('appear');
 
+
     sel = $('#sel-color-theme');
     sel.prop('disabled', false);
     sel.empty();
@@ -82,6 +83,21 @@ function setup_with_prefs(prefs)
     sel.on('input', evhan_zoom_level);
     sel.val(prefs.gamewin_zoomlevel);
     apply_zoom_level(prefs.gamewin_zoomlevel);
+
+
+    sel = $('#sel-glulx-terp');
+    sel.prop('disabled', false);
+    sel.empty();
+
+    for (var ix=0; ix<formats.formatmap['glulx'].engines.length; ix++) {
+        var engine = formats.formatmap['glulx'].engines[ix];
+        optel = $('<option>', { value:engine.id }).text(engine.name);
+        if (prefs.glulx_terp == engine.id)
+            optel.prop('selected', true);
+        sel.append(optel);
+    }
+
+    sel.on('change', evhan_glulx_terp);
 }
 
 function set_tab(val)
@@ -256,6 +272,12 @@ function evhan_zoom_level()
     electron.ipcRenderer.send('pref_zoom_level', val);
 }
 
+function evhan_glulx_terp()
+{
+    var sel = $('#sel-glulx-terp');
+    var val = sel.val();
+    electron.ipcRenderer.send('pref_glulx_terp', val);
+}
 
 /* Respond to messages from the app. */
 

@@ -24,7 +24,8 @@ var prefs = {
     gamewin_colortheme: 'light',
     gamewin_font: 'lora',
     gamewin_customfont: null,
-    gamewin_zoomlevel: 0
+    gamewin_zoomlevel: 0,
+    glulx_terp: 'quixe'   // engine.id from formats.js
 };
 var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
 var prefstimer = null;
@@ -1324,6 +1325,11 @@ electron.ipcMain.on('pref_zoom_level', function(ev, arg) {
     note_prefs_dirty();
     var val = zoom_factor_for_level(prefs.gamewin_zoomlevel);
     set_zoom_factor_all(val);
+});
+
+electron.ipcMain.on('pref_glulx_terp', function(ev, arg) {
+    prefs.glulx_terp = arg;
+    note_prefs_dirty();
 });
 
 electron.ipcMain.on('search_done', function(ev, arg) {
