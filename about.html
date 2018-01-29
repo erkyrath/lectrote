@@ -114,7 +114,10 @@ function onready()
       var path = path_mod.join(__dirname, 'emglken', 'versions.json');
       var val = fs.readFileSync(path, { encoding:'utf8' });
       var package = JSON.parse(val);
+      update('emglken_version', package.emglken);
       update('hugo_version', package.hugo);
+      update('git_version', package.git);
+      update('glulxe_version', package.glulxe);
     }
     catch (ex) { }
     try {
@@ -163,7 +166,11 @@ function openrecent()
 Quixe <span id="quixe_version">???</span>;
 inkjs <span id="inkjs_version">???</span>;
 ZVM (ifvms) <span id="ifvms_version">???</span>;
-Hugo (emglken) <span id="hugo_version">???</span>
+<br>
+emglken <span id="emglken_version">???</span>
+(Hugo <span id="hugo_version">???</span>;
+Git <span id="git_version">???</span>;
+Glulxe <span id="glulxe_version">???</span>)
 <br>
 Electron <span id="electron_version">???</span>
 (Node <span id="node_version">???</span>,
