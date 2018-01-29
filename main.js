@@ -507,11 +507,19 @@ function launch_game(path)
 
     add_recent_game(path);
 
+    var engine = kind.engines[0];
+    var enginepref = prefs[kind.id+'_terp'];
+    if (enginepref) {
+        var neweng = formats.enginemap[enginepref];
+        if (neweng && neweng.format == kind.id)
+            engine = neweng;
+    }
+
     var win = null;
     var game = {
         path: path,
-        basehtml: kind.engines[0].html,
-        engineid: kind.engines[0].id,
+        basehtml: engine.html,
+        engineid: engine.id,
         title: null,
         signature: null
     };
