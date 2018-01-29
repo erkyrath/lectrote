@@ -6,7 +6,7 @@
   "description": "Lectrote: the Glulx/Ink IF interpreter in an Electron shell",
   "main": "main.js",
   "bin": {
-    "lectrote" : "./cli.sh"
+    "lectrote": "./cli.sh"
   },
   "scripts": {
     "start": "electron .",
