@@ -26,6 +26,7 @@ var prefs = {
     gamewin_customfont: null,
     gamewin_zoomlevel: 0,
     glulx_terp: 'quixe'   // engine.id from formats.js
+    // could also have zcode_terp, hugo_terp, ink-json_terp here. (I know, ink-json_terp is ugly, I should rename that.)
 };
 var prefspath = path_mod.join(app.getPath('userData'), 'lectrote-prefs.json');
 var prefstimer = null;
