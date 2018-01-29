@@ -3,6 +3,8 @@ const electron = require('electron');
 
 const fonts = require('./fonts.js');
 
+const tablist = [ 'appear', 'terp' ];
+
 /* Set up the initial appearance of the window. This adjusts the controls
    and the sample text, but does not send changes to the app (because there
    have been no changes yet).
@@ -10,6 +12,18 @@ const fonts = require('./fonts.js');
 function setup_with_prefs(prefs)
 {
     var sel, optel;
+
+    // Function-calling function because closures suck.
+    var setclick = function(val) {
+        $('#tabbutton-'+val).on('click', function(ev) { 
+            set_tab(val); 
+            ev.preventDefault();
+        });
+    }
+    for (var ix=0; ix<tablist.length; ix++) {
+        setclick(tablist[ix]);
+    }
+    set_tab('appear');
 
     sel = $('#sel-color-theme');
     sel.prop('disabled', false);
@@ -69,6 +83,23 @@ function setup_with_prefs(prefs)
     apply_zoom_level(prefs.gamewin_zoomlevel);
 }
 
+function set_tab(val)
+{
+    switch (val) {
+    case 'appear':
+        $('body').removeClass('CurrentTabTerp');
+        $('body').addClass('CurrentTabAppear');
+        break;
+    case 'terp':
+        $('body').removeClass('CurrentTabAppear');
+        $('body').addClass('CurrentTabTerp');
+        break;
+    default:
+        $('body').removeClass('CurrentTabAppear');
+        $('body').removeClass('CurrentTabTerp');
+        break;
+    }
+}
 
 /* The apply_... functions adjust the sample text in this window, but
    do not directly affect the controls or send changes to the app.
