@@ -1,8 +1,9 @@
 'use strict';
 
 /* This module is used by both the main process (main.js) and the game
-   process (apphooks.js). It contains all the information about the game
-   formats which Lectrote understands.
+   process (apphooks.js). And the prefs window too, come to think of it.
+   It contains all the information about the game formats which Lectrote
+   understands.
 
    The bulk of this module is a list of format entries, each of which
    contains (zero or more) engine entries.

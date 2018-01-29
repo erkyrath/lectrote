@@ -2,6 +2,7 @@
 const electron = require('electron');
 
 const fonts = require('./fonts.js');
+const formats = require('./formats.js');
 
 const tablist = [ 'appear', 'terp' ];
 
