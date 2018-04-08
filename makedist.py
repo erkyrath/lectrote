@@ -89,6 +89,12 @@ appfiles = [
             './emglken/git.js',
             './emglken/git-core.js.bin',
             './emglken/git-core.js.mem',
+            './emglken/glulxe.js',
+            './emglken/glulxe-core.js.bin',
+            './emglken/glulxe-core.js.mem',
+            './emglken/glulxe-profiler.js',
+            './emglken/glulxe-profiler-core.js.bin',
+            './emglken/glulxe-profiler-core.js.mem',
             './emglken/emglken_dispload.min.js',
             './emglken/versions.json',
         ]
