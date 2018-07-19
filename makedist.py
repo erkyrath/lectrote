@@ -107,6 +107,7 @@ appfiles = [
             './inkjs/ink.min.js',
             './inkjs/ink-130.min.js',
             './inkjs/ink-146.min.js',
+            './inkjs/ink-160.min.js',
             './inkjs/package.json',
         ]
     },
