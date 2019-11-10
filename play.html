@@ -21,16 +21,22 @@ game_options = {
 
 window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
 if (!game_options.use_unminified_js) {
-  require('./quixe/lib/elkote.min.js');
-  require('./quixe/lib/quixe.min.js');
+  var elkote_mods = require('./quixe/lib/elkote.min.js');
+  window.GlkOte = elkote_mods.GlkOte;
+  window.Dialog = elkote_mods.Dialog;
+  window.Glk = elkote_mods.Glk;
+  var quixe_mods = require('./quixe/lib/quixe.min.js');
+  window.Quixe = quixe_mods.Quixe;
+  window.GiDispa = quixe_mods.GiDispa;
+  window.GiLoad = quixe_mods.GiLoad;
 }
 else {
-  require('./quixe/src/glkote/glkote.js');
-  require('./quixe/src/glkote/electrofs.js');
-  require('./quixe/src/glkote/glkapi.js');
-  require('./quixe/src/quixe/quixe.js');
-  require('./quixe/src/quixe/gi_dispa.js');
-  require('./quixe/src/quixe/gi_load.js');
+  window.GlkOte = require('./quixe/src/glkote/glkote.js').GlkOte;
+  window.Dialog = require('./quixe/src/glkote/electrofs.js').Dialog;
+  window.Glk = require('./quixe/src/glkote/glkapi.js').Glk;
+  window.Quixe = require('./quixe/src/quixe/quixe.js').Quixe;
+  window.GiDispa = require('./quixe/src/quixe/gi_dispa.js').GiDispa;
+  window.GiLoad = require('./quixe/src/quixe/gi_load.js').GiLoad;
 }
 require('./apphooks.js');
 
