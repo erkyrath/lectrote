@@ -129,7 +129,7 @@ function onready()
     catch (ex) { }
   }
 
-  require('./quixe/lib/quixe.min.js');
+  window.Quixe = require('./quixe/lib/quixe.min.js').Quixe;
   if (window.Quixe) {
     update('quixe_version', Quixe.version);
   }
