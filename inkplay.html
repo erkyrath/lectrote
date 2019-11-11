@@ -26,8 +26,8 @@ if (!game_options.use_unminified_js) {
   window.Glk = elkote_mods.Glk;
 }
 else {
-  require('./quixe/src/glkote/glkote.js');
-  require('./quixe/src/glkote/electrofs.js');
+  window.GlkOte = require('./quixe/src/glkote/glkote.js').GlkOte;
+  window.Dialog = require('./quixe/src/glkote/electrofs.js').Dialog;
 }
 require('./inkplay.js');
 require('./apphooks.js');

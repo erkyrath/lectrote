@@ -29,12 +29,12 @@ if (!game_options.use_unminified_js) {
   var ZVM = require('./ifvms/zvm.min.js');
 }
 else {
-  require('./quixe/src/glkote/glkote.js');
-  require('./quixe/src/glkote/electrofs.js');
-  require('./quixe/src/glkote/glkapi.js');
+  window.GlkOte = require('./quixe/src/glkote/glkote.js').GlkOte;
+  window.Dialog = require('./quixe/src/glkote/electrofs.js').Dialog;
+  window.Glk = require('./quixe/src/glkote/glkapi.js').Glk;
   var ZVM = require('./ifvms/zvm.min.js');
   require('./ifvms/zvm_dispatch.js');
-  require('./quixe/src/quixe/gi_load.js');
+  window.GiLoad = require('./quixe/src/quixe/gi_load.js').GiLoad;
 }
 require('./apphooks.js');
 
