@@ -3,7 +3,7 @@
 
 ### The IF interpreter in an [Electron][] shell
 
-- Version 1.3.2
+- Version 1.3.3
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 - [Download the latest Lectrote app][releases]
 
@@ -54,9 +54,9 @@ This relies on the [inkjs][] interpreter. It is a deliberately non-fancy present
 
 # License information
 
-- Lectrote is copyright (c) 2016, Andrew Plotkin ([MIT license][licensefile])
-- Electron is copyright (c) 2013-2017 GitHub Inc. ([MIT license][licensefile])
-- Quixe is copyright (c) 2010-2016, Andrew Plotkin ([MIT license][licensefile])
+- Lectrote is copyright (c) 2019, Andrew Plotkin ([MIT license][licensefile])
+- Electron is copyright (c) 2013-2019 GitHub Inc. ([MIT license][licensefile])
+- Quixe is copyright (c) 2010-2019, Andrew Plotkin ([MIT license][licensefile])
 - inkjs is copyright (c) 2017 Yannick Lohse ([MIT license][licensefile])
 - ifvms.js is copyright (c) 2016 Dannii Willis and other contributors ([MIT license][licensefile])
 - emglken is copyright (c) 2012-2017, Andrew Plotkin, Dannii Willis ([MIT license][licensefile])
