@@ -1217,7 +1217,14 @@ function construct_menu_template(special)
 
 /* Ensure that only one Lectrote process exists at a time. */
 
-var secondary = app.makeSingleInstance(function(argv, cwd) {
+if (!app.requestSingleInstanceLock()) {
+    /* Another process already exists. Our arguments have been sent
+       to it. */
+    app.quit();
+    return;
+}
+
+app.on('second-instance', (event, argv, cwd) => {
     /* This callback arrives when a second process tries to launch.
        Its arguments are sent here. */
     var count = 0;
@@ -1246,12 +1253,6 @@ var secondary = app.makeSingleInstance(function(argv, cwd) {
         }
     }
 });
-if (secondary) {
-    /* Another process already exists. Our arguments have been sent
-       to it. */
-    app.quit();
-    return;
-}
 
 /* Set up handlers. */
 
