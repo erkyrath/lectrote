@@ -349,7 +349,7 @@ function invoke_app_hook(win, func, arg)
 function game_file_discriminate(path)
 {
     var fd = fs.openSync(path, 'r');
-    var buf = new Buffer(16);
+    var buf = Buffer.alloc(16);
     var len = fs.readSync(fd, buf, 0, 16, 0);
     fs.closeSync(fd);
 
@@ -398,7 +398,7 @@ function parse_blorb(path)
     var res = null;
 
     var fd = fs.openSync(path, 'r');
-    var buf = new Buffer(16);
+    var buf = Buffer.alloc(16);
 
     var len = fs.readSync(fd, buf, 0, 16, 0);
     if (!(buf[0] == 0x46 && buf[1] == 0x4F && buf[2] == 0x52 && buf[3] == 0x4D
