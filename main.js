@@ -454,8 +454,8 @@ function select_load_game()
         filters.push({ name:format.longname, extensions:format.extensions });
     }
     
-    if (process.platform !== 'darwin') {
-        /* On Win/Linux, the file dialog can only show one filter-row at a
+    if (true) {
+        /* The file dialog can only show one filter-row at a
            time. So we construct one that has a union of the types, and
            push it onto the beginning of the filters list. */
         var arr = [];
