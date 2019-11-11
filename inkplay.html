@@ -20,7 +20,10 @@ game_options = {
 
 window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
 if (!game_options.use_unminified_js) {
-  require('./quixe/lib/elkote.min.js');
+  var elkote_mods = require('./quixe/lib/elkote.min.js');
+  window.GlkOte = elkote_mods.GlkOte;
+  window.Dialog = elkote_mods.Dialog;
+  window.Glk = elkote_mods.Glk;
 }
 else {
   require('./quixe/src/glkote/glkote.js');
