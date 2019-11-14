@@ -28,6 +28,6 @@ def compress_source(target, srcls):
 
 compress_source(
     'emglken/emglken_dispload.min.js', [
-        'emglken/emglken_dispatch.js',
+        'emglken/dispatch.js',
         'quixe/src/quixe/gi_load.js',
         ])
