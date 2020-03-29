@@ -530,6 +530,7 @@ function launch_game(path)
         width: prefs.gamewin_width, height: prefs.gamewin_height,
         minWidth: 400, minHeight: 400,
         webPreferences: {
+            nodeIntegration: true,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         }
     };
@@ -672,7 +673,8 @@ function reset_game(game)
 */
 function open_about_window()
 {
-    var winopts = { 
+    var winopts = {
+        webPreferences: { nodeIntegration: true },
         width: 600, height: 450,
         useContentSize: true,
         resizable: false
@@ -717,6 +719,7 @@ function open_about_window()
 function open_prefs_window()
 {
     var winopts = { 
+        webPreferences: { nodeIntegration: true },
         width: 600, height: 530,
         useContentSize: true,
         resizable: false
@@ -749,10 +752,10 @@ function open_prefs_window()
 */
 function open_card_window()
 {
-    var winopts = { 
+    var winopts = {
+        webPreferences: { nodeIntegration: true },
         width: 810, height: 600,
-        useContentSize: true,
-        javascript: false
+        useContentSize: true
     };
     window_position_prefs(winopts, 'cardwin');
     if (window_icon)
