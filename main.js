@@ -674,7 +674,7 @@ function reset_game(game)
 function open_about_window()
 {
     var winopts = {
-        webPreferences: { nodeIntegration: true },
+        webPreferences: { nodeIntegration: true, enableRemoteModule: false },
         width: 600, height: 450,
         useContentSize: true,
         resizable: false
@@ -719,7 +719,7 @@ function open_about_window()
 function open_prefs_window()
 {
     var winopts = { 
-        webPreferences: { nodeIntegration: true },
+        webPreferences: { nodeIntegration: true, enableRemoteModule: false },
         width: 600, height: 530,
         useContentSize: true,
         resizable: false
@@ -753,7 +753,7 @@ function open_prefs_window()
 function open_card_window()
 {
     var winopts = {
-        webPreferences: { nodeIntegration: true },
+        webPreferences: { nodeIntegration: true, enableRemoteModule: false },
         width: 810, height: 600,
         useContentSize: true
     };
