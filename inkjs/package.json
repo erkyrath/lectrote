@@ -1,6 +1,6 @@
 {
   "name": "inkjs",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "A javascript port of inkle's ink scripting language (http://www.inklestudios.com/ink/)",
   "main": "dist/ink-es2015.js",
   "scripts": {
@@ -28,9 +28,9 @@
     "babel-plugin-transform-object-assign": "6.22.0",
     "babel-preset-env": "1.7.0",
     "istanbul": "0.4.5",
-    "jasmine": "3.1.0",
+    "jasmine": "3.2.0",
     "npm-watch": "0.3.0",
-    "rollup": "0.62.0",
+    "rollup": "0.65.0",
     "rollup-plugin-babel": "3.0.7",
     "rollup-plugin-node-resolve": "3.3.0"
   },
