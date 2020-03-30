@@ -658,7 +658,7 @@ function reset_game(game)
        the entire app. The async call would only block the game window, but
        that causes weird results (e.g., cmd-Q fails to shut down the blocked
        game window). */
-    var res = electron.dialog.showMessageBox(game.win, winopts);
+    var res = electron.dialog.showMessageBoxSync(game.win, winopts);
     if (res == winopts.cancelId) {
         var win = game.win;
         /* Set a flag to inhibit autorestore (but not autosave). This
