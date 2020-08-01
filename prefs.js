@@ -128,6 +128,8 @@ function set_tab(val)
 */
 
 var themelist = [
+    { key:'lightdark', label:'System (Light/Dark)' },
+    { key:'sepiaslate', label:'System (Sepia/Slate)' },
     { key:'light', label:'Light' },
     { key:'sepia', label:'Sepia' },
     { key:'slate', label:'Slate' },
@@ -137,6 +139,14 @@ var themelist = [
 function apply_color_theme(val)
 {
     var bodyel = $('.Sample');
+
+    // System-reactive themes:
+    if (val == 'lightdark') {
+        val = (darklight_flag ? 'dark' : 'light');
+    }
+    else if (val == 'sepiaslate') {
+        val = (darklight_flag ? 'slate' : 'sepia');
+    }
 
     bodyel.removeClass('SepiaTheme');
     bodyel.removeClass('SlateTheme');

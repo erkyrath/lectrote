@@ -21,7 +21,7 @@ var prefs = {
     gamewin_width: 600,
     gamewin_height: 800,
     gamewin_marginlevel: 1,
-    gamewin_colortheme: 'light',
+    gamewin_colortheme: 'lightdark',
     gamewin_font: 'lora',
     gamewin_customfont: null,
     gamewin_zoomlevel: 0,
