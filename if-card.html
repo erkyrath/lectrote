@@ -13,15 +13,23 @@ body {
   margin: 0px;
   margin-top: 10px;
 }
+body.DarkMode {
+  background: #303030;
+}
 
 #card {
   margin: auto;
   position: relative;
   background: white;
+  color: black;
   width: 790px;
   height: 575px;
   font-family: "Times New Roman", Times, serif;
   font-size: 14px;
+}
+.DarkMode #card {
+  background: black;
+  color: white;
 }
 
 #zork {
@@ -38,6 +46,9 @@ body {
   font-size: 19px;
   line-height: 25px;
 }
+.DarkMode #zork {
+  border: double white 3px;
+}
 
 #mailbox {
   position: absolute;
@@ -49,6 +60,9 @@ body {
 .highlight {
   border: dotted black 1px;
   padding: 0px 1px;
+}
+.DarkMode .highlight {
+  border: dotted white 1px;
 }
 
 .bullets {
@@ -140,6 +154,9 @@ body {
   padding: 4px 8px;
   border: dashed black 1px;
 }
+.DarkMode #col2a {
+  border: dashed white 1px;
+}
 
 #col2b {
   position: absolute;
@@ -148,6 +165,16 @@ body {
   width: 240px;
   padding: 4px 8px;
   border: dashed black 1px;
+}
+.DarkMode #col2b {
+  border: dashed white 1px;
+}
+
+table {
+  color: black;
+}
+.DarkMode table {
+  color: white;
 }
 
 table.commands {
@@ -294,7 +321,7 @@ table.tryfirst {
 }
 
 </style>
-<body>
+<body id="body">
 
 <div id="card">
 

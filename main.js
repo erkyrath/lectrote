@@ -780,6 +780,10 @@ function open_card_window()
             ev.preventDefault();
         });
 
+    cardwin.webContents.on('dom-ready', function() {
+            cardwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
+        });
+
     cardwin.loadURL('file://' + __dirname + '/if-card.html');
 }
 
@@ -1287,6 +1291,8 @@ electron.nativeTheme.on('updated', function() {
         prefswin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
     if (aboutwin)
         aboutwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
+    if (cardwin)
+        cardwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
 });
 
 electron.ipcMain.on('select_load_game', function() {
