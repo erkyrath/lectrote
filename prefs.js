@@ -6,6 +6,8 @@ const formats = require('./formats.js');
 
 const tablist = [ 'appear', 'terp' ];
 
+var darklight_flag = false;
+
 /* Set up the initial appearance of the window. This adjusts the controls
    and the sample text, but does not send changes to the app (because there
    have been no changes yet).
@@ -235,6 +237,24 @@ function apply_zoom_level(val)
     el.text(text);
 }
 
+function apply_darklight(val)
+{
+    darklight_flag = val;
+    
+    var el = $('body');
+    if (!darklight_flag) {
+        el.addClass('LightMode');
+        el.removeClass('DarkMode');
+    }
+    else {
+        el.addClass('DarkMode');
+        el.removeClass('LightMode');
+    }
+    
+    var sel = $('#sel-color-theme');
+    var val = sel.val();
+    apply_color_theme(val);
+}
 
 /* The evhan_... functions respond to user manipulation of the controls.
    They invoke apply_... to adjust the sample text, and then send a
@@ -281,6 +301,9 @@ function evhan_glulx_terp()
 
 /* Respond to messages from the app. */
 
+electron.ipcRenderer.on('set-darklight-mode', function(ev, arg) {
+    apply_darklight(arg);
+});
 electron.ipcRenderer.on('current-prefs', function(ev, arg) {
     setup_with_prefs(arg);
 });

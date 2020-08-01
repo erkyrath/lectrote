@@ -9,9 +9,14 @@
 
 body {
   background: #EEE;
+  color: black;
   font-family: "Lora", Georgia, serif;
   margin: 0px;
   font-size: 1.0em;
+}
+body.DarkMode {
+  background: #222;
+  color: white;
 }
 
 #content {
@@ -25,6 +30,9 @@ body {
   text-align: center;
   font-size: 0.85em;
   font-weight: bold;
+}
+.DarkMode #tabheader {
+  background: #555;
 }
 
 .TabButton {
@@ -47,6 +55,12 @@ body {
 }
 .CurrentTabTerp #tabbutton-terp {
   background: #AAA;
+}
+.DarkMode.CurrentTabAppear #tabbutton-appear {
+  background: #888;
+}
+.DarkMode.CurrentTabTerp #tabbutton-terp {
+  background: #888;
 }
 
 .CurrentTabAppear #tabcontent-appear {
@@ -80,6 +94,11 @@ hr {
   font-size: 1.0em;
 }
 
+.DarkMode select {
+  background: #111;
+  color: white;
+}
+
 #input-font {
   width: 12em;
   display: none;
@@ -101,6 +120,10 @@ input[type=range]::-webkit-slider-runnable-track {
   background: #F0F0F0;
   -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.8);
 }
+.DarkMode input[type=range]::-webkit-slider-runnable-track {
+  background: #202020;
+  -webkit-box-shadow: inset 0 0 3px rgba(255,255,255,0.9);
+}
 
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -112,6 +135,11 @@ input[type=range]::-webkit-slider-thumb {
   margin-top: -3px;
   -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
 }
+.DarkMode input[type=range]::-webkit-slider-thumb {
+  background: #444;
+  border: 1px solid #AAA;
+  -webkit-box-shadow: inset 0 0 3px rgba(255,255,255,0.5);
+}
 
 .Sample {
   max-height: 140px;
@@ -119,6 +147,7 @@ input[type=range]::-webkit-slider-thumb {
   font-size: 0.95em;
   padding: 1em;
   background: white;
+  color: black;
 }
 
 .Sample.SepiaTheme {

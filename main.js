@@ -707,8 +707,8 @@ function open_about_window()
         });
 
     aboutwin.webContents.on('dom-ready', function() {
-            var ls = construct_recent_game_menu();
             aboutwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
+            var ls = construct_recent_game_menu();
             aboutwin.webContents.send('recent-count', ls.length);
         });
 
@@ -743,6 +743,7 @@ function open_prefs_window()
     prefswin.on('move', window_position_prefs_handler('prefswin', prefswin));
 
     prefswin.webContents.on('dom-ready', function() {
+            prefswin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
             prefswin.webContents.send('current-prefs', prefs);
         });
 
@@ -1282,7 +1283,8 @@ app.on('will-quit', function() {
 
 electron.nativeTheme.on('updated', function() {
     //### gamewins
-    //### prefswin
+    if (prefswin)
+        prefswin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
     if (aboutwin)
         aboutwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
 });
