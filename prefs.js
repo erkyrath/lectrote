@@ -138,8 +138,6 @@ var themelist = [
 
 function apply_color_theme(val)
 {
-    var bodyel = $('.Sample');
-
     // System-reactive themes:
     if (val == 'lightdark') {
         val = (darklight_flag ? 'dark' : 'light');
@@ -147,6 +145,8 @@ function apply_color_theme(val)
     else if (val == 'sepiaslate') {
         val = (darklight_flag ? 'slate' : 'sepia');
     }
+
+    var bodyel = $('.Sample');
 
     bodyel.removeClass('SepiaTheme');
     bodyel.removeClass('SlateTheme');
