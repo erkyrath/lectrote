@@ -65,8 +65,19 @@ function set_margin_level(val)
     $('#gameport').css({'margin':str});
 }
 
-function set_color_theme(val)
+function set_color_theme(obj)
 {
+    var val = obj.theme;
+    var darklight_flag = obj.darklight;
+    
+    // System-reactive themes:
+    if (val == 'lightdark') {
+        val = (darklight_flag ? 'dark' : 'light');
+    }
+    else if (val == 'sepiaslate') {
+        val = (darklight_flag ? 'slate' : 'sepia');
+    }
+
     var bodyel = $('body');
 
     bodyel.removeClass('SepiaTheme');

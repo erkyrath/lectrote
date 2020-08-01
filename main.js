@@ -587,7 +587,7 @@ function launch_game(path)
             return;
         invoke_app_hook(win, 'set_zoom_factor', winopts.webPreferences.zoomFactor);
         invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
-        invoke_app_hook(win, 'set_color_theme', prefs.gamewin_colortheme);
+        invoke_app_hook(win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
         invoke_app_hook(win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
         if (game.suppress_autorestore) {
             invoke_app_hook(win, 'set_clear_autosave', true);
@@ -1286,7 +1286,10 @@ app.on('will-quit', function() {
 });
 
 electron.nativeTheme.on('updated', function() {
-    //### gamewins
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        invoke_app_hook(game.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
+    }
     if (prefswin)
         prefswin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
     if (aboutwin)
@@ -1336,7 +1339,7 @@ electron.ipcMain.on('pref_color_theme', function(ev, arg) {
     note_prefs_dirty();
     for (var id in gamewins) {
         var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_color_theme', prefs.gamewin_colortheme);
+        invoke_app_hook(game.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
     }
 });
 
