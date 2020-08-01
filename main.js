@@ -708,6 +708,7 @@ function open_about_window()
 
     aboutwin.webContents.on('dom-ready', function() {
             var ls = construct_recent_game_menu();
+            aboutwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
             aboutwin.webContents.send('recent-count', ls.length);
         });
 
@@ -1277,6 +1278,13 @@ app.on('before-quit', function() {
 */
 app.on('will-quit', function() {
     write_prefs_now();
+});
+
+electron.nativeTheme.on('updated', function() {
+    //### gamewins
+    //### prefswin
+    if (aboutwin)
+        aboutwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
 });
 
 electron.ipcMain.on('select_load_game', function() {
