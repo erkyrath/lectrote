@@ -45,6 +45,11 @@ function load_named_game(arg)
             obj.signature = signature;
     }
 
+    var coverimageres = GiLoad.get_cover_pict();
+    if (coverimageres !== undefined) {
+	obj.coverimageres = coverimageres;
+    }
+
     electron.ipcRenderer.send('game_metadata', obj);
 }
 

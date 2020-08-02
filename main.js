@@ -1333,6 +1333,8 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
             game.title = arg.title;
         if (arg.signature)
             game.signature = arg.signature;
+        if (arg.coverimageres !== undefined)
+            game.coverimageres = arg.coverimageres;
     }
 });
 
