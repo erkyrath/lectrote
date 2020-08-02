@@ -1112,7 +1112,7 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                console.log('### cover art is', game.coverimageres);
+                invoke_app_hook(game.win, 'display_cover_art');
             }
         }
         ]

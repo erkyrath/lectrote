@@ -58,6 +58,49 @@ function set_clear_autosave(val)
     game_options.clear_vm_autosave = val;
 }
 
+function display_cover_art()
+{
+    /* If the cover art pane is already up, remove it. */
+    var panel = $('#cover_art_pane');
+    if (panel.length) {
+	panel.remove();
+	return;
+    }
+    
+    var coverimageres = GiLoad.get_cover_pict();
+    console.log('### display_cover_art', coverimageres);
+    if (coverimageres === undefined)
+	return;
+
+    var info = GiLoad.get_image_info(coverimageres);
+    if (!info)
+	return;
+    var url = GiLoad.get_image_url(coverimageres);
+    if (!url)
+	return;
+    
+    console.log('###', info.width, info.height, info.image);
+
+    var panel = $('<div>', { id:'cover_art_pane' });
+    var imgel = $('<img>', { src:url });
+    imgel.css({ width:'100vmin', height:'100vmin' });
+    panel.append(imgel);
+    var inpel = $('<input>');
+    inpel.val(' Hit any key ');
+    panel.append(inpel);
+
+    var removefunc = function() {
+	$('#cover_art_pane').remove();
+	return true;
+    };
+    panel.on('click', removefunc);
+    inpel.on('keypress', removefunc);
+    inpel.on('keydown', removefunc);
+
+    $('#content').append(panel);
+    inpel.focus();
+}
+    
 function set_zoom_factor(val) 
 {
     var webFrame = electron.webFrame;
@@ -297,6 +340,7 @@ function search_request(arg)
 const namespace = {
     load_named_game : load_named_game,
     set_clear_autosave : set_clear_autosave,
+    display_cover_art : display_cover_art,
     set_zoom_factor : set_zoom_factor,
     set_margin_level : set_margin_level,
     set_color_theme : set_color_theme,
