@@ -471,8 +471,11 @@ function select_load_game()
     };
 
     gamedialog = true;
-    electron.dialog.showOpenDialog(null, opts, function(ls) {
+    electron.dialog.showOpenDialog(null, opts).then(function(res) {
         gamedialog = false;
+        if (!res || res.canceled)
+            return;
+        var ls = res.filePaths;
         if (!ls || !ls.length)
             return;
         launch_game(ls[0]);
@@ -828,7 +831,10 @@ function export_game_file(path)
         filters: [ { name: 'Game File', extensions: [suffix] } ]
     };
 
-    electron.dialog.showSaveDialog(opts, function(destpath) {
+    electron.dialog.showSaveDialog(opts).then(function(res) {
+        if (!res || res.canceled)
+            return;
+        var destpath = res.filePath;
         if (!destpath)
             return;
         copy_file(path, destpath, function(ex) {
