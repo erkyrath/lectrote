@@ -12,7 +12,7 @@ var darklight_flag = false;
    and the sample text, but does not send changes to the app (because there
    have been no changes yet).
 */
-function setup_with_prefs(prefs)
+function setup_with_prefs(prefs, isbound)
 {
     var sel, optel;
 
@@ -315,7 +315,7 @@ electron.ipcRenderer.on('set-darklight-mode', function(ev, arg) {
     apply_darklight(arg);
 });
 electron.ipcRenderer.on('current-prefs', function(ev, arg) {
-    setup_with_prefs(arg);
+    setup_with_prefs(arg.prefs, arg.isbound);
 });
 electron.ipcRenderer.on('set-zoom-level', function(ev, arg) {
     $('#range-zoom').val(arg);

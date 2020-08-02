@@ -752,7 +752,7 @@ function open_prefs_window()
 
     prefswin.webContents.on('dom-ready', function() {
             prefswin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
-            prefswin.webContents.send('current-prefs', prefs);
+            prefswin.webContents.send('current-prefs', { prefs:prefs, isbound:isbound });
         });
 
     prefswin.loadURL('file://' + __dirname + '/prefs.html');
