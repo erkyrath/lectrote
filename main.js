@@ -532,11 +532,14 @@ function launch_game(path)
         title: require('electron').app.getName(),
         width: prefs.gamewin_width, height: prefs.gamewin_height,
         minWidth: 400, minHeight: 400,
+        backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         webPreferences: {
             nodeIntegration: true,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         }
     };
+    /* backgroundColor should maybe be based on darkmode+theme, not
+       just the darkmode flag. */
     /* The webPreferences.zoomFactor doesn't seem to take effect in
        Electron 1.6.11, so we'll send it over via IPC later. */
 
@@ -679,6 +682,7 @@ function open_about_window()
     var winopts = {
         webPreferences: { nodeIntegration: true, enableRemoteModule: false },
         width: 600, height: 450,
+        backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true,
         resizable: false
     };
@@ -725,6 +729,7 @@ function open_prefs_window()
     var winopts = { 
         webPreferences: { nodeIntegration: true, enableRemoteModule: false },
         width: 600, height: 530,
+        backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true,
         resizable: false
     };
@@ -760,6 +765,7 @@ function open_card_window()
     var winopts = {
         webPreferences: { nodeIntegration: true, enableRemoteModule: false },
         width: 810, height: 600,
+        backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true
     };
     window_position_prefs(winopts, 'cardwin');
