@@ -87,19 +87,25 @@ function setup_with_prefs(prefs, isbound)
     apply_zoom_level(prefs.gamewin_zoomlevel);
 
 
-    sel = $('#sel-glulx-terp');
-    sel.prop('disabled', false);
-    sel.empty();
+    if (!isbound) {
+        sel = $('#sel-glulx-terp');
+        sel.prop('disabled', false);
+        sel.empty();
 
-    for (var ix=0; ix<formats.formatmap['glulx'].engines.length; ix++) {
-        var engine = formats.formatmap['glulx'].engines[ix];
-        optel = $('<option>', { value:engine.id }).text(engine.name);
-        if (prefs.glulx_terp == engine.id)
-            optel.prop('selected', true);
-        sel.append(optel);
+        for (var ix=0; ix<formats.formatmap['glulx'].engines.length; ix++) {
+            var engine = formats.formatmap['glulx'].engines[ix];
+            optel = $('<option>', { value:engine.id }).text(engine.name);
+            if (prefs.glulx_terp == engine.id)
+                optel.prop('selected', true);
+            sel.append(optel);
+        }
+
+        sel.on('change', evhan_glulx_terp);
     }
-
-    sel.on('change', evhan_glulx_terp);
+    else {
+        sel = $('#tabheader');
+        sel.hide();
+    }
 }
 
 function set_tab(val)
