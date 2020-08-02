@@ -68,7 +68,6 @@ function display_cover_art()
     }
     
     var coverimageres = GiLoad.get_cover_pict();
-    console.log('### display_cover_art', coverimageres);
     if (coverimageres === undefined)
 	return;
 
@@ -79,11 +78,10 @@ function display_cover_art()
     if (!url)
 	return;
     
-    console.log('###', info.width, info.height, info.image);
-
     var panel = $('<div>', { id:'cover_art_pane' });
     var imgel = $('<img>', { src:url });
-    imgel.css({ width:'100vmin', height:'100vmin' });
+    var heightval = Math.round(90 * info.height / info.width);
+    imgel.css({ width:'90vmin', height:heightval+'vmin' });
     panel.append(imgel);
     var inpel = $('<input>');
     inpel.val(' Hit any key ');
