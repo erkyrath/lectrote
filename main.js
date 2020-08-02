@@ -586,6 +586,9 @@ function launch_game(path)
         if (isbound)
             app.quit();
     });
+    win.on('focus', function() {
+        win_focus_update(win, game);
+    });
 
     win.webContents.on('dom-ready', function(ev) {
         var game = game_for_webcontents(ev.sender);
@@ -707,6 +710,9 @@ function open_about_window()
     aboutwin.on('closed', function() {
             aboutwin = null;
         });
+    aboutwin.on('focus', function() {
+            win_focus_update(aboutwin, null);
+        });
     aboutwin.on('move', window_position_prefs_handler('aboutwin', aboutwin));
     aboutwin.webContents.on('will-navigate', function(ev, url) {
             require('electron').shell.openExternal(url);
@@ -748,6 +754,9 @@ function open_prefs_window()
     prefswin.on('closed', function() {
             prefswin = null;
         });
+    prefswin.on('focus', function() {
+            win_focus_update(prefswin, null);
+        });
     prefswin.on('move', window_position_prefs_handler('prefswin', prefswin));
 
     prefswin.webContents.on('dom-ready', function() {
@@ -783,6 +792,9 @@ function open_card_window()
     cardwin.on('closed', function() {
             cardwin = null;
         });
+    cardwin.on('focus', function() {
+            win_focus_update(cardwin, null);
+        });
     cardwin.on('move', window_position_prefs_handler('cardwin', cardwin));
     cardwin.webContents.on('will-navigate', function(ev, url) {
             require('electron').shell.openExternal(url);
@@ -794,6 +806,20 @@ function open_card_window()
         });
 
     cardwin.loadURL('file://' + __dirname + '/if-card.html');
+}
+
+function win_focus_update(win, game)
+{
+    /* Determine whether the "Display Cover Art" option should be
+       enabled or not. */
+    var showoption = (win && game && game.coverimageres !== undefined);
+
+    var menu = electron.Menu.getApplicationMenu();
+    if (menu) {
+        var item = menu.getMenuItemById('view_cover_art');
+        if (item)
+            item.enabled = showoption;
+    }
 }
 
 function find_in_template(template, key)
@@ -1076,6 +1102,18 @@ function construct_menu_template(special)
                 if (prefswin)
                     prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
+        },
+        { type: 'separator' },
+        {
+            label: 'Display Cover Art',
+            id: 'view_cover_art',
+            enabled: false,
+            click: function(item, win) {
+                var game = game_for_window(win);
+                if (!game)
+                    return;
+                console.log('### cover art is', game.coverimageres);
+            }
         }
         ]
     },
@@ -1335,6 +1373,9 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
             game.signature = arg.signature;
         if (arg.coverimageres !== undefined)
             game.coverimageres = arg.coverimageres;
+
+        // Bang the focus event to update the "Display Cover Art" menu item.
+        win_focus_update(game.win, game);
     }
 });
 
