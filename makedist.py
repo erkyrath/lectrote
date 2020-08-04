@@ -77,7 +77,8 @@ appfiles = [
         'files': [
             './zplay.html',
             './ifvms/zvm.min.js',
-            './ifvms/zvm_dispload.min.js',
+            './ifvms/zvm_dispatch.min.js',
+            './ifvms/gi_load.min.js',
             './ifvms/zvm.css',
             './ifvms/package.json',
         ]
