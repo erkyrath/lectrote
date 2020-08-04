@@ -45,7 +45,10 @@ function load_named_game(arg)
             obj.signature = signature;
     }
 
-    var coverimageres = GiLoad.get_cover_pict();
+    var coverimageres = undefined;
+    if (GiLoad.get_cover_pict) {
+	coverimageres = GiLoad.get_cover_pict();
+    }
     if (coverimageres !== undefined) {
 	obj.coverimageres = coverimageres;
     }
@@ -67,6 +70,8 @@ function display_cover_art()
 	return;
     }
     
+    if (!GiLoad.get_cover_pict)
+	return;
     var coverimageres = GiLoad.get_cover_pict();
     if (coverimageres === undefined)
 	return;
