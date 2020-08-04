@@ -105,7 +105,11 @@ You can add arguments to narrow down the platforms you are building, e.g.:
     python3 makedist.py linux
     python3 makedist.py win32-x64
 
-If you want to code-sign the Mac version, you currently have to do it manually between the `-b` and `-z` steps. Yes, I should add an option for this.
+If you want to code-sign the Mac version, use the --macsign argument:
+
+    python3 makedist.py darwin --macsign 'Developer ID Application: ...'
+
+You must be a registered Apple developer to do this. The argument must be the name of the "Developer Id Application" certificate in your keychain. Run the Keychain Access app to see this. If you don't have one, the easiest way to set it up is to run Xcode, open the Preferences, select Accounts, and hit Manage Certificates.
 
 ## Packaging a bound game
 
