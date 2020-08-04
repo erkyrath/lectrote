@@ -27,7 +27,11 @@ def compress_source(target, srcls):
             raise Exception('Process result code %d' % (ret,))
 
 compress_source(
-    'ifvms/zvm_dispload.min.js', [
+    'ifvms/zvm_dispatch.min.js', [
         'ifvms/zvm_dispatch.js',
+        ])
+
+compress_source(
+    'ifvms/gi_load.min.js', [
         'quixe/src/quixe/gi_load.js',
         ])
