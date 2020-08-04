@@ -36,6 +36,9 @@ popt.add_option('-n', '--none',
 popt.add_option('-g', '--game', '--gamedir',
                 action='store', dest='gamedir',
                 help='directory for game-specific files')
+popt.add_option('--macsign',
+                action='store', dest='macsign',
+                help='Apple Developer cert name')
 popt.add_option('-v', '--version',
                 action='store', dest='buildversion',
                 default='1',
@@ -216,6 +219,13 @@ def builddir(dir, pack, pkg):
             '--extra-resource=resources/icon-glkdata.icns',
             '--extra-resource=resources/icon-json.icns',
             '--extend-info', 'resources/Add-Info.plist',
+            ]
+        if opts.macsign:
+            args = args + [
+                '--osx-sign.entitlements', 'resources/mac-app.entitlements',
+                '--osx-sign.entitlements-inherit', 'resources/mac-app.entitlements',
+                '--osx-sign.identity', opts.macsign,
+                '--osx-sign.hardenedRuntime', 'true',
             ]
 
     if platform == 'win32':
