@@ -24,7 +24,8 @@ if (!game_options.use_unminified_js) {
   window.GlkOte = elkote_mods.GlkOte;
   window.Dialog = elkote_mods.Dialog;
   window.Glk = elkote_mods.Glk;
-  require('./emglken/emglken_dispload.min.js');
+  require('./emglken/emglken_dispatch.min.js');
+  window.GiLoad = require('./ifvms/gi_load.min.js').GiLoad;
 }
 else {
   window.GlkOte = require('./quixe/src/glkote/glkote.js').GlkOte;

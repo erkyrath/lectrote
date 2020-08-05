@@ -99,7 +99,8 @@ appfiles = [
             './emglken/glulxe-profiler.js',
             './emglken/glulxe-profiler-core.js.bin',
             './emglken/glulxe-profiler-core.js.mem',
-            './emglken/emglken_dispload.min.js',
+            './emglken/emglken_dispatch.min.js',
+            './emglken/gi_load.min.js',
             './emglken/versions.json',
         ]
     },
