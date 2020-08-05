@@ -32,6 +32,6 @@ compress_source(
         ])
 
 compress_source(
-    'ifvms/gi_load.min.js', [
+    'emglken/gi_load.min.js', [
         'quixe/src/quixe/gi_load.js',
         ])
