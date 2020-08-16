@@ -47,10 +47,10 @@ function load_named_game(arg)
 
     var coverimageres = undefined;
     if (GiLoad.get_cover_pict) {
-	coverimageres = GiLoad.get_cover_pict();
+        coverimageres = GiLoad.get_cover_pict();
     }
     if (coverimageres !== undefined) {
-	obj.coverimageres = coverimageres;
+        obj.coverimageres = coverimageres;
     }
 
     electron.ipcRenderer.send('game_metadata', obj);
@@ -66,22 +66,22 @@ function display_cover_art()
     /* If the cover art pane is already up, remove it. */
     var panel = $('#cover_art_pane');
     if (panel.length) {
-	panel.remove();
-	return;
+        panel.remove();
+        return;
     }
     
     if (!GiLoad.get_cover_pict)
-	return;
+        return;
     var coverimageres = GiLoad.get_cover_pict();
     if (coverimageres === undefined)
-	return;
+        return;
 
     var info = GiLoad.get_image_info(coverimageres);
     if (!info)
-	return;
+        return;
     var url = GiLoad.get_image_url(coverimageres);
     if (!url)
-	return;
+        return;
     
     var panel = $('<div>', { id:'cover_art_pane' });
     var imgel = $('<img>', { src:url });
@@ -93,8 +93,8 @@ function display_cover_art()
     panel.append(inpel);
 
     var removefunc = function() {
-	$('#cover_art_pane').remove();
-	return true;
+        $('#cover_art_pane').remove();
+        return true;
     };
     panel.on('click', removefunc);
     inpel.on('keypress', removefunc);
