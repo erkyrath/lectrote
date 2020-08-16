@@ -160,10 +160,36 @@ This file can define new functionality by exporting any of the following Javascr
 - `exports.app_ready()`: Called when the app is ready to open windows. At this point the game window has already been opened.
 - `exports.construct_menu_template(template, special)`: Called to customize the app menu template. The `template` argument is a Javascript data structure as described in [the Electron Menu docs][elemenu]. `special` is null for the game window, or one of the strings `"about", "prefs", "card"` for one of Lectrote's special windows. Modify `template` and return it.
 - `exports.set_zoom_factor(val)`: Called when the app's zoom level changes. The argument is suitable for Electron's `setZoomFactor()` method.
+- `exports.set_darklight_mode(val)`: Called when the OS native theme changes. The argument is false for light theme, true for dark theme.
 - `exports.export_game_path()`: The bound app normally has an "Export Portable Game File..." menu option, which lets the user extract your game file for use in other interpreters. You can implement this function and return null to suppress this menu option. You can also return the pathname of a different game file, which is not actually a useful thing to do.
-- `exports.about_window_size`: An object `{ width:W, height:H }` which customizes the size of the about.html window. (Defaults to `{ width:600, height:450 }`.)
+- `exports.about_window_size`: An object `{ width:W, height:H }` which customizes the size of the `about.html` window. (Defaults to `{ width:600, height:450 }`.)
 
 [elemenu]: http://electron.atom.io/docs/latest/api/menu/
 
 The main Lectrote module exports several functions you can use in your extension code. I have not yet documented them; see the `main.js` file.
 
+#### Style customizations for dark/light mode
+
+As of release 1.3.6 (August 2020), Lectrote supports OS dark theme. You should do the same for any windows you have added or customized.
+
+Look at `about.html` to see how this works. The `evhan_darklight()` function alters the document style; the `onready()` function now sets up a callback for this function. The `<body>` tag now has `<body id="body">` to support this, and several `.DarkMode` stanzas have been added to the CSS. You should copy these changes in your own `about.html`.
+
+When opening a window, use a backgroundColor line to set the loading color, minimizing flash:
+
+	backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
+
+Then, in the `dom-ready` event, send a message to convey the OS theme:
+
+	win.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
+
+Also add a `set_darklight_mode()` routine to your extension code (see above). This routine should send the same message to all open windows.
+
+In the window, set up a handler for this message and adjust your body styles appropriately:
+
+	require('electron').ipcRenderer.on('set-darklight-mode', function(ev, arg) {
+		// arg is false for light mode, true for dark mode.
+	});
+
+See `about.html` and `if-card.html` for examples of dark/light style handling.
+
+Be sure to test that your windows open with the appropriate theme (matching the OS theme), and also that they change dynamically when the OS theme changes.
