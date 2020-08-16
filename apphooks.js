@@ -61,7 +61,7 @@ function set_clear_autosave(val)
     game_options.clear_vm_autosave = val;
 }
 
-function display_cover_art()
+function display_cover_art(dat)
 {
     /* If the cover art pane is already up, remove it. */
     var panel = $('#cover_art_pane');
@@ -70,22 +70,31 @@ function display_cover_art()
         return;
     }
     
-    if (!GiLoad.get_cover_pict)
-        return;
-    var coverimageres = GiLoad.get_cover_pict();
-    if (coverimageres === undefined)
-        return;
+    if (dat) {
+        /* dat is an object containing { url, width, height } of an image. */
+    }
+    else {
+        /* dat is null; try to use the cover image data from the blorb. */
+        if (!GiLoad.get_cover_pict)
+            return;
+        var coverimageres = GiLoad.get_cover_pict();
+        if (coverimageres === undefined)
+            return;
+        
+        var info = GiLoad.get_image_info(coverimageres);
+        if (!info)
+            return;
+        var url = GiLoad.get_image_url(coverimageres);
 
-    var info = GiLoad.get_image_info(coverimageres);
-    if (!info)
-        return;
-    var url = GiLoad.get_image_url(coverimageres);
-    if (!url)
+        dat = { url:url, width:info.width, height:info.height };
+    }
+
+    if (!dat.url || !dat.width || !dat.height)
         return;
     
     var panel = $('<div>', { id:'cover_art_pane' });
-    var imgel = $('<img>', { src:url });
-    var heightval = Math.round(90 * info.height / info.width);
+    var imgel = $('<img>', { src:dat.url });
+    var heightval = Math.round(90 * dat.height / dat.width);
     imgel.css({ width:'90vmin', height:heightval+'vmin' });
     panel.append(imgel);
     var inpel = $('<input>');

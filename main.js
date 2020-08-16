@@ -813,6 +813,8 @@ function win_focus_update(win, game)
     /* Determine whether the "Display Cover Art" option should be
        enabled or not. */
     var showoption = (win && game && game.coverimageres !== undefined);
+    if (main_extension.cover_image_info)
+       showoption = true;
 
     var menu = electron.Menu.getApplicationMenu();
     if (menu) {
@@ -1112,7 +1114,10 @@ function construct_menu_template(special)
                 var game = game_for_window(win);
                 if (!game)
                     return;
-                invoke_app_hook(game.win, 'display_cover_art');
+                var dat = null;
+                if (main_extension.cover_image_info)
+                    dat = main_extension.cover_image_info;
+                invoke_app_hook(game.win, 'display_cover_art', dat);
             }
         }
         ]
