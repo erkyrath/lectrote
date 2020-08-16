@@ -162,6 +162,7 @@ This file can define new functionality by exporting any of the following Javascr
 - `exports.set_zoom_factor(val)`: Called when the app's zoom level changes. The argument is suitable for Electron's `setZoomFactor()` method.
 - `exports.set_darklight_mode(val)`: Called when the OS native theme changes. The argument is false for light theme, true for dark theme.
 - `exports.export_game_path()`: The bound app normally has an "Export Portable Game File..." menu option, which lets the user extract your game file for use in other interpreters. You can implement this function and return null to suppress this menu option. You can also return the pathname of a different game file, which is not actually a useful thing to do.
+- `exports.cover_image_info`: An object `{ url:URL, width:W, height:H }` which provides cover art. This is only needed if your game is not a blorb file. (If it is not provided, Lectrote attempts to load the blorb cover art as usual.)
 - `exports.about_window_size`: An object `{ width:W, height:H }` which customizes the size of the `about.html` window. (Defaults to `{ width:600, height:450 }`.)
 
 [elemenu]: http://electron.atom.io/docs/latest/api/menu/
