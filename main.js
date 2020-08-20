@@ -587,7 +587,7 @@ function launch_game(path)
             app.quit();
     });
     win.on('focus', function() {
-        win_focus_update(win, game);
+        window_focus_update(win, game);
     });
 
     win.webContents.on('dom-ready', function(ev) {
@@ -711,7 +711,7 @@ function open_about_window()
             aboutwin = null;
         });
     aboutwin.on('focus', function() {
-            win_focus_update(aboutwin, null);
+            window_focus_update(aboutwin, null);
         });
     aboutwin.on('move', window_position_prefs_handler('aboutwin', aboutwin));
     aboutwin.webContents.on('will-navigate', function(ev, url) {
@@ -755,7 +755,7 @@ function open_prefs_window()
             prefswin = null;
         });
     prefswin.on('focus', function() {
-            win_focus_update(prefswin, null);
+            window_focus_update(prefswin, null);
         });
     prefswin.on('move', window_position_prefs_handler('prefswin', prefswin));
 
@@ -793,7 +793,7 @@ function open_card_window()
             cardwin = null;
         });
     cardwin.on('focus', function() {
-            win_focus_update(cardwin, null);
+            window_focus_update(cardwin, null);
         });
     cardwin.on('move', window_position_prefs_handler('cardwin', cardwin));
     cardwin.webContents.on('will-navigate', function(ev, url) {
@@ -808,7 +808,7 @@ function open_card_window()
     cardwin.loadURL('file://' + __dirname + '/if-card.html');
 }
 
-function win_focus_update(win, game)
+function window_focus_update(win, game)
 {
     /* Determine whether the "Display Cover Art" option should be
        enabled or not. */
@@ -1385,7 +1385,7 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
             game.coverimageres = arg.coverimageres;
 
         // Bang the focus event to update the "Display Cover Art" menu item.
-        win_focus_update(game.win, game);
+        window_focus_update(game.win, game);
     }
 });
 
@@ -1556,6 +1556,7 @@ exports.window_position_prefs = window_position_prefs;
 exports.window_position_prefs_handler = window_position_prefs_handler;
 exports.window_size_prefs = window_size_prefs;
 exports.window_size_prefs_handler = window_size_prefs_handler;
+exports.window_focus_update = window_focus_update;
 exports.zoom_factor = function() { return zoom_factor_for_level(prefs.gamewin_zoomlevel); };
 exports.is_app_ready = function() { return app_ready; };
 exports.is_app_quitting = function() { return app_quitting; };
