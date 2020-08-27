@@ -129,7 +129,7 @@ You will need to create a separate directory for your game's files. Copy `packag
 - `author`: You, the game's author.
 - `description`: One-line description of your game.
 - `lectrotePackagedGame`: Pathname to the game file.
-- `lectroteSoleInterpreter`: Set to `"glulx"`, `"ifvms"`, `"hugo"`, `"inkjs"`, `"emglken"` to include just one of Lectrote's interpreter engines. (Optional, but it saves a little bit of space.) (Note that Git, Glulxe, Hugo, and TADS are all handled by the emglken package.)
+- `lectroteSoleInterpreter`: Set to `"ifvms"`, `"inkjs"`, `"emglken"` to include just one of Lectrote's interpreter engines. (Optional, but it saves a little bit of space.) (Note that Git, Glulxe, Hugo, and TADS are all handled by the emglken package. There's currently no way to include just one of them.)
 - `lectroteExtraFiles`: An array of extra files to include. These are assumed to be in the game directory, so you do not have to include the directory prefix. (This list must include the game file -- yes, it's redundant with `lectrotePackagedGame`.)
 - `lectroteMacAppID`: If you plan to build a MacOS app, a reverse-DNS ID string to uniquely identify it.
 - `lectroteCopyright`: Copyright string (applied to Windows binaries).
