@@ -69,7 +69,7 @@ This relies on the [inkjs][] interpreter. It is a deliberately non-fancy present
 - Git (in emglken) is copyright (c) 2003 Iain Merrick ([MIT license][licensefile])
 - Glulxe (in emglken) is copyright (c) 1999-2016, Andrew Plotkin ([MIT license][licensefile])
 - Hugo (in emglken)  is copyright (c) 2011 by Kent Tessman ([BSD license][licensefile])
-- TADS (in emglken)  is copyright (c) 1991-2012 by Michael J. Roberts ([TADS license][licensefile])
+- TADS (in emglken)  is copyright (c) 1991-2012 by Michael J. Roberts ([dual-licensed GPL/TADS license][licensefile])
 - RemGlk (in emglken) is copyright (c) 2012-2020, Andrew Plotkin ([MIT license][licensefile])
 
 [licensefile]: LICENSE
