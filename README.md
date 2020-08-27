@@ -20,12 +20,14 @@ Lectrote currently supports:
 - [Glulx][] games (`.ulx` or `.gblorb`), as produced by [Inform 7][i7].
 - [Z-code][] games (`.z3/.z4/.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
 - [Hugo][] games (`.hex`).
+- [TADS2 and TADS3][tads] games (`.gam`, `.t3`).
 - [Ink][] compiled game files (`.json`), as produced by the [Ink][] scripting language.
 
 [i7]: http://inform7.com/
 [Glulx]: http://eblong.com/zarf/glulx/
 [Hugo]: http://www.generalcoffee.com/hugo/gethugo.html
 [Ink]: http://www.inklestudios.com/ink
+[tads]: https://tads.org/
 [Z-code]: http://inform-fiction.org/zmachine/standards/z1point1
 
 You can also use this package to construct a "bound game" -- an app which plays a single built-in game. This is a package containing Chromium, the interpreter, your game file, and perhaps some additional configuration. You can distribute this as a standalone game application; it's bulky but it lets people play your game.
@@ -46,6 +48,10 @@ Lectrote uses the [ZVM][] interpreter for Z-machine support. (V3/4/5 and V8 only
 
 The Hugo engine does not currently support autosave.
 
+## TADS support
+
+The TADS 2/3 engine does not currently support autosave.
+
 ## Ink support
 
 This relies on the [inkjs][] interpreter. It is a deliberately non-fancy presentation -- no attempt to slow-print the output or hide the choice list.
@@ -63,6 +69,7 @@ This relies on the [inkjs][] interpreter. It is a deliberately non-fancy present
 - Git (in emglken) is copyright (c) 2003 Iain Merrick ([MIT license][licensefile])
 - Glulxe (in emglken) is copyright (c) 1999-2016, Andrew Plotkin ([MIT license][licensefile])
 - Hugo (in emglken)  is copyright (c) 2011 by Kent Tessman ([BSD license][licensefile])
+- TADS (in emglken)  is copyright (c) 1991-2012 by Michael J. Roberts ([TADS license][licensefile])
 
 [licensefile]: LICENSE
 
