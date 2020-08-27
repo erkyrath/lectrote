@@ -42,6 +42,30 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
+			<string>TADS 2 Story File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.tads2</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-tads.icns</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>TADS 3 Story File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.tads3</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>icon-tads.icns</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
 			<string>Blorbed IF Story File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -163,6 +187,50 @@
 			</dict>
 			<key>UTTypeIconFile</key>
 			<string>icon-hugo.icns</string>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.tads2</string>
+			<key>UTTypeDescription</key>
+			<string>TADS 2 Story File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://tads.org/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>gam</string>
+				<key>public.mime-type</key>
+				<string>application/x-tads</string>
+			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-tads.icns</string>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.content</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.tads3</string>
+			<key>UTTypeDescription</key>
+			<string>TADS 3 Story File</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://tads.org/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>t3</string>
+				<key>public.mime-type</key>
+				<string>application/x-t3vm-image</string>
+			</dict>
+			<key>UTTypeIconFile</key>
+			<string>icon-tads.icns</string>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
