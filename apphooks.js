@@ -273,7 +273,7 @@ function construct_searchbar()
         return;
 
     barel.empty();
-    var shadow = barel.get(0).createShadowRoot();
+    var shadow = barel.get(0).attachShadow({ mode: 'open' });
 
     var bodyel = $('<div>', { id:'searchbar_body' });
     search_body_el = bodyel;
