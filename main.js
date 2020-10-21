@@ -535,6 +535,7 @@ function launch_game(path)
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         webPreferences: {
             nodeIntegration: true,
+            enableRemoteModule: true, /* electrojs relies on remote.app, remote.dialog, etc */
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         }
     };
