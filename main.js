@@ -333,6 +333,8 @@ function write_prefs_now()
 
 /* Call one of the functions in apphooks.js (in the game renderer process).
    The argument is passed as a JSON string.
+   (This is fire-and-forget! Beware races. TODO: Create a chained send
+   function (async) for the places where we invoke a bunch of hooks.)
 */
 function invoke_app_hook(win, func, arg)
 {
@@ -1373,6 +1375,14 @@ electron.ipcMain.on('select_load_recent', function() {
         return;
     var menu = electron.Menu.buildFromTemplate(template);
     menu.popup(aboutwin);
+});
+
+electron.ipcMain.on('get_app_paths', function(ev) {
+    var obj = {
+        userData: app.getPath('userData'),
+        temp: app.getPath('temp')
+    };
+    ev.returnValue = obj;
 });
 
 electron.ipcMain.on('game_metadata', function(ev, arg) {
