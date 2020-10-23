@@ -171,11 +171,25 @@ body.DarkTheme {
 }
 
 .InvisibleCursor {
-  /* This provides the padding below the last line of text (and the input
+  /* This is a relic. It used to provide the padding below the last line
+     of text, but now it has no effect. It will go away at some point. */
+  position: relative;
+}
+
+.BufferLine:last-child {
+  /* This provides the margin below the last line of text (and the input
      prompt). Without this, they'd be flush against the bottom of the
      window, which would be ugly. Do not modify this CSS class. */
-  position: relative;
-  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+.HasNoInputField .BufferLine:last-child .BlankLineSpan {
+  /* If the last line in a buffer window is blank, and there is no
+     char/line input occurring, we suppress the blank line in the DOM.
+     (The div still exists, but it has no visible contents, so it
+     collapses.) This aids fixed-height buffer wins which contained
+     exactly the right number of lines. */
+  display: none;
 }
 
 .MorePrompt {
