@@ -349,6 +349,19 @@ function search_request(arg)
     }
 }
 
+function sequence(argls)
+{
+    /* The argument is a list of { key, arg } pairs. */
+    for (var arg of argls) {
+	var func = namespace[arg.key];
+	if (!func) {
+	    console.log('sequence: unable to find handler: ' + arg.key);
+	    continue;
+	}
+	func(arg.arg);
+    }
+}
+    
 const namespace = {
     load_named_game : load_named_game,
     set_clear_autosave : set_clear_autosave,
@@ -357,7 +370,8 @@ const namespace = {
     set_margin_level : set_margin_level,
     set_color_theme : set_color_theme,
     set_font : set_font,
-    search_request : search_request
+    search_request : search_request,
+    sequence : sequence
 };
 
 /* We hook up the namespace to IPC events, so that the main process can

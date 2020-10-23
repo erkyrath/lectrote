@@ -333,8 +333,8 @@ function write_prefs_now()
 
 /* Call one of the functions in apphooks.js (in the game renderer process).
    The argument is passed as a JSON string.
-   (This is fire-and-forget! Beware races. TODO: Create a chained send
-   function (async) for the places where we invoke a bunch of hooks.)
+   (This is fire-and-forget! Beware races. If you want to invoke a bunch
+   of hooks, use "sequence".)
 */
 function invoke_app_hook(win, func, arg)
 {
@@ -597,15 +597,28 @@ function launch_game(path)
         var game = game_for_webcontents(ev.sender);
         if (!game)
             return;
-        invoke_app_hook(win, 'set_zoom_factor', winopts.webPreferences.zoomFactor);
-        invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
-        invoke_app_hook(win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
-        invoke_app_hook(win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
+        var funcs = [];
+        funcs.push({
+            key: 'set_zoom_factor',
+            arg: winopts.webPreferences.zoomFactor });
+        funcs.push({
+            key: 'set_margin_level',
+            arg: prefs.gamewin_marginlevel });
+        funcs.push({
+            key: 'set_color_theme',
+            arg: { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors } });
+        funcs.push({
+            key: 'set_font',
+            arg: { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont } });
         if (game.suppress_autorestore) {
-            invoke_app_hook(win, 'set_clear_autosave', true);
+            funcs.push({ key: 'set_clear_autosave', arg: true });
             game.suppress_autorestore = false;
         }
-        invoke_app_hook(win, 'load_named_game', { path: game.path, format: kind.id, engine: game.engineid } );
+        funcs.push({
+            key: 'load_named_game',
+            arg: { path: game.path, format: kind.id, engine: game.engineid } });
+
+        invoke_app_hook(win, 'sequence', funcs);
     });
 
     win.webContents.on('found-in-page', function(ev, res) {
