@@ -1,8 +1,8 @@
 {
   "name": "lectrote",
   "productName": "Lectrote",
-  "version": "1.3.7",
-  "lectroteVersion": "1.3.7",
+  "version": "1.3.8",
+  "lectroteVersion": "1.3.8",
   "description": "Lectrote: the Glulx/Ink IF interpreter in an Electron shell",
   "main": "main.js",
   "bin": {
