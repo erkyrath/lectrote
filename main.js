@@ -536,6 +536,7 @@ function launch_game(path)
         minWidth: 400, minHeight: 400,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         webPreferences: {
+            spellcheck: false,
             nodeIntegration: true,
             enableRemoteModule: true, /* electrojs relies on remote.app, remote.dialog, etc */
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
