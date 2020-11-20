@@ -538,7 +538,7 @@ function launch_game(path)
         webPreferences: {
             spellcheck: false,
             nodeIntegration: true,
-            enableRemoteModule: true, /* electrofs relies on remote.app, remote.dialog, etc */
+            enableRemoteModule: false,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         }
     };
@@ -1397,6 +1397,21 @@ electron.ipcMain.on('get_app_paths', function(ev) {
         temp: app.getPath('temp')
     };
     ev.returnValue = obj;
+});
+
+electron.ipcMain.handle('dialog_open', function(ev, tosave, opts) {
+    var game = game_for_webcontents(ev.sender);
+    if (!game) {
+        return null;
+    }
+
+    // The showDialog calls return a promise whose ultimate value becomes the RPC return value.
+    if (!tosave) {
+        return electron.dialog.showOpenDialog(game.win, opts);
+    }
+    else {
+        return electron.dialog.showSaveDialog(game.win, opts);
+    }
 });
 
 electron.ipcMain.on('game_metadata', function(ev, arg) {
