@@ -353,12 +353,12 @@ function sequence(argls)
 {
     /* The argument is a list of { key, arg } pairs. */
     for (var arg of argls) {
-	var func = namespace[arg.key];
-	if (!func) {
-	    console.log('sequence: unable to find handler: ' + arg.key);
-	    continue;
-	}
-	func(arg.arg);
+        var func = namespace[arg.key];
+        if (!func) {
+            console.log('sequence: unable to find handler: ' + arg.key);
+            continue;
+        }
+        func(arg.arg);
     }
 }
     
