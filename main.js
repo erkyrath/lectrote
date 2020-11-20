@@ -538,7 +538,7 @@ function launch_game(path)
         webPreferences: {
             spellcheck: false,
             nodeIntegration: true,
-            enableRemoteModule: true, /* electrojs relies on remote.app, remote.dialog, etc */
+            enableRemoteModule: true, /* electrofs relies on remote.app, remote.dialog, etc */
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         }
     };
