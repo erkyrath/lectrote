@@ -1391,12 +1391,12 @@ electron.ipcMain.on('select_load_recent', function() {
     menu.popup(aboutwin);
 });
 
-electron.ipcMain.on('get_app_paths', function(ev) {
+electron.ipcMain.handle('get_app_paths', function(ev) {
     var obj = {
         userData: app.getPath('userData'),
         temp: app.getPath('temp')
     };
-    ev.returnValue = obj;
+    return obj;
 });
 
 electron.ipcMain.handle('dialog_open', function(ev, tosave, opts) {
