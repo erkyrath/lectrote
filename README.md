@@ -32,6 +32,8 @@ Lectrote currently supports:
 
 You can also use this package to construct a "bound game" -- an app which plays a single built-in game. This is a package containing Chromium, the interpreter, your game file, and perhaps some additional configuration. You can distribute this as a standalone game application; it's bulky but it lets people play your game.
 
+Linux note: Depending on your Linux configuration and how you install this package, you may have to add the `--no-sandbox` option when launching Lectrote.
+
 ## Glulx (Inform 7) support
 
 Because this relies on the [Quixe][] interpreter, sound is not supported. It's also not as fast as a native interpreter.
