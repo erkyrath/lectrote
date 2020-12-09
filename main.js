@@ -538,10 +538,15 @@ function launch_game(path)
         webPreferences: {
             spellcheck: false,
             nodeIntegration: true,
+            contextIsolation: false,
             enableRemoteModule: false,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         }
     };
+    /* Note that Electron recommends contextIsolation:true, but the
+       way we're including interpreter code isn't compatible with
+       contextIsolation. Shouldn't be a problem since we don't support
+       arbitrary remote/game content. */
     /* backgroundColor should maybe be based on darkmode+theme, not
        just the darkmode flag. */
     /* The webPreferences.zoomFactor doesn't seem to take effect in
@@ -700,7 +705,7 @@ function reset_game(game)
 function open_about_window()
 {
     var winopts = {
-        webPreferences: { nodeIntegration: true, enableRemoteModule: false },
+        webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: false },
         width: 600, height: 450,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true,
@@ -750,7 +755,7 @@ function open_about_window()
 function open_prefs_window()
 {
     var winopts = { 
-        webPreferences: { nodeIntegration: true, enableRemoteModule: false },
+        webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: false },
         width: 600, height: 530,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true,
@@ -789,7 +794,7 @@ function open_prefs_window()
 function open_card_window()
 {
     var winopts = {
-        webPreferences: { nodeIntegration: true, enableRemoteModule: false },
+        webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: false },
         width: 810, height: 600,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true
