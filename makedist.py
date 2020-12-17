@@ -269,7 +269,8 @@ def makezip(dir, unwrapped=False):
     val = os.path.split(dir)[-1]
     if not val.startswith(prefix):
         raise Exception('path does not have the prefix')
-    zipfile = product_name + '-' + product_version + '-' + val[len(prefix):]
+    platform = val[len(prefix):]
+    zipfile = product_name + '-' + product_version + '-' + platform
     zipargs = '-q'
     if 'darwin' in zipfile:
         zipfile = zipfile.replace('darwin', 'macos')
@@ -277,7 +278,11 @@ def makezip(dir, unwrapped=False):
         specfile = 'resources/pack-dmg-spec.json'
         if opts.gamedir and os.path.exists(os.path.join(opts.gamedir, specfile)):
             specfile = os.path.join(opts.gamedir, specfile)
-        subprocess.call('rm -f "dist/%s.dmg"; node_modules/.bin/appdmg "%s" "dist/%s.dmg"' % (zipfile, specfile, zipfile),
+        tmpspecfile = specfile.replace('/pack-dmg-spec.json', '/pack-dmg-spec-tmp.json')
+        dat = open(specfile).read()
+        dat = dat.replace('$PLATFORM$', platform)
+        open(tmpspecfile, 'w').write(dat)
+        subprocess.call('rm -f "dist/%s.dmg"; node_modules/.bin/appdmg "%s" "dist/%s.dmg"' % (zipfile, tmpspecfile, zipfile),
                         shell=True)
         return
     print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
