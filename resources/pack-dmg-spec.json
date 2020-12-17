@@ -5,9 +5,9 @@
   "icon-size": 80,
   "contents": [
     { "x": 448, "y": 200, "type": "link", "path": "/Applications" },
-    { "x": 192, "y": 200, "type": "file", "path": "../dist/Lectrote-darwin-x64/Lectrote.app" },
-    { "x": 160, "y": 360, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSE" },
-    { "x": 320, "y": 360, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSES-FONTS.txt" },
-    { "x": 480, "y": 360, "type": "file", "path": "../dist/Lectrote-darwin-x64/LICENSES.chromium.html" }
+    { "x": 192, "y": 200, "type": "file", "path": "../dist/Lectrote-$PLATFORM$/Lectrote.app" },
+    { "x": 160, "y": 360, "type": "file", "path": "../dist/Lectrote-$PLATFORM$/LICENSE" },
+    { "x": 320, "y": 360, "type": "file", "path": "../dist/Lectrote-$PLATFORM$/LICENSES-FONTS.txt" },
+    { "x": 480, "y": 360, "type": "file", "path": "../dist/Lectrote-$PLATFORM$/LICENSES.chromium.html" }
   ]
 }
