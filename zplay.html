@@ -23,7 +23,7 @@ window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
 if (!game_options.use_unminified_js) {
   var elkote_mods = require('./quixe/lib/elkote.min.js');
   window.GlkOteClass = elkote_mods.GlkOteClass;
-  window.DialogClass = elkote_mods.DialogClass;
+  window.Dialog = elkote_mods.Dialog;
   window.Glk = elkote_mods.Glk;
   require('./ifvms/zvm_dispatch.min.js');
   var ZVM = require('./ifvms/zvm.min.js');
@@ -31,12 +31,18 @@ if (!game_options.use_unminified_js) {
 }
 else {
   window.GlkOteClass = require('./quixe/src/glkote/glkote.js').GlkOteClass;
-  window.DialogClass = require('./quixe/src/glkote/electrofs.js').DialogClass;
+  window.Dialog = require('./quixe/src/glkote/electrofs.js').Dialog;
   window.Glk = require('./quixe/src/glkote/glkapi.js').Glk;
   var ZVM = require('./ifvms/zvm.min.js');
   require('./ifvms/zvm_dispatch.js');
   window.GiLoad = require('./quixe/src/quixe/gi_load.js').GiLoad;
 }
+
+game_options.Dialog = window.Dialog; // loaded from electrofs.js
+game_options.GiDispa = window.GiDispa; // loaded from zvm_dispatch.js
+// TODO: Update the GiDispa.set_vm() call in zvm_dispatch.js to the newer GiDispa.init() format. Until then, we patch in an adapter.
+window.GiDispa.init = function(opts) { window.GiDispa.set_vm(opts.vm); };
+
 require('./apphooks.js');
 
 </script>
