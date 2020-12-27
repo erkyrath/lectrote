@@ -27,7 +27,9 @@ if (!game_options.use_unminified_js) {
   window.Glk = elkote_mods.Glk;
   require('./ifvms/zvm_dispatch.min.js');
   var ZVM = require('./ifvms/zvm.min.js');
-  window.GiLoad = require('./ifvms/gi_load.min.js').GiLoad;
+  //TODO: We are currently usinging the GiLoad from Quixe, rather than the one bundled with ifvms. When ifvms is updated, change this back.
+  window.GiLoad = require('./quixe/lib/quixe.min.js').GiLoad;
+  // window.GiLoad = require('./ifvms/gi_load.min.js').GiLoad;
 }
 else {
   window.GlkOteClass = require('./quixe/src/glkote/glkote.js').GlkOteClass;
