@@ -6,7 +6,7 @@ const Story = require('./inkjs/ink.min.js').Story;
 var story = null;
 /* Short string which will (hopefully) be unique per game. */
 var signature = null;
-/* Global taqgs. */
+/* Global tags. */
 var metadata = {};
 
 /* We need to distinguish each turn's hyperlinks. */
