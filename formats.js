@@ -37,6 +37,13 @@
    the main process.
  */
 
+/* TODO: Switch to the new module format, where modules are provided as classes rather than window.Module.
+   I think the engine will provide a getlibrary() call. Then this function can do:
+   opts.Dialog = engine.getlibrary('Dialog');
+   opts.GlkOte = engine.getlibrary('GlkOte');
+   ...and so on.
+*/
+
 function common_emglken_load(file, buf, opts) {
     var engine = new ( require(`./emglken/${file}.js`) )();
     const data = Uint8Array.from(buf);
@@ -136,6 +143,7 @@ const formatlist = [
                 name: 'ZVM',
                 html: 'zplay.html',
                 load: (arg, buf, opts) => {
+                    /* TODO: switch to module format. See comment on common_emglken_load() above. */
                     opts.blorb_gamechunk_type = 'ZCOD';
                     opts.vm = window.engine = new window.ZVM();
                     opts.Glk = window.Glk;
