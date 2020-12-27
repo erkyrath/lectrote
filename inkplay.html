@@ -22,12 +22,11 @@ window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
 if (!game_options.use_unminified_js) {
   var elkote_mods = require('./quixe/lib/elkote.min.js');
   window.GlkOte = elkote_mods.GlkOte;
-  window.Dialog = elkote_mods.Dialog;
-  window.Glk = elkote_mods.Glk;
+  window.DialogClass = elkote_mods.DialogClass;
 }
 else {
   window.GlkOte = require('./quixe/src/glkote/glkote.js').GlkOte;
-  window.Dialog = require('./quixe/src/glkote/electrofs.js').Dialog;
+  window.DialogClass = require('./quixe/src/glkote/electrofs.js').DialogClass;
 }
 require('./inkplay.js');
 require('./apphooks.js');

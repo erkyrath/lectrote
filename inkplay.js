@@ -180,6 +180,8 @@ function game_cycle()
 */
 function perform_autosave(clear)
 {
+    var Dialog = GlkOte.getlibrary('Dialog');
+    
     if (clear) {
         Dialog.autosave_write(signature, null);
         return;
@@ -226,6 +228,8 @@ var game_quit = false;
 
 function startup() 
 {
+    var Dialog = GlkOte.getlibrary('Dialog');
+    
     if (all_options.clear_vm_autosave) {
         Dialog.autosave_write(signature, null);
     }
