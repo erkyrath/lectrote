@@ -42,6 +42,7 @@
    opts.Dialog = engine.getlibrary('Dialog');
    opts.GlkOte = engine.getlibrary('GlkOte');
    ...and so on.
+   (Referring to window.GiLoad will remain valid.)
 */
 
 function common_emglken_load(file, buf, opts) {
