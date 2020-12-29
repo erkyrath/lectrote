@@ -35,6 +35,12 @@ if (fs.existsSync(outpath)) {
     fs.rmdirSync(outpath, { recursive:true });
 }
 
+/* Copy the LICENSES.chromium.html file, which I think is normally
+   created by electron-packager. */
+fs.copyFileSync(
+    'dist/Lectrote-darwin-arm64/LICENSES.chromium.html',
+    'dist/Lectrote-darwin-univ/LICENSES.chromium.html');
+
 /* Include ./tools in the path, because makeUniversalApp needs to use
    ./tools/file rather than /usr/bin/file. 
 */

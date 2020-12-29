@@ -17,6 +17,7 @@ import subprocess
 all_packages = [
     'darwin-x64',
     'darwin-arm64',
+    'darwin-univ',
     'linux-x64',
     'win32-ia32',
     'win32-x64',
@@ -179,7 +180,7 @@ def install(resourcedir, pkg):
 
 def builddir(dir, pack, pkg):
     (platform, dummy, arch) = pack.partition('-')
-    
+
     cmd = 'node_modules/.bin/electron-packager'
     args = [
         cmd, 'tempapp', product_name,
@@ -190,7 +191,11 @@ def builddir(dir, pack, pkg):
         '--overwrite'
         ]
 
-    if platform == 'darwin':
+    if platform == 'darwin' and arch == 'univ':
+        cmd = 'node'
+        args = [ cmd, 'tools/makemacuni.js' ]
+    
+    elif platform == 'darwin':
         appid = 'com.eblong.lectrote'
         if opts.gamedir:
             appid = pkg.get('lectroteMacAppID')
@@ -262,7 +267,9 @@ def builddir(dir, pack, pkg):
 
     for filename in rootfiles:
         shutil.copyfile(filename, os.path.join(dir, filename))
-    os.unlink(os.path.join(dir, 'version'))
+    val = os.path.join(dir, 'version')
+    if os.path.exists(val):
+        os.unlink(val)
     
 def makezip(dir, unwrapped=False):
     prefix = product_name + '-'
