@@ -194,6 +194,13 @@ def builddir(dir, pack, pkg):
     if platform == 'darwin' and arch == 'univ':
         cmd = 'node'
         args = [ cmd, 'tools/makemacuni.js' ]
+        if opts.macsign:
+            args = args + [
+                '--osx-sign.entitlements', 'resources/mac-app.entitlements',
+                '--osx-sign.entitlements-inherit', 'resources/mac-app.entitlements',
+                '--osx-sign.identity', opts.macsign,
+                '--osx-sign.hardenedRuntime', 'true',
+            ]
     
     elif platform == 'darwin':
         appid = 'com.eblong.lectrote'

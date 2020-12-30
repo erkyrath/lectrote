@@ -18,12 +18,32 @@
 
 const path = require('path');
 const fs = require('fs');
-var { makeUniversalApp } = require('@electron/universal');
+const { makeUniversalApp } = require('@electron/universal');
+const { signAsync } = require('electron-osx-sign');
 
 var cwd = process.cwd();
 var outpath = path.join(cwd, 'dist/Lectrote-darwin-univ/Lectrote.app');
 
 console.log('Writing to', outpath);
+
+var signargs = null;
+
+var ix = 0;
+while (ix < process.argv.length) {
+    var val = process.argv[ix];
+    if (val.startsWith('--osx-sign.')) {
+	if (!signargs) {
+	    signargs = {};
+	}
+	ix++;
+	signargs[val.substring(11)] = process.argv[ix];
+    }
+    else if (val.startsWith('--')) {
+	console.log('Unrecognized argument', val);
+    }
+
+    ix++;
+}
 
 /* Make sure the destination directory exists and the destination
    binary does not. */
@@ -58,5 +78,21 @@ makeUniversalApp({
     process.exit(1);
 }).then(function() {
     console.log('Success.');
+
+    if (signargs != null) {
+	// electron-packager adds these
+	signargs['platform'] = 'darwin';
+	signargs['app'] = outpath;
+	console.log('Signing with', signargs['identity']);
+
+        signAsync(signargs).catch(function(ex) {
+	    console.log('Failed:', ex);
+	    process.exit(1);
+	}).then(function() {
+	    console.log('Success.');
+	});
+    }
+
 });
+
 
