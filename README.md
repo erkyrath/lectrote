@@ -119,13 +119,13 @@ To build a universal (Intel/ARM) Mac binary, you must first build the Intel and 
 
     python3 makedist.py darwin
 
-If you want to code-sign the Mac version, use the --macsign argument:
+If you want to code-sign the Mac version, use the `--macsign` argument:
 
     python3 makedist.py darwin --macsign 'Developer ID Application: ...'
 
 You must be a registered Apple developer to do this. The argument must be the name of the "Developer Id Application" certificate in your keychain. Run the Keychain Access app to see this. If you don't have one, the easiest way to set it up is to run Xcode, open the Preferences, select Accounts, and hit Manage Certificates.
 
-Building a *signed* universal Mac version is unfortunately a pain in the butt. You must (a) build `darwin-x64` and `darwin-arm64` versions unsigned; (b) build `darwin-univ` with the `--macsign` argument; (c) build the first two again with the `--macsign` argument. I may streamline this in the future.
+Building a *signed* universal Mac version is unfortunately a pain in the butt. You must (a) build the `darwin-x64` and `darwin-arm64` versions unsigned; (b) build `darwin-univ` with the `--macsign` argument; (c) build the first two again with the `--macsign` argument. I may streamline this in the future.
 
 ## Packaging a bound game
 
