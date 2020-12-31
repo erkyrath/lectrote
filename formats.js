@@ -147,6 +147,7 @@ const formatlist = [
                     /* TODO: switch to module format. See comment on common_emglken_load() above. */
                     opts.blorb_gamechunk_type = 'ZCOD';
                     opts.vm = window.engine = new window.ZVM();
+                    opts.vm.init = opts.vm.prepare;
                     opts.Glk = window.Glk;
                     opts.Dialog = window.Dialog;
                     return Uint8Array.from(buf);
