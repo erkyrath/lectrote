@@ -41,7 +41,10 @@ function load_named_game(arg)
         title: default_name
     };
 
-    var title = Blorb.get_metadata('title');
+    var title = undefined;
+    if (Blorb && Blorb.get_metadata) {
+        var title = Blorb.get_metadata('title');
+    }
     if (title)
         obj.title = title;
 
@@ -52,7 +55,7 @@ function load_named_game(arg)
     }
 
     var coverimageres = undefined;
-    if (Blorb.get_cover_pict) {
+    if (Blorb && Blorb.get_cover_pict) {
         coverimageres = Blorb.get_cover_pict();
     }
     if (coverimageres !== undefined) {
@@ -83,7 +86,7 @@ function display_cover_art(dat)
         var Blorb = GiLoad.getlibrary('Blorb');
         
         /* dat is null; try to use the cover image data from the blorb. */
-        if (!Blorb.get_cover_pict)
+        if (!(Blorb && Blorb.get_cover_pict))
             return;
         var coverimageres = Blorb.get_cover_pict();
         if (coverimageres === undefined)
