@@ -23,6 +23,7 @@ window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
 if (!game_options.use_unminified_js) {
   var elkote_mods = require('./quixe/lib/elkote.min.js');
   window.GlkOteClass = elkote_mods.GlkOteClass;
+  window.BlorbClass = elkote_mods.BlorbClass;
   window.DialogClass = elkote_mods.DialogClass;
   window.Glk = elkote_mods.Glk;
   var quixe_mods = require('./quixe/lib/quixe.min.js');
@@ -32,6 +33,7 @@ if (!game_options.use_unminified_js) {
 }
 else {
   window.GlkOteClass = require('./quixe/src/glkote/glkote.js').GlkOteClass;
+  window.BlorbClass = require('./quixe/src/glkote/gi_blorb.js').BlorbClass;
   window.DialogClass = require('./quixe/src/glkote/electrofs.js').DialogClass;
   window.Glk = require('./quixe/src/glkote/glkapi.js').Glk;
   window.Quixe = require('./quixe/src/quixe/quixe.js').Quixe;
