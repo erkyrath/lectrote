@@ -9,8 +9,6 @@ const fs = require('fs');
 const fonts = require('./fonts.js');
 const formats = require('./formats.js');
 
-//### GiLoad.get_metadata, GiLoad.get_cover_pict, GiLoad.get_image_info, GiLoad.get_image_url
-
 function load_named_game(arg)
 {
     const engine = formats.enginemap[arg.engine];
