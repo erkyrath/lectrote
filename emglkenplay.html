@@ -24,6 +24,8 @@ if (!game_options.use_unminified_js) {
   window.GlkOte = elkote_mods.GlkOte;
   window.Dialog = elkote_mods.Dialog;
   window.GiLoad = require('./ifvms/gi_load.min.js').GiLoad;
+  //TODO: We are using the older GiLoad bundled with ifvms. This is missing the getlibrary() call, so we patch a stub in here. When ifvms is updated, remove this line.
+  window.GiLoad.getlibrary = function(val) { return null; };    
 }
 else {
   window.GlkOte = require('./quixe/src/glkote/glkote.js').GlkOte;
