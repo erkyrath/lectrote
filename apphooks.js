@@ -9,6 +9,8 @@ const fs = require('fs');
 const fonts = require('./fonts.js');
 const formats = require('./formats.js');
 
+//### GiLoad.get_metadata, GiLoad.get_cover_pict, GiLoad.get_image_info, GiLoad.get_image_url
+
 function load_named_game(arg)
 {
     const engine = formats.enginemap[arg.engine];
@@ -29,13 +31,19 @@ function load_named_game(arg)
         arr = engine.load(arg, buf, game_options);
 
     GiLoad.load_run(game_options, arr, load_options);
+    /* Note that load_run() is synchronous with this config (the "not a
+       URL at all" path). So Blorb should now be safely inited. */
+    var Blorb = GiLoad.getlibrary('Blorb');
+    if ((!Blorb) || (!Blorb.inited())) {
+        console.log('Blorb is not inited after load_run()!');
+    }
 
     /* Pass some metadata back to the app */
     var obj = {
         title: default_name
     };
 
-    var title = GiLoad.get_metadata('title');
+    var title = Blorb.get_metadata('title');
     if (title)
         obj.title = title;
 
@@ -46,8 +54,8 @@ function load_named_game(arg)
     }
 
     var coverimageres = undefined;
-    if (GiLoad.get_cover_pict) {
-        coverimageres = GiLoad.get_cover_pict();
+    if (Blorb.get_cover_pict) {
+        coverimageres = Blorb.get_cover_pict();
     }
     if (coverimageres !== undefined) {
         obj.coverimageres = coverimageres;
@@ -74,17 +82,19 @@ function display_cover_art(dat)
         /* dat is an object containing { url, width, height } of an image. */
     }
     else {
+        var Blorb = GiLoad.getlibrary('Blorb');
+        
         /* dat is null; try to use the cover image data from the blorb. */
-        if (!GiLoad.get_cover_pict)
+        if (!Blorb.get_cover_pict)
             return;
-        var coverimageres = GiLoad.get_cover_pict();
+        var coverimageres = Blorb.get_cover_pict();
         if (coverimageres === undefined)
             return;
         
-        var info = GiLoad.get_image_info(coverimageres);
+        var info = Blorb.get_image_info(coverimageres);
         if (!info)
             return;
-        var url = GiLoad.get_image_url(coverimageres);
+        var url = Blorb.get_image_url(coverimageres);
 
         dat = { url:url, width:info.width, height:info.height };
     }
