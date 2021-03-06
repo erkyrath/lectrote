@@ -1321,7 +1321,7 @@ app.on('second-instance', (event, argv, cwd) => {
         var path = argv[ix];
         if (path_mod.basename(path) == 'main.js' || path_mod.basename(path) == '.')
             continue;
-        if (process.platform == 'darwin' && path.startsWith('-psn'))
+        if (path.startsWith('-'))
             continue;
         if (!app_ready)
             launch_paths.push(path);
@@ -1542,13 +1542,13 @@ app.on('will-finish-launching', function() {
        in process.argv. Unfortunately, the first argument may be "main.js"
        or not, depending on how we were launched. I don't know a way to
        distinguish this other than just special-casing "main.js".
-       We also special-case the "-psn..." argument which MacOS sometimes
-       throws in. */
+       We also ignore any arguments starting with a dash; these appear on
+       various platforms and I don't have a full list. */
     for (var ix=1; ix<process.argv.length; ix++) {
         var path = process.argv[ix];
         if (path_mod.basename(path) == 'main.js' || path_mod.basename(path) == '.')
             continue;
-        if (process.platform == 'darwin' && path.startsWith('-psn'))
+        if (path.startsWith('-'))
             continue;
         launch_paths.push(path);
     }
