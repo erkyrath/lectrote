@@ -18,7 +18,7 @@
   "author": "Andrew Plotkin <erkyrath@eblong.com>",
   "license": "MIT",
   "dependencies": {
-    "electron": "^11.2.0"
+    "electron": "^11.3.0"
   },
   "devDependencies": {
     "electron-packager": "^15.1.0",
