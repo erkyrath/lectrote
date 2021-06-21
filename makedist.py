@@ -19,6 +19,7 @@ all_packages = [
     'darwin-arm64',
     'darwin-univ',
     'linux-x64',
+    'linux-arm64',
     'win32-ia32',
     'win32-x64',
 ]
