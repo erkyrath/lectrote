@@ -144,6 +144,8 @@ You will need to create a separate directory for your game's files. Copy `packag
 
 (Do not change `lectroteVersion`; that should always show the Lectrote release that you built your bound app from.)
 
+To create a Mac DMG archive, you will also need a `resources/pack-dmg-spec.json` file. See `samplegame/resources/pack-dmg-spec.json`. You should update the "title", the "dist/Adventure-$PLATFORM$" paths under "contents", and (if you want) the "background" image which is used for the folder window.
+
 You may also copy any of Lectrote's content files to your game directory and customize them. You will probably want to customize `about.html`, for example.
 
 The `samplegame` directory in the Lectrote source demonstrates the layout. It will be simplest to clone that and alter it.
