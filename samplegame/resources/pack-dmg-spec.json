@@ -1,0 +1,13 @@
+{
+  "title": "Install Adventure",
+  "icon": "../../resources/appicon-dmg.icns",
+  "background": "../../resources/pack-dmg-background.png",
+  "icon-size": 80,
+  "contents": [
+    { "x": 448, "y": 200, "type": "link", "path": "/Applications" },
+    { "x": 192, "y": 200, "type": "file", "path": "../../dist/Adventure-$PLATFORM$/Adventure.app" },
+    { "x": 160, "y": 360, "type": "file", "path": "../../dist/Adventure-$PLATFORM$/LICENSE" },
+    { "x": 320, "y": 360, "type": "file", "path": "../../dist/Adventure-$PLATFORM$/LICENSES-FONTS.txt" },
+    { "x": 480, "y": 360, "type": "file", "path": "../../dist/Adventure-$PLATFORM$/LICENSES.chromium.html" }
+  ]
+}
