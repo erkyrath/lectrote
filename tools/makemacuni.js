@@ -21,8 +21,22 @@ const fs = require('fs');
 const { makeUniversalApp } = require('@electron/universal');
 const { signAsync } = require('electron-osx-sign');
 
+/* Normally these are "dist/Lectrote-darwin-univ", "dist/Lectrote-darwin-x64",
+   "dist/Lectrote-darwin-arm64". */
+var diruniv = process.argv[2];
+var dirx64 = diruniv.replace(/univ$/, 'x64');
+var dirarm64 = diruniv.replace(/univ$/, 'arm64');
+
+/* Normally this is "Lectrote.app". */
+var productname = process.argv[3] + '.app';
+
+if (diruniv == dirx64) {
+    console.log('Failed: path does not end with univ', diruniv);
+    process.exit(1);
+}
+
 var cwd = process.cwd();
-var outpath = path.join(cwd, 'dist/Lectrote-darwin-univ/Lectrote.app');
+var outpath = path.join(cwd, diruniv, productname);
 
 console.log('Writing to', outpath);
 
@@ -48,8 +62,8 @@ while (ix < process.argv.length) {
 /* Make sure the destination directory exists and the destination
    binary does not. */
 
-if (!fs.existsSync('dist/Lectrote-darwin-univ')) {
-    fs.mkdirSync('dist/Lectrote-darwin-univ');
+if (!fs.existsSync(diruniv)) {
+    fs.mkdirSync(diruniv);
 }
 if (fs.existsSync(outpath)) {
     fs.rmdirSync(outpath, { recursive:true });
@@ -58,8 +72,8 @@ if (fs.existsSync(outpath)) {
 /* Copy the LICENSES.chromium.html file, which I think is normally
    created by electron-packager. */
 fs.copyFileSync(
-    'dist/Lectrote-darwin-arm64/LICENSES.chromium.html',
-    'dist/Lectrote-darwin-univ/LICENSES.chromium.html');
+    path.join(dirarm64, 'LICENSES.chromium.html'),
+    path.join(diruniv, 'LICENSES.chromium.html'));
 
 /* Include ./tools in the path, because makeUniversalApp needs to use
    ./tools/file rather than /usr/bin/file. 
@@ -70,8 +84,8 @@ process.env['PATH'] = path.join(cwd, 'tools') + ':' + execpath
 /* Do it. */
 
 makeUniversalApp({
-    x64AppPath: path.join(cwd, 'dist/Lectrote-darwin-x64/Lectrote.app'),
-    arm64AppPath: path.join(cwd, 'dist/Lectrote-darwin-arm64/Lectrote.app'),
+    x64AppPath: path.join(cwd, dirx64, productname),
+    arm64AppPath: path.join(cwd, dirarm64, productname),
     outAppPath: outpath,
 }).catch(function(ex) {
     console.log('Failed:', ex);
