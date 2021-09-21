@@ -194,7 +194,7 @@ def builddir(dir, pack, pkg):
 
     if platform == 'darwin' and arch == 'univ':
         cmd = 'node'
-        args = [ cmd, 'tools/makemacuni.js' ]
+        args = [ cmd, 'tools/makemacuni.js', dir, product_name ]
         if opts.macsign:
             args = args + [
                 '--osx-sign.entitlements', 'resources/mac-app.entitlements',
