@@ -271,7 +271,9 @@ def builddir(dir, pack, pkg):
             '--icon='+iconpath,
             ]
         
-    subprocess.call(args)
+    res = subprocess.call(args)
+    if res:
+        raise Exception('electron-packager failed')
 
     for filename in rootfiles:
         shutil.copyfile(filename, os.path.join(dir, filename))
