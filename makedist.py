@@ -66,6 +66,7 @@ appfiles = [
     './el-glkote.css',
     './font',  # all files
     './icon-128.png',
+    './icon-tray.ico',
     './docicon-glulx.ico',
     './docicon-zcode.ico',
     './docicon-hugo.ico',

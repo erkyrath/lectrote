@@ -37,6 +37,7 @@ var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
 var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
 var window_icon = null; /* icon to apply to all windows (only used on Linux) */
+var tray_icon = null; /* icon to use for system tray (only on Windows) */
 
 var search_string = ''; /* recent text search in a game window */
 
@@ -1566,6 +1567,17 @@ app.on('ready', function() {
            icon from the app's .ico resource. On Linux, we want to
            apply a generic icon. */
         window_icon = path_mod.join(__dirname, 'icon-128.png');
+    }
+    if (process.platform == 'win32') {
+        /* On Windows, set the tray icon. */
+        tray_icon = new electron.Tray(path_mod.join(__dirname, 'icon-tray.ico'));
+
+        var traymenu = electron.Menu.buildFromTemplate([
+            {
+                label: 'Quit', click: function() { app.quit(); }
+            }
+        ]);
+        tray_icon.setContextMenu(traymenu)
     }
     
     var template = construct_menu_template();
