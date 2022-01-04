@@ -22,6 +22,7 @@ all_packages = [
     'linux-arm64',
     'win32-ia32',
     'win32-x64',
+    'win32-arm64',
 ]
 
 popt = optparse.OptionParser()
