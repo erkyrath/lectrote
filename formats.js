@@ -45,21 +45,24 @@
    (Referring to window.GiLoad will remain valid.)
 */
 
+const fs = require('fs')
+
 function common_emglken_load(file, buf, opts) {
-    var engine = new ( require(`./emglken/${file}.js`) )();
     const data = Uint8Array.from(buf);
-    const vm = opts.vm = window.engine = engine;
+    const vm_class = require(`./emglken/${file}.js`).default
+    const vm = opts.vm = window.engine = new vm_class()
     opts.Dialog = window.Dialog;
     opts.Glk = opts.io = {
-        fatal_error: window.GlkOte.fatal_error,
+        fatal_error: window.GlkOte.error,
         init(opts) {
-            // Call prepare here because GiLoad will send extracted Glulx files rather than the whole blorb
-            vm.prepare(data, opts);
+            // Call init here because GiLoad will send extracted Glulx files rather than the whole blorb
+            vm.init(data, opts);
             // start will call GlkOte later on
             vm.start(opts);
         },
     };
     opts.GlkOte = window.GlkOte;
+    opts.wasmBinary = fs.readFileSync(`./emglken/${file}-core.wasm`)
     if (file === 'git' || file === 'glulxe') {
         opts.blorb_gamechunk_type = 'GLUL';
     }
