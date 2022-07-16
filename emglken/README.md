@@ -5,20 +5,6 @@ Over the years many Interactive Fiction interpreters have been written which use
 
 Emglken itself doesn't have a lot of code, RemGlk does most of the work for us. What Emglken does provide is a virtual file system for Emscripten which lets RemGlk think it is running on a normal Linux filesystem, but is actually transformed to use [GlkOte](https://github.com/erkyrath/glkote)'s Dialog API. Emglken also provides a common interpreter interface to handle setting up the connections between each interpreter and GlkOte.
 
-Both RemGlk and the Emglken customisations are MIT licensed, as are some of the interpreters, but others are licensed under other Free Software licenses as listed below.
-
-Included Projects
------------------
-
-Name   | Upstream repo | License
------- | ------------- | -------
-Bocfel | [garglk/garglk](https://github.com/garglk/garglk) | [GPL-2.0](https://github.com/garglk/garglk/blob/master/terps/bocfel/COPYING.GPLv2)/[GPL-3.0](https://github.com/garglk/garglk/blob/master/terps/bocfel/COPYING.GPLv3)
-Git    | [DavidKinder/Git](https://github.com/DavidKinder/Git) | [MIT](https://github.com/DavidKinder/Git/blob/master/README.txt)
-Glulxe | [erkyrath/glulxe](https://github.com/erkyrath/glulxe) | [MIT](https://github.com/erkyrath/glulxe/blob/master/LICENSE)
-Hugo   | [0branch/hugo-unix](https://github.com/0branch/hugo-unix) | [BSD-2-Clause](https://github.com/0branch/hugo-unix/blob/master/License.txt)
-RemGlk | [erkyrath/remglk](https://github.com/erkyrath/remglk) | [MIT](https://github.com/erkyrath/remglk/blob/master/LICENSE)
-TADS   | [garglk/garglk](https://github.com/garglk/garglk) | [GPL-2.0](https://github.com/garglk/garglk/blob/master/tads/COPYING)
-
 npm package and console app
 ---------------------------
 
@@ -27,3 +13,17 @@ Emglken has been published to the [npm package repository](https://www.npmjs.com
 ```
 emglken storyfile.gblorb
 ```
+
+Included Projects
+-----------------
+
+Both RemGlk and the Emglken customisations are MIT licensed, as are some of the interpreters, but others are licensed under other Free Software licenses as listed below.
+
+Name   | Upstream repo | License
+------ | ------------- | -------
+Bocfel | [garglk/garglk](https://github.com/garglk/garglk) | [GPL-2.0](https://github.com/garglk/garglk/blob/master/terps/bocfel/COPYING.GPLv2)/[GPL-3.0](https://github.com/garglk/garglk/blob/master/terps/bocfel/COPYING.GPLv3)
+Git    | [DavidKinder/Git](https://github.com/DavidKinder/Git) | [MIT](https://github.com/DavidKinder/Git/blob/master/README.txt)
+Glulxe | [erkyrath/glulxe](https://github.com/erkyrath/glulxe) | [MIT](https://github.com/erkyrath/glulxe/blob/master/LICENSE)
+Hugo   | [hugoif/hugo-unix](https://github.com/hugoif/hugo-unix) | [BSD-2-Clause](https://github.com/hugoif/hugo-unix/blob/master/License.txt)
+RemGlk | [erkyrath/remglk](https://github.com/erkyrath/remglk) | [MIT](https://github.com/erkyrath/remglk/blob/master/LICENSE)
+TADS   | [tads-intfic/tads-runner](https://github.com/tads-intfic/tads-runner) | [GPL-2.0](https://github.com/tads-intfic/tads-runner/blob/master/COPYING)
