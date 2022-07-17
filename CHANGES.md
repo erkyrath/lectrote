@@ -1,5 +1,5 @@
 
-## 1.4.2  (###)
+## 1.4.2  (Jul 16, 2022)
 
 - Accept ".sav" as a valid file suffix when loading save files (in addition to ".glksave").
 - Updated Quixe to 2.2.1 (matching Glulx VM 3.1.3, now with double-precision math).
