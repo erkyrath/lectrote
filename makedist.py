@@ -17,7 +17,7 @@ import subprocess
 all_packages = [
     'darwin-x64',
     'darwin-arm64',
-    'darwin-univ',
+    'darwin-universal',
     'linux-x64',
     'linux-arm64',
     'win32-ia32',
@@ -194,18 +194,7 @@ def builddir(dir, pack, pkg):
         '--overwrite'
         ]
 
-    if platform == 'darwin' and arch == 'univ':
-        cmd = 'node'
-        args = [ cmd, 'tools/makemacuni.js', dir, product_name ]
-        if opts.macsign:
-            args = args + [
-                '--osx-sign.entitlements', 'resources/mac-app.entitlements',
-                '--osx-sign.entitlements-inherit', 'resources/mac-app.entitlements',
-                '--osx-sign.identity', opts.macsign,
-                '--osx-sign.hardenedRuntime', 'true',
-            ]
-    
-    elif platform == 'darwin':
+    if platform == 'darwin':
         appid = 'com.eblong.lectrote'
         if opts.gamedir:
             appid = pkg.get('lectroteMacAppID')
