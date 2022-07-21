@@ -62,7 +62,7 @@ function common_emglken_load(file, buf, opts) {
         },
     };
     opts.GlkOte = window.GlkOte;
-    opts.wasmBinary = fs.readFileSync(`./emglken/${file}-core.wasm`)
+    opts.wasmBinary = fs.readFileSync(`${__dirname}/emglken/${file}-core.wasm`)
     if (file === 'git' || file === 'glulxe') {
         opts.blorb_gamechunk_type = 'GLUL';
     }
