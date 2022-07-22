@@ -1,4 +1,8 @@
 
+## 1.4.3  (Jul 21, 2022)
+
+- Fix a path bug in emglken.
+
 ## 1.4.2  (Jul 16, 2022)
 
 - Accept ".sav" as a valid file suffix when loading save files (in addition to ".glksave").
