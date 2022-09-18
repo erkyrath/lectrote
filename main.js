@@ -1251,7 +1251,7 @@ function construct_menu_template(special)
             },
             {
                 label: 'Hide Others',
-                accelerator: 'Command+Shift+H',
+                accelerator: 'Command+Alt+H',
                 role: 'hideothers'
             },
             {
