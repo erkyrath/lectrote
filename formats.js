@@ -80,6 +80,23 @@ const formatlist = [
     },
 
     {
+        id: 'adrift4',
+        longname: 'Adrift 4 Game File',
+        name: 'Adrift 4',
+        extensions: [ 'taf' ],
+        docicon: 'docicon-adrift.ico',
+        engines: [
+            {
+                id: 'scare',
+                name: 'Scare',
+                html: 'emglkenplay.html',
+                load: (arg, buf, opts) => common_emglken_load('scare', buf, opts),
+                //get_signature: () => window.engine.get_signature(),
+            },
+        ],
+    },
+
+    {
         id: 'glulx',
         longname: 'Glulx Game File',
         name: 'Glulx',
