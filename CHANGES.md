@@ -2,7 +2,7 @@
 ## 1.4.4  (###)
 
 - Updates for emglken and glkote.
-- Bumped electron to ###.
+- Bumped Electron to 24.8.2.
 
 ## 1.4.3  (Jul 21, 2022)
 
