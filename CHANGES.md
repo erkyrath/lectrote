@@ -1,5 +1,5 @@
 
-## 1.4.4  (###)
+## 1.4.4  (Sep 2, 2023)
 
 - Updates for emglken and glkote.
 - Updated inkjs to 2.2.2.
