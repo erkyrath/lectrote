@@ -34,10 +34,10 @@
   },
   "homepage": "https://github.com/erkyrath/lectrote",
   "dependencies": {
-    "electron": "^18.3.0"
+    "electron": "^20.3.0"
   },
   "devDependencies": {
-    "electron-packager": "^15.5.0",
+    "electron-packager": "^17.1.0",
     "@electron/universal": "^1.0"
   },
   "optionalDependencies": {
