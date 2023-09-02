@@ -62,17 +62,17 @@ This relies on the [inkjs][] interpreter. It is a deliberately non-fancy present
 
 # License information
 
-- Lectrote is copyright (c) 2016-2021, Andrew Plotkin ([MIT license][licensefile])
-- Electron is copyright (c) 2013-2021 GitHub Inc. ([MIT license][licensefile])
-- Quixe is copyright (c) 2010-2020, Andrew Plotkin ([MIT license][licensefile])
-- inkjs is copyright (c) 2017-2020 Yannick Lohse ([MIT license][licensefile])
-- ifvms.js is copyright (c) 2016 Dannii Willis and other contributors ([MIT license][licensefile])
-- emglken is copyright (c) 2012-2017, Andrew Plotkin, Dannii Willis ([MIT license][licensefile])
+- Lectrote is copyright (c) 2016-2023, Andrew Plotkin ([MIT license][licensefile])
+- Electron is copyright (c) 2013-2023 GitHub Inc. ([MIT license][licensefile])
+- Quixe is copyright (c) 2010-2023, Andrew Plotkin ([MIT license][licensefile])
+- inkjs is copyright (c) 2017-2023 Yannick Lohse ([MIT license][licensefile])
+- ifvms.js is copyright (c) 2016-2017 Dannii Willis and other contributors ([MIT license][licensefile])
+- emglken is copyright (c) 2012-2023, Andrew Plotkin, Dannii Willis ([MIT license][licensefile])
 - Git (in emglken) is copyright (c) 2003 Iain Merrick ([MIT license][licensefile])
-- Glulxe (in emglken) is copyright (c) 1999-2016, Andrew Plotkin ([MIT license][licensefile])
+- Glulxe (in emglken) is copyright (c) 1999-2023, Andrew Plotkin ([MIT license][licensefile])
 - Hugo (in emglken)  is copyright (c) 2011 by Kent Tessman ([BSD license][licensefile])
 - TADS (in emglken)  is copyright (c) 1991-2012 by Michael J. Roberts ([dual-licensed GPL/TADS license][licensefile])
-- RemGlk (in emglken) is copyright (c) 2012-2020, Andrew Plotkin ([MIT license][licensefile])
+- RemGlk (in emglken) is copyright (c) 2012-2023, Andrew Plotkin ([MIT license][licensefile])
 
 [licensefile]: LICENSE
 
