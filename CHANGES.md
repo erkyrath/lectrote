@@ -2,6 +2,7 @@
 ## 1.4.4  (###)
 
 - Updates for emglken and glkote.
+- Updated inkjs to 2.2.2.
 - Bumped Electron to 24.8.2.
 
 ## 1.4.3  (Jul 21, 2022)
