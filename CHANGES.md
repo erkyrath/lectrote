@@ -1,4 +1,9 @@
 
+## 1.4.4  (###)
+
+- Updates for emglken and glkote.
+- Bumped electron to ###.
+
 ## 1.4.3  (Jul 21, 2022)
 
 - Fix a path bug in emglken.
