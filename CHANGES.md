@@ -1,7 +1,7 @@
 
 ## 1.4.4  (Sep 2, 2023)
 
-- Updates for emglken and glkote.
+- Updates for emglken and glkote. (Adrift 4 support; various TADS bugs.)
 - Updated inkjs to 2.2.2.
 - Bumped Electron to 24.8.2.
 

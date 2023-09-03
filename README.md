@@ -21,14 +21,16 @@ Lectrote currently supports:
 - [Z-code][] games (`.z3/.z4/.z5/.z8` or `.zblorb`), as produced by [Inform 7][i7] or earlier versions of Inform.
 - [Hugo][] games (`.hex`).
 - [TADS2 and TADS3][tads] games (`.gam`, `.t3`).
+- [Adrift 4][adrift4] games (`.taf`).
 - [Ink][] compiled game files (`.json`), as produced by the [Ink][] scripting language.
 
 [i7]: http://inform7.com/
-[Glulx]: http://eblong.com/zarf/glulx/
+[Glulx]: https://eblong.com/zarf/glulx/
 [Hugo]: http://www.generalcoffee.com/hugo/gethugo.html
-[Ink]: http://www.inklestudios.com/ink
+[Ink]: https://www.inklestudios.com/ink
 [tads]: https://tads.org/
-[Z-code]: http://inform-fiction.org/zmachine/standards/z1point1
+[adrift4]: https://www.adrift.co/
+[Z-code]: https://inform-fiction.org/zmachine/standards/z1point1
 
 You can also use this package to construct a "bound game" -- an app which plays a single built-in game. This is a package containing Chromium, the interpreter, your game file, and perhaps some additional configuration. You can distribute this as a standalone game application; it's bulky but it lets people play your game.
 
