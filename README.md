@@ -7,8 +7,8 @@
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 - [Download the latest Lectrote app][releases]
 
-[Electron]: http://electron.atom.io
-[Node]: http://nodejs.org
+[Electron]: https://www.electronjs.org
+[Node]: https://nodejs.org/en
 [releases]: https://github.com/erkyrath/lectrote/releases
 
 Lectrote packages up IF interpreters with the Chromium browser as a [Mac/Win/Linux app][releases].
@@ -181,7 +181,7 @@ This file can define new functionality by exporting any of the following Javascr
 - `exports.cover_image_info`: An object `{ url:URL, width:W, height:H }` which provides cover art. This is only needed if your game is not a blorb file. (If it is not provided, Lectrote attempts to load the blorb cover art as usual.)
 - `exports.about_window_size`: An object `{ width:W, height:H }` which customizes the size of the `about.html` window. (Defaults to `{ width:600, height:450 }`.)
 
-[elemenu]: http://electron.atom.io/docs/latest/api/menu/
+[elemenu]: https://www.electronjs.org/docs/latest/api/menu/
 
 The main Lectrote module exports several functions you can use in your extension code. I have not yet documented them; see the `main.js` file.
 
