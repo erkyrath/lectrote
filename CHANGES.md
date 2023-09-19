@@ -1,5 +1,5 @@
 
-## 1.4.5  (Sep 2, 2023)
+## 1.4.5  (Sep 19, 2023)
 
 - Fix a packaging bug that prevented Adrift from working.
 
