@@ -99,6 +99,8 @@ appfiles = [
             'emglken/glulxe.js',
             'emglken/hugo-core.wasm',
             'emglken/hugo.js',
+            'emglken/scare-core.wasm',
+            'emglken/scare.js',
             'emglken/tads-core.wasm',
             'emglken/tads.js',
             'emglken/versions.json',
