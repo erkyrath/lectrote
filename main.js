@@ -707,7 +707,7 @@ function open_about_window()
 {
     var winopts = {
         webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: false },
-        width: 600, height: 450,
+        width: 650, height: 450,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true,
         resizable: false
