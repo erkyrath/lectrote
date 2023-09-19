@@ -2,7 +2,7 @@
   "name": "adventure",
   "productName": "Adventure",
   "version": "1.0.0",
-  "lectroteVersion": "1.4.4",
+  "lectroteVersion": "1.4.5",
   "lectrotePackagedGame": "samplegame/Advent.ulx",
   "lectroteMacAppID": "com.eblong.adventsample",
   "lectroteCopyright": "Written by Will Crowther and Don Woods",

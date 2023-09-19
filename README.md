@@ -1,9 +1,9 @@
-# Lectrote
+`# Lectrote
 <img style="float:right;" src="icon-128.png" alt="Lectrote logo: purple compass">
 
 ### The IF interpreter in an [Electron][] shell
 
-- Version 1.4.4
+- Version 1.4.5
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 - [Download the latest Lectrote app][releases]
 

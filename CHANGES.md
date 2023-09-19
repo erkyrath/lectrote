@@ -1,7 +1,11 @@
 
+## 1.4.5  (Sep 2, 2023)
+
+- Fix a packaging bug that prevented Adrift from working.
+
 ## 1.4.4  (Sep 2, 2023)
 
-- Updates for emglken and glkote. (Adrift 4 support; various TADS bugs.)
+- Updates for emglken and glkote. (Experimental Adrift 4 support; various TADS bugs.)
 - Updated inkjs to 2.2.2.
 - Bumped Electron to 24.8.2.
 
