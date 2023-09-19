@@ -56,6 +56,10 @@ The Hugo engine does not currently support autosave.
 
 The TADS 2/3 engine does not currently support autosave.
 
+## Adrift 4 support
+
+The Adrift 4 engine does not currently support autosave.
+
 ## Ink support
 
 This relies on the [inkjs][] interpreter. It is a deliberately non-fancy presentation -- no attempt to slow-print the output or hide the choice list.
