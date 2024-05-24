@@ -70,7 +70,7 @@ function setup_with_prefs(prefs, isbound)
     sel = $('#range-margin');
     sel.attr('step', 1);
     sel.attr('min', 0);
-    sel.attr('max', 5);
+    sel.attr('max', 7);
 
     sel.on('input', evhan_margin_level);
     sel.val(prefs.gamewin_marginlevel);
