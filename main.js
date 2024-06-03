@@ -600,10 +600,14 @@ function launch_game(path)
         window_focus_update(win, game);
     });
 
-    win.webContents.on('dom-ready', function(ev) {
-        var game = game_for_webcontents(ev.sender);
-        if (!game)
+    win.webContents.on('dom-ready', function() {
+        if (!win) {
             return;
+        }
+        var game = game_for_webcontents(win.webContents);
+        if (!game) {
+            return;
+        }
         var funcs = [];
         funcs.push({
             key: 'set_zoom_factor',
