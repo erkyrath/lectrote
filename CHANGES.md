@@ -2,6 +2,7 @@
 ## 1.4.6  (###, 2024)
 
 - The margin preference can now go up to 35%.
+- Updated inkjs to 2.2.4.
 - Bumped Electron to 29.4.2.
 - Mac version now requires MacOS 10.15 "Catalina" or later.
 
