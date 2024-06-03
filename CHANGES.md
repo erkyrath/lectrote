@@ -1,4 +1,10 @@
 
+## 1.4.6  (###, 2024)
+
+- The margin preference can now go up to 35%.
+- Bumped Electron to 29.4.2.
+- Mac version now requires MacOS 10.15 "Catalina" or later.
+
 ## 1.4.5  (Sep 19, 2023)
 
 - Fix a packaging bug that prevented Adrift from working.
