@@ -1,9 +1,23 @@
 {
   "name": "inkjs",
-  "version": "2.2.2",
+  "version": "2.2.4",
   "description": "A javascript port of inkle's ink scripting language (http://www.inklestudios.com/ink/)",
+  "type": "commonjs",
   "main": "dist/ink-full.js",
   "types": "ink.d.ts",
+  "files": ["src/engine","src/compiler","ink.d.ts", "ink.d.mts","script/inkjs-compiler.ts", "dist"],
+  "exports": {
+    ".":{
+      "types": "./ink.d.mts",
+      "import": "./dist/ink.mjs",
+      "default": "./dist/ink.js"
+    },
+    "./full":{
+      "types": "./ink.d.mts",
+      "import": "./dist/ink-full.mjs",
+      "default": "./dist/ink-full.js"
+    }
+  },
   "scripts": {
     "test": "npm run test:typescript && npm run test:javascript",
     "test:typescript": "jest",
@@ -21,9 +35,9 @@
   "license": "MIT",
   "browserslist": "> 0.25%, not dead",
   "devDependencies": {
-    "@babel/core": "7.22.1",
-    "@babel/preset-env": "7.22.4",
-    "@rollup/plugin-babel": "6.0.3",
+    "@babel/core": "7.24.5",
+    "@babel/preset-env": "7.24.5",
+    "@rollup/plugin-babel": "6.0.4",
     "@rollup/plugin-node-resolve": "13.3.0",
     "@types/jest": "26.0.24",
     "@types/node": "^20.2.6",
