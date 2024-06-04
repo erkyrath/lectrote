@@ -1,5 +1,5 @@
 
-## 1.4.6  (###, 2024)
+## 1.4.6  (June 3, 2024)
 
 - The margin preference can now go up to 35%.
 - Updated inkjs to 2.2.4.
