@@ -1,4 +1,8 @@
 
+## 1.4.7 (###)
+
+- Minor Quixe optimizations.
+
 ## 1.4.6  (June 3, 2024)
 
 - The margin preference can now go up to 35%.
