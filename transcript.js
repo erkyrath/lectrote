@@ -6,6 +6,8 @@ const path_mod = require('path');
 var transcriptdir = null;
 var metadata = null;
 
+var firstobj = null;
+
 var path = null;
 var fd = null;
 
@@ -32,6 +34,22 @@ function set_metadata(obj)
 
 function record_update(obj)
 {
+    /* We have to be careful of the autorestore case, which is a bit
+       unobvious. If we're autorestoring, we get an initial type:'init'
+       input (the game start) which we must *ignore*. The game's
+       real first event will come in with a different sessionId.
+
+       To cope with this, we stash the 'init' input away and only
+       record it if the next input has a matching sessionId.
+
+       (This also means that we entirely omit sessions that never
+       get player input. That seems ok.)
+    */
+    if (obj.input.type == 'init' && firstobj === null) {
+        firstobj = Object.assign({}, obj); // copy
+        return;
+    }
+
     if (path === null) {
         // First time! Open the file.
         var writemeta = false;
@@ -64,15 +82,15 @@ function record_update(obj)
     if (fd === null)
         return;
 
-    /* We have to be careful of the autorestore case, which is a bit
-       unobvious. If we're autorestoring, we get an initial type:'init'
-       input (the game start) which we must *ignore*. The game's
-       real first event (usually type:'arrange') will come in with
-       a different sessionId.
-    */
+    if (firstobj !== null) {
+        if (firstobj.sessionId == obj.sessionId) {
+            console.log('### record-init', firstobj.sessionId, JSON.stringify(firstobj.input)); //###
+            fs.writeSync(fd, JSON.stringify(firstobj)+'\n');
+        }
+        firstobj = null;
+    }
 
     console.log('### record', obj.sessionId, JSON.stringify(obj.input)); //###
-
     fs.writeSync(fd, JSON.stringify(obj)+'\n');
 }
 
