@@ -64,8 +64,18 @@ function record_update(obj)
 
     if (fd === null)
         return;
-    
-    console.log('### record', JSON.stringify(obj));
+
+    /* We have to be careful of the autorestore case, which is a bit
+       unobvious. If we're autorestoring, we get an initial type:'init'
+       input (the game start) which we must *ignore*. The game's
+       real first event (usually type:'arrange') will come in with
+       a different sessionId.
+    */
+
+    console.log('### record', obj.sessionId, JSON.stringify(obj.input)); //###
+
+    fs.writeSync(fd, JSON.stringify(obj));
+    fs.writeSync(fd, '\n');
 }
 
 
