@@ -57,8 +57,7 @@ function record_update(obj)
         }
         console.log('### fd', fd);
         if (writemeta && metadata != null) {
-            fs.writeSync(fd, JSON.stringify(metadata));
-            fs.writeSync(fd, '\n');
+            fs.writeSync(fd, JSON.stringify(metadata)+'\n');
         }
     }
 
@@ -74,8 +73,7 @@ function record_update(obj)
 
     console.log('### record', obj.sessionId, JSON.stringify(obj.input)); //###
 
-    fs.writeSync(fd, JSON.stringify(obj));
-    fs.writeSync(fd, '\n');
+    fs.writeSync(fd, JSON.stringify(obj)+'\n');
 }
 
 
