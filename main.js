@@ -627,7 +627,10 @@ function launch_game(path)
         }
         funcs.push({
             key: 'load_named_game',
-            arg: { path: game.path, format: kind.id, engine: game.engineid } });
+            arg: {
+                path: game.path, format: kind.id, engine: game.engineid,
+                transcriptpath: path_mod.join(app.getPath('userData'), 'transcripts')
+            } });
 
         invoke_app_hook(win, 'sequence', funcs);
     });
