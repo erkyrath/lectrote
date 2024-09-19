@@ -845,11 +845,11 @@ function open_transcript_window()
 {
     var winopts = { 
         webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: false },
-        width: 600, height: 530,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true
     };
     window_position_prefs(winopts, 'transcriptwin');
+    window_size_prefs(winopts, 'transcriptwin', 600, 530);
     if (window_icon)
         winopts.icon = window_icon;
 
@@ -867,6 +867,7 @@ function open_transcript_window()
     transcriptwin.on('focus', function() {
             window_focus_update(transcriptwin, null);
         });
+    transcriptwin.on('resize', window_size_prefs_handler('transcriptwin', transcriptwin));
     transcriptwin.on('move', window_position_prefs_handler('transcriptwin', transcriptwin));
 
     transcriptwin.webContents.on('dom-ready', function() {
