@@ -1434,6 +1434,8 @@ electron.nativeTheme.on('updated', function() {
         aboutwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
     if (cardwin)
         cardwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
+    if (transcriptwin)
+        transcriptwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
     if (main_extension.set_darklight_mode)
         main_extension.set_darklight_mode(electron.nativeTheme.shouldUseDarkColors);
 });
