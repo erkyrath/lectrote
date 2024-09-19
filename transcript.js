@@ -28,7 +28,7 @@ function set_transcriptdir(path)
 
 function set_metadata(obj)
 {
-    metadata = obj;
+    metadata = Object.assign({}, obj); // copy
     console.log('### metadata', metadata); //###
 }
 
@@ -74,8 +74,10 @@ function record_update(obj)
             return;
         }
         console.log('### fd', fd);
+        
         if (writemeta && metadata != null) {
-            fs.writeSync(fd, JSON.stringify(metadata)+'\n');
+            var metaobj = { metadata:metadata };
+            fs.writeSync(fd, JSON.stringify(metaobj)+'\n');
         }
     }
 
