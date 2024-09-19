@@ -15,6 +15,7 @@ var gamewins = {}; /* maps window ID to a game structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
 var prefswin = null; /* the preferences window, if active */
+var transcriptwin = null; /* the transcript browser window, if active */
 var gamedialog = false; /* track whether the game-open dialog is visible */
 
 var prefs = {
@@ -838,6 +839,44 @@ function open_card_window()
     cardwin.loadURL('file://' + __dirname + '/if-card.html');
 }
 
+/* Open the Transcript Browser window. (It must not already exist.)
+*/
+function open_transcript_window()
+{
+    var winopts = { 
+        webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: false },
+        width: 600, height: 530,
+        backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
+        useContentSize: true
+    };
+    window_position_prefs(winopts, 'transcriptwin');
+    if (window_icon)
+        winopts.icon = window_icon;
+
+    transcriptwin = new electron.BrowserWindow(winopts);
+
+    if (process.platform != 'darwin') {
+        var template = construct_menu_template('transcript');
+        var menu = electron.Menu.buildFromTemplate(template);
+        transcriptwin.setMenu(menu);
+    }
+    
+    transcriptwin.on('closed', function() {
+            transcriptwin = null;
+        });
+    transcriptwin.on('focus', function() {
+            window_focus_update(transcriptwin, null);
+        });
+    transcriptwin.on('move', window_position_prefs_handler('transcriptwin', transcriptwin));
+
+    transcriptwin.webContents.on('dom-ready', function() {
+            transcriptwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
+            //### list of transcripts?
+        });
+
+    transcriptwin.loadURL('file://' + __dirname + '/transcript.html');
+}
+
 function window_focus_update(win, game)
 {
     /* Determine whether the "Display Cover Art" option should be
@@ -1151,6 +1190,16 @@ function construct_menu_template(special)
                 if (main_extension.cover_image_info)
                     dat = main_extension.cover_image_info;
                 invoke_app_hook(game.win, 'display_cover_art', dat);
+            }
+        },
+        {
+            label: 'Transcript Browser',
+            enabled: (special != 'transcript'),
+            click: function(item, win) {
+                if (!transcriptwin)
+                    open_transcript_window();
+                else
+                    transcriptwin.show();
             }
         }
         ]
