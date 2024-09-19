@@ -8,6 +8,7 @@ const fs = require('fs');
 
 const fonts = require('./fonts.js');
 const formats = require('./formats.js');
+const transcript = require('./transcript.js');
 
 function load_named_game(arg)
 {
@@ -24,6 +25,8 @@ function load_named_game(arg)
     game_options.default_page_title = default_name;
     game_options.game_format_name = engine.name; /* label used for loading error messages */
     game_options.engine_name = engine.name; /* label used in page title */
+    game_options.recording_handler = transcript.record_update;
+    
     var arr = null;
     if (engine.load)
         arr = engine.load(arg, buf, game_options);
@@ -62,6 +65,9 @@ function load_named_game(arg)
         obj.coverimageres = coverimageres;
     }
 
+    transcript.set_transcriptdir(arg.transcriptdir);
+    transcript.set_metadata(obj);
+    
     electron.ipcRenderer.send('game_metadata', obj);
 }
 
