@@ -76,7 +76,10 @@ function record_update(obj)
         console.log('### fd', fd);
         
         if (writemeta && metadata != null) {
-            var metaobj = { metadata:metadata };
+            var metaobj = {
+                metadata: metadata,
+                timestamp: (new Date().getTime())
+            };
             fs.writeSync(fd, JSON.stringify(metaobj)+'\n');
         }
     }
