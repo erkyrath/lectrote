@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const fonts = require('./fonts.js');
 const formats = require('./formats.js');
-const transcript = require('./transcript.js');
+const transcript = require('./transcriptgen.js');
 
 function load_named_game(arg)
 {
