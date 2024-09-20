@@ -7,7 +7,8 @@ const path_mod = require('path');
 var darklight_flag = false;
 
 var transcriptdir = null;
-var tmap = new Map();
+var tralist = []; // filenames, ordered by modtime
+var tramap = new Map(); // maps filenames to data
 
 function set_dir_path(dir)
 {
@@ -17,14 +18,19 @@ function set_dir_path(dir)
 
 function reload_transcripts()
 {
-    tmap.clear();
     //### should be async with a guard flag
     
-    if (transcriptdir) {
-        get_transcript_info()
-            .then(() => { console.log('### done'); })
-            .catch((ex) => { console.log('### ex', ex); });
+    if (!transcriptdir) {
+        return;
     }
+    
+    get_transcript_info()
+        .then((ls) => {
+            console.log('### done', ls);
+        })
+        .catch((ex) => {
+            console.log('get_transcript_info failed:', ex);
+        });
 }
 
 async function get_transcript_info()
@@ -67,9 +73,15 @@ async function get_transcript_info()
         }
     }
     
-    var results = await Promise.allSettled(reqs);
+    var settled = await Promise.allSettled(reqs);
+    var results = [];
+    for (var obj of settled) {
+        if (obj.status == 'fulfilled') {
+            results.push(obj.value);
+        }
+    }
 
-    console.log('### results', results);
+    return results;
 }
 
 /* Read a file as a sequence of newline-separated JSON stanzas.
