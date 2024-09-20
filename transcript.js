@@ -38,8 +38,9 @@ async function get_transcript_info()
             throw new Error('not a file');
         }
         
+        var res = { 'title': '???' };
+        
         var iter = stanza_reader(path);
-        var res = { 'title': '???', modtime: stat.mtime.getTime(), filesize: stat.size };
         for await (var obj of iter) {
             if (obj.timestamp) {
                 res.starttime = obj.timestamp;
@@ -51,6 +52,11 @@ async function get_transcript_info()
             iter.return();
             break;
         }
+        
+        res.modtime = stat.mtime.getTime();
+        res.filesize = stat.size;
+        res.filename = filename;
+        res.filepath = path;
         return res;
     }
 
