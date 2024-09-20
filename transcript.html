@@ -17,9 +17,32 @@ body.DarkMode {
   color: white;
 }
 
-#content {
-  max-width: 550px;
-  margin: auto;
+#header {
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  height: 40px;
+  background: #CCC;
+}
+.DarkMode #header {
+  background: #555;
+}
+
+#buttonrow {
+  padding: 8px 16px;
+  text-align: right;
+}
+
+#list {
+  position: absolute;
+  width: 100%;
+  top: 40px;
+  bottom: 0px;
+  overflow-y: scroll;
+}
+
+button {
+  font-size: 1.0em;
 }
 
 </style>
@@ -32,8 +55,14 @@ require('./transcript.js');
 </head>
 
 <body>
-
-<p>List...</p>
+<div id="header">
+  <div id="buttonrow">
+    <button id="openbutton">Open</button>
+    <button id="deletebutton">Delete</button>
+  </div>
+</div>
+<div id="list">
+</div>
 
 </body>
 
