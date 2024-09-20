@@ -73,11 +73,13 @@ function load_transcript_info(filename)
    parsing (after reading in the entire rest of the file). No, that's not
    ideal.
    
-   This is an async generator (fancy!) You can use it like this:
+   This is an async generator (fancy!) You can use it in the following
+   ways:
 
        for await (var obj of stanza_reader(path)) { ... }
 
-   or:
+       var iter = stanza_reader(path);
+       for await (var obj of iter) { ... }
        
        var iter = stanza_reader(path);
        var res = await iter.next();
@@ -186,9 +188,11 @@ async function* stanza_reader(path)
             buf = buf.subarray(pos);
             buflen -= pos;
             yield obj;
+            // We return from here if the caller calls iter.return().
         }
     }
     finally {
+        // If we throw or return early...
         if (fhan !== null) {
             await fhan.close();
             fhan = null;
