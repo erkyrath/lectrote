@@ -254,11 +254,11 @@ function rebuild_list()
         var el = $('<div>', { 'class':'Entry' });
 
         var subel = $('<div>', { 'class':'Data' });
-        subel.text(obj.title ?? '???');
-        el.append(subel);
-
-        var subel = $('<div>', { 'class':'Data' });
-        subel.text(obj.author ?? '(author unknown)');
+        subel.append($('<span>', { 'class':'Title' }).text(obj.title ?? '???'));
+        if (obj.author) {
+            subel.append($('<span>', { 'class':'' }).text(' \u2014 '));
+            subel.append($('<span>', { 'class':'' }).text(obj.author));
+        }
         el.append(subel);
 
         var subel = $('<div>', { 'class':'Data' });
