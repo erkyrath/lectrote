@@ -33,8 +33,13 @@ async function get_transcript_info()
 
     async function readone(filename) {
         var path = path_mod.join(transcriptdir, filename);
+        var stat = await fsp.stat(path);
+        if (!stat.isFile()) {
+            throw new Error('not a file');
+        }
+        
         var iter = stanza_reader(path);
-        var res = { 'title': '???' };
+        var res = { 'title': '???', modtime: stat.mtime.getTime(), filesize: stat.size };
         for await (var obj of iter) {
             if (obj.timestamp) {
                 res.starttime = obj.timestamp;
@@ -49,7 +54,13 @@ async function get_transcript_info()
         return res;
     }
 
-    var reqs = ls.map(readone); // array of Promises
+    var reqs = []; // array of Promises
+    for (var filename of ls) {
+        if (filename.endsWith('.glktra')) {
+            reqs.push(readone(filename));
+        }
+    }
+    
     var results = await Promise.allSettled(reqs);
 
     console.log('### results', results);
