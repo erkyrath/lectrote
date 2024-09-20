@@ -69,7 +69,7 @@ async function* stanza_reader(path)
         var pos = 0;
         while (true) {
             while (pos < buflen
-                   && (buf[pos] == '\n' || buf[pos] == ' ' || buf[pos] == '\t' || buf[pos] == '\r')) {
+                   && (buf[pos] == 0x20 || buf[pos] == 0x0A || buf[pos] == 0x0D || buf[pos] == 0x09)) {   // whitespaces
                 pos++;
             }
             if (pos < buflen) {
@@ -96,7 +96,7 @@ async function* stanza_reader(path)
             throw new Error('assert: should have text after eating whitespace');
         }
 
-        if (buf[0] != '{') {
+        if (buf[0] != 0x7B) {  // '{'
             // The next text is not a JSON stanza. That's bad.
             throw new Error('non-JSON encountered');
         }
@@ -129,8 +129,10 @@ async function* stanza_reader(path)
             // pos is now on a newline. Eat that, then check to see if we've got a complete stanza.
             pos++;
             var str = buf.toString('utf8', 0, pos);
+            console.log('### trying str:', str);
             try {
                 obj = JSON.parse(str);
+                console.log('### valid obj:', obj);
                 break;
             }
             catch (ex) {
