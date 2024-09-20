@@ -143,7 +143,6 @@ async function* stanza_reader(path)
         if (obj === null) {
             throw new Error('assert: left loop without object');
         }
-        console.log('### yielding at pos', pos, 'buflen', buflen);
         
         // Trim buffer, yield, and continue
         buf = buf.subarray(pos);
