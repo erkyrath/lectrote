@@ -127,7 +127,7 @@ async function* stanza_reader(path)
                 buflen += res.bytesRead;
             }
             
-            // pos is now on non-whitespace; trim that. (We should have nonzero text left after that.)
+            // pos is now on the first non-whitespace; trim everything before tthat. (We should have nonzero text left.)
             buf = buf.subarray(pos);
             buflen -= pos;
 
