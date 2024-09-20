@@ -272,7 +272,10 @@ function rebuild_list()
             subel.append($('<span>', { 'class':'' }).text(startstr));
         }
         el.append(subel);
-        
+
+        el.on('click', { filename:filename }, (ev) => {
+            console.log('###', ev.data.filename );
+        });
 
         parel.append(el);
         listel.append(parel);
