@@ -64,9 +64,38 @@ function load_transcript_info(filename)
         .catch((ex) => { console.log('### ex', ex); });
 }
 
+/* Read a file as a sequence of newline-separated JSON stanzas.
+
+   A partial stanza at the end will be silently ignored.
+
+   It's okay if the JSON has more whitespace or newlines. You just need
+   at least one newline between stanzas.
+
+   If non-JSON occurs at the start or between stanzas, this will throw
+   an exception. Bad formatting inside a stanza will silently end the
+   parsing (after reading in the entire rest of the file). No, that's not
+   ideal.
+   
+   This is an async generator (fancy!) You can use it like this:
+
+       for await (var obj of stanza_reader(path)) { ... }
+
+   or:
+       
+       var iter = stanza_reader(path);
+       var res = await iter.next();
+       while (!res.done) {
+           // ...
+           res = await iter.next();
+       }
+
+   If you want to stop reading early, you must use the iterator form so
+   that you can call iter.return(). (This cleans up the file handle;
+   you don't want to leak that.)
+ */
 async function* stanza_reader(path)
 {
-    const CHUNK = 128;
+    const CHUNK = 512;
     
     var buf = Buffer.alloc(CHUNK);
     var buflen = 0; // amount of unconsumed text in buf
@@ -164,8 +193,8 @@ async function* stanza_reader(path)
     }
     finally {
         if (fhan !== null) {
-            console.log('### emergency close');
             await fhan.close();
+            fhan = null;
         }
     }
 }
