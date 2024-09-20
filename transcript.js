@@ -60,7 +60,7 @@ async function* stanza_reader(path)
     const CHUNK = 128;
     
     var buf = Buffer.alloc(CHUNK);
-    var buflen = 0;
+    var buflen = 0; // amount of unconsumed text in buf
     
     var fhan = await fsp.open(path, "r");
 
@@ -101,12 +101,13 @@ async function* stanza_reader(path)
             throw new Error('non-JSON encountered');
         }
 
+        pos = 0;
         var obj = null;
         
         while (true) {
             // search for the next newline
             while (true) {
-                while (pos < buflen && buf[pos] != '\n') {
+                while (pos < buflen && (buf[pos] != 0x0A && buf[pos] != 0x0D)) {
                     pos++;
                 }
                 if (pos < buflen) {
@@ -129,10 +130,8 @@ async function* stanza_reader(path)
             // pos is now on a newline. Eat that, then check to see if we've got a complete stanza.
             pos++;
             var str = buf.toString('utf8', 0, pos);
-            console.log('### trying str:', str);
             try {
                 obj = JSON.parse(str);
-                console.log('### valid obj:', obj);
                 break;
             }
             catch (ex) {
@@ -144,10 +143,11 @@ async function* stanza_reader(path)
         if (obj === null) {
             throw new Error('assert: left loop without object');
         }
+        console.log('### yielding at pos', pos, 'buflen', buflen);
         
         // Trim buffer, yield, and continue
         buf = buf.subarray(pos);
-        buflen =- pos;
+        buflen -= pos;
         yield obj;
     }
 }
