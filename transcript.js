@@ -64,56 +64,19 @@ async function* stanza_reader(path)
     
     var fhan = await fsp.open(path, "r");
 
-    while (true) {
-        // eat whitespace
-        var pos = 0;
+    try {
         while (true) {
-            while (pos < buflen
-                   && (buf[pos] == 0x20 || buf[pos] == 0x0A || buf[pos] == 0x0D || buf[pos] == 0x09)) {   // whitespaces
-                pos++;
-            }
-            if (pos < buflen) {
-                break;
-            }
-            // ate whitespace to end of buffer; read a chunk and keep eating
-            if (buflen+CHUNK > buf.length) {
-                var newlen = buflen + CHUNK;
-                buf = Buffer.concat([buf], newlen);
-            }
-            var res = await fhan.read(buf, buflen, CHUNK);
-            if (res.bytesRead == 0) {
-                await fhan.close();
-                return; // end of file
-            }
-            buflen += res.bytesRead;
-        }
-        
-        // pos is now on non-whitespace; trim that. (We should have nonzero text left after that.)
-        buf = buf.subarray(pos);
-        buflen -= pos;
-
-        if (buflen == 0) {
-            throw new Error('assert: should have text after eating whitespace');
-        }
-
-        if (buf[0] != 0x7B) {  // '{'
-            // The next text is not a JSON stanza. That's bad.
-            throw new Error('non-JSON encountered');
-        }
-
-        pos = 0;
-        var obj = null;
-        
-        while (true) {
-            // search for the next newline
+            // eat whitespace
+            var pos = 0;
             while (true) {
-                while (pos < buflen && (buf[pos] != 0x0A && buf[pos] != 0x0D)) {
+                while (pos < buflen
+                       && (buf[pos] == 0x20 || buf[pos] == 0x0A || buf[pos] == 0x0D || buf[pos] == 0x09)) {   // whitespaces
                     pos++;
                 }
                 if (pos < buflen) {
                     break;
                 }
-                // ate non-newlines to end of buffer; read a chunk and keep eating
+                // ate whitespace to end of buffer; read a chunk and keep eating
                 if (buflen+CHUNK > buf.length) {
                     var newlen = buflen + CHUNK;
                     buf = Buffer.concat([buf], newlen);
@@ -121,33 +84,80 @@ async function* stanza_reader(path)
                 var res = await fhan.read(buf, buflen, CHUNK);
                 if (res.bytesRead == 0) {
                     await fhan.close();
+                    fhan = null;
                     return; // end of file
-                    // We probably have an incomplete JSON stanza in the buffer, but we ignore that.
                 }
                 buflen += res.bytesRead;
             }
+            
+            // pos is now on non-whitespace; trim that. (We should have nonzero text left after that.)
+            buf = buf.subarray(pos);
+            buflen -= pos;
 
-            // pos is now on a newline. Eat that, then check to see if we've got a complete stanza.
-            pos++;
-            var str = buf.toString('utf8', 0, pos);
-            try {
-                obj = JSON.parse(str);
-                break;
+            if (buflen == 0) {
+                throw new Error('assert: should have text after eating whitespace');
             }
-            catch (ex) {
-                // Nope, look for the next newline
-                continue;
-            }
-        }
 
-        if (obj === null) {
-            throw new Error('assert: left loop without object');
+            if (buf[0] != 0x7B) {  // '{'
+                // The next text is not a JSON stanza. That's bad.
+                throw new Error('non-JSON encountered');
+            }
+
+            pos = 0;
+            var obj = null;
+            
+            while (true) {
+                // search for the next newline
+                while (true) {
+                    while (pos < buflen && (buf[pos] != 0x0A && buf[pos] != 0x0D)) {
+                        pos++;
+                    }
+                    if (pos < buflen) {
+                        break;
+                    }
+                    // ate non-newlines to end of buffer; read a chunk and keep eating
+                    if (buflen+CHUNK > buf.length) {
+                        var newlen = buflen + CHUNK;
+                        buf = Buffer.concat([buf], newlen);
+                    }
+                    var res = await fhan.read(buf, buflen, CHUNK);
+                    if (res.bytesRead == 0) {
+                        await fhan.close();
+                        fhan = null;
+                        return; // end of file
+                        // We probably have an incomplete JSON stanza in the buffer, but we ignore that.
+                    }
+                    buflen += res.bytesRead;
+                }
+
+                // pos is now on a newline. Eat that, then check to see if we've got a complete stanza.
+                pos++;
+                var str = buf.toString('utf8', 0, pos);
+                try {
+                    obj = JSON.parse(str);
+                    break;
+                }
+                catch (ex) {
+                    // Nope, look for the next newline
+                    continue;
+                }
+            }
+
+            if (obj === null) {
+                throw new Error('assert: left loop without object');
+            }
+            
+            // Trim buffer, yield, and continue
+            buf = buf.subarray(pos);
+            buflen -= pos;
+            yield obj;
         }
-        
-        // Trim buffer, yield, and continue
-        buf = buf.subarray(pos);
-        buflen -= pos;
-        yield obj;
+    }
+    finally {
+        if (fhan !== null) {
+            console.log('### emergency close');
+            await fhan.close();
+        }
     }
 }
 
