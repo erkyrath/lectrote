@@ -872,7 +872,7 @@ function open_transcript_window()
 
     transcriptwin.webContents.on('dom-ready', function() {
             transcriptwin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
-            //### list of transcripts?
+            transcriptwin.webContents.send('set-dir-path', path_mod.join(app.getPath('userData'), 'transcripts'));
         });
 
     transcriptwin.loadURL('file://' + __dirname + '/transcript.html');
