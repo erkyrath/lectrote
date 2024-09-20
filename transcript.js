@@ -10,6 +10,8 @@ var transcriptdir = null;
 var tralist = []; // filenames, ordered by modtime
 var tramap = new Map(); // maps filenames to data
 
+var curselected = null;
+
 function set_dir_path(dir)
 {
     transcriptdir = dir;
@@ -264,6 +266,8 @@ function rebuild_list()
 
         var parel = $('<div>', { 'class':'EntryBox' });
         var el = $('<div>', { 'class':'Entry', id:id_for_filename(filename) });
+        if (filename == curselected)
+            el.addClass('Selected');
 
         var subel = $('<div>', { 'class':'Data' });
         subel.append($('<span>', { 'class':'Title' }).text(obj.title ?? '???'));
@@ -297,6 +301,24 @@ function evhan_set_selection(ev)
     console.log('###', ev.data.filename );
     ev.stopPropagation();
     ev.preventDefault();
+
+    if (curselected) {
+        var id = id_for_filename(curselected);
+        var el = $('#'+id);
+        if (el.length)
+            el.removeClass('Selected');
+    }
+
+    curselected = ev.data.filename;
+    
+    if (curselected) {
+        var id = id_for_filename(curselected);
+        var el = $('#'+id);
+        if (el.length)
+            el.addClass('Selected');
+    }
+
+    //### buttons
 }
 
 function apply_darklight(val)
