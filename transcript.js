@@ -21,44 +21,38 @@ function reload_transcripts()
     //### should be async with a guard flag
     
     if (transcriptdir) {
-        try {
-            var ls = fs.readdirSync(transcriptdir);
-            for (var filename of ls) {
-                if (filename.endsWith('.glktra')) {
-                    //### try, store return value
-                    try {
-                        load_transcript_info(filename);
-                    }
-                    catch (ex) {
-                        throw ex; //###
-                    }
-                }
-            }
-        }
-        catch (ex) {}
+        get_transcript_info()
+            .then(() => { console.log('### done'); })
+            .catch((ex) => { console.log('### ex', ex); });
     }
 }
 
-function load_transcript_info(filename)
+async function get_transcript_info()
 {
-    var path = path_mod.join(transcriptdir, filename);
-    console.log('### reading path', path);
+    var ls = await fsp.readdir(transcriptdir);
 
-    async function readall(path) {
+    async function readone(filename) {
+        var path = path_mod.join(transcriptdir, filename);
         var iter = stanza_reader(path);
+        var res = { 'title': '???' };
         for await (var obj of iter) {
-            console.log('### stanza', obj);
-            if (obj.metadata) {
-                console.log('### got the metadata');
-                iter.return();
-                break;
+            if (obj.timestamp) {
+                res.starttime = obj.timestamp;
             }
+            if (obj.metadata) {
+                Object.assign(res, obj.metadata);
+            }
+            // break after the first stanza, regardless
+            iter.return();
+            break;
         }
+        return res;
     }
 
-    readall(path)
-        .then(() => { console.log('### done'); })
-        .catch((ex) => { console.log('### ex', ex); });
+    var reqs = ls.map(readone); // array of Promises
+    var results = await Promise.allSettled(reqs);
+
+    console.log('### results', results);
 }
 
 /* Read a file as a sequence of newline-separated JSON stanzas.
