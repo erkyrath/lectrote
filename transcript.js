@@ -273,13 +273,18 @@ function rebuild_list()
         }
         el.append(subel);
 
-        el.on('click', { filename:filename }, (ev) => {
-            console.log('###', ev.data.filename );
-        });
+        el.on('click', { filename:filename }, evhan_set_selection);
 
         parel.append(el);
         listel.append(parel);
     }
+}
+
+function evhan_set_selection(ev)
+{
+    console.log('###', ev.data.filename );
+    ev.stopPropagation();
+    ev.preventDefault();
 }
 
 function apply_darklight(val)
@@ -302,4 +307,8 @@ electron.ipcRenderer.on('set-dir-path', function(ev, arg) {
 });
 electron.ipcRenderer.on('set-darklight-mode', function(ev, arg) {
     apply_darklight(arg);
+});
+
+$(document).on('ready', function() {
+    $('#list').on('click', { filename:null }, evhan_set_selection);
 });
