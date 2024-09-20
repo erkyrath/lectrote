@@ -232,6 +232,16 @@ async function* stanza_reader(path)
     }
 }
 
+function format_timestamp(val)
+{
+    var date = new Date();
+    date.setTime(val);
+
+    var res = date.toDateString().slice(4);
+    res = res + ' ' + date.toTimeString().slice(0, 8);
+    return res;
+}
+
 function rebuild_list()
 {
     var listel = $('#list');
@@ -250,6 +260,19 @@ function rebuild_list()
         var subel = $('<div>', { 'class':'Data' });
         subel.text(obj.author ?? '(author unknown)');
         el.append(subel);
+
+        var subel = $('<div>', { 'class':'Data' });
+        var modstr = format_timestamp(obj.modtime);
+        subel.append($('<span>', { 'class':'Label' }).text('updated: '));
+        subel.append($('<span>', { 'class':'' }).text(modstr));
+        if (obj.starttime) {
+            var startstr = format_timestamp(obj.starttime);
+            subel.append($('<span>', { 'class':'' }).text(' \xA0 '));
+            subel.append($('<span>', { 'class':'Label' }).text('created: '));
+            subel.append($('<span>', { 'class':'' }).text(startstr));
+        }
+        el.append(subel);
+        
 
         parel.append(el);
         listel.append(parel);
