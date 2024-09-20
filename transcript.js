@@ -19,6 +19,7 @@ function set_dir_path(dir)
 function reload_transcripts()
 {
     //### should be async with a guard flag
+    //### should only call rebuild_list() if the list has materially changed (order, size, any modtimes)
     
     if (!transcriptdir) {
         return;
@@ -27,6 +28,14 @@ function reload_transcripts()
     get_transcript_info()
         .then((ls) => {
             console.log('### done', ls);
+            tramap.clear();
+            tralist.length = 0;
+            for (var obj of ls) {
+                tralist.push(obj.filename);
+                tramap.set(obj.filename, obj);
+            }
+            tralist.sort( (o1, o2) => (tramap.get(o1).modtime - tramap.get(o2).modtime) );
+            rebuild_list();
         })
         .catch((ex) => {
             console.log('get_transcript_info failed:', ex);
@@ -220,6 +229,30 @@ async function* stanza_reader(path)
             await fhan.close();
             fhan = null;
         }
+    }
+}
+
+function rebuild_list()
+{
+    var listel = $('#list');
+    listel.empty();
+
+    for (var filename of tralist) {
+        var obj = tramap.get(filename);
+
+        var parel = $('<div>', { 'class':'EntryBox' });
+        var el = $('<div>', { 'class':'Entry' });
+
+        var subel = $('<div>', { 'class':'Data' });
+        subel.text(obj.title ?? '???');
+        el.append(subel);
+
+        var subel = $('<div>', { 'class':'Data' });
+        subel.text(obj.author ?? '(author unknown)');
+        el.append(subel);
+
+        parel.append(el);
+        listel.append(parel);
     }
 }
 
