@@ -45,17 +45,14 @@ function load_transcript_info(filename)
     console.log('### reading path', path);
 
     async function readall(path) {
-        //### for await (var obj of stanza_reader(path)) {
         var iter = stanza_reader(path);
-        var res = await iter.next();
-        while (!res.done) {
-            console.log('### stanza', res.value);
-            if (res.value.metadata) {
+        for await (var obj of iter) {
+            console.log('### stanza', obj);
+            if (obj.metadata) {
                 console.log('### got the metadata');
                 iter.return();
                 break;
             }
-            res = await iter.next();
         }
     }
 
