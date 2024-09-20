@@ -242,6 +242,18 @@ function format_timestamp(val)
     return res;
 }
 
+var idmap = new Map();
+
+function id_for_filename(filename)
+{
+    var id = idmap.get(filename);
+    if (!id) {
+        id = 'entry_' + idmap.size;
+        idmap.set(filename, id);
+    }
+    return id;
+}
+
 function rebuild_list()
 {
     var listel = $('#list');
@@ -251,7 +263,7 @@ function rebuild_list()
         var obj = tramap.get(filename);
 
         var parel = $('<div>', { 'class':'EntryBox' });
-        var el = $('<div>', { 'class':'Entry' });
+        var el = $('<div>', { 'class':'Entry', id:id_for_filename(filename) });
 
         var subel = $('<div>', { 'class':'Data' });
         subel.append($('<span>', { 'class':'Title' }).text(obj.title ?? '???'));
