@@ -35,7 +35,7 @@ function reload_transcripts()
                 tralist.push(obj.filename);
                 tramap.set(obj.filename, obj);
             }
-            tralist.sort( (o1, o2) => (tramap.get(o1).modtime - tramap.get(o2).modtime) );
+            tralist.sort( (o1, o2) => (tramap.get(o2).modtime - tramap.get(o1).modtime) );
             rebuild_list();
         })
         .catch((ex) => {
