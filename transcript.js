@@ -29,7 +29,6 @@ function reload_transcripts()
     
     get_transcript_info()
         .then((ls) => {
-            console.log('### done', ls);
             tramap.clear();
             tralist.length = 0;
             for (var obj of ls) {
@@ -296,9 +295,24 @@ function rebuild_list()
     }
 }
 
+function evhan_open_transcript()
+{
+    if (!curselected)
+        return;
+
+    console.log('### open', curselected);
+}
+
+function evhan_delete_transcript()
+{
+    if (!curselected)
+        return;
+
+    console.log('### delete', curselected);
+}
+
 function evhan_set_selection(ev)
 {
-    console.log('###', ev.data.filename );
     ev.stopPropagation();
     ev.preventDefault();
 
@@ -348,4 +362,6 @@ electron.ipcRenderer.on('set-darklight-mode', function(ev, arg) {
 
 $(document).on('ready', function() {
     $('#list').on('click', { filename:null }, evhan_set_selection);
+    $('#openbutton').on('click', evhan_open_transcript);
+    $('#deletebutton').on('click', evhan_delete_transcript);
 });
