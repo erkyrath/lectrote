@@ -316,9 +316,12 @@ function evhan_set_selection(ev)
         var el = $('#'+id);
         if (el.length)
             el.addClass('Selected');
+        else
+            curselected = null;
     }
 
-    //### buttons
+    $('#openbutton').prop('disabled', (curselected == null));
+    $('#deletebutton').prop('disabled', (curselected == null));
 }
 
 function apply_darklight(val)
