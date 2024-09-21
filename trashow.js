@@ -6,6 +6,9 @@ const path_mod = require('path');
 const fonts = require('./fonts.js');
 const traread = require('./traread.js');
 
+var tra_filename = null;
+var tra_path = null;
+
 /* Not yet implemented. */
 var search_input_el = null;
 var search_body_el = null;
@@ -13,6 +16,34 @@ var search_body_el = null;
 function load_transcript(arg)
 {
     console.log('### load_transcript', arg);
+    tra_filename = arg.filename;
+    tra_path = arg.path;
+
+    var firsttime = true;
+
+    async function readall() {
+        var iter = traread.stanza_reader(tra_path);
+        for await (var obj of iter) {
+            if (firsttime) {
+                $('#loadingpane').remove();
+                firsttime = false;
+            }
+            add_stanza(obj);
+        }
+    }
+
+    readall()
+        .then(() => {
+            console.log('done reading'); //###
+        })
+        .catch((ex) => {
+            console.log('transcript read failed:', ex);
+        });
+}
+
+function add_stanza(obj)
+{
+    console.log('###', obj.output);
 }
 
 /* Preference-handling functions are copied from apphooks.js. Could be
