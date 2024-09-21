@@ -55,12 +55,79 @@ function add_stanza(obj)
                 var win = windowdic.get(dat.id);
                 if (win && win.type == 'buffer') {
                     //### if dat.clear, show a horizontal rule?
-                    for (var el of dat.text) {
-                        //###
+                    if (dat.text) {
+                        add_stanza_linedata(dat.text);
                     }
                 }
             }
         }
+    }
+}
+
+function add_stanza_linedata(text)
+{
+    var frameel = $('#window');
+    
+    for (let ix=0; ix<text.length; ix++) {
+        const textarg = text[ix];
+        const content = textarg.content;
+        let divel = null;
+        if (textarg.append) {
+            if (!content || !content.length)
+                continue;
+            divel = buffer_last_line();
+        }
+        if (divel == null) {
+            /* Create a new paragraph div */
+            divel = $('<div>', { 'class': 'BufferLine BlankPara' });
+            divel.data('blankpara', true);
+            frameel.append(divel);
+        }
+        // skip textarg.flowbreak for now
+        if (!content || !content.length) {
+            if (divel.data('blankpara'))
+                divel.append($('<span>', { 'class':'BlankLineSpan' }).text(' '));
+            continue;
+        }
+        if (divel.data('blankpara')) {
+            divel.data('blankpara', false);
+            divel.removeClass('BlankPara');
+            divel.empty();
+        }
+
+        for (let sx=0; sx<content.length; sx++) {
+            const rdesc = content[sx];
+            let rstyle, rtext, rlink;
+            if (jQuery.type(rdesc) === 'object') {
+                if (rdesc.special !== undefined) {
+                    // skip specials for now
+                    continue;
+                }
+                rstyle = rdesc.style;
+                rtext = rdesc.text;
+                rlink = rdesc.hyperlink;
+            }
+            else {
+                rstyle = rdesc;
+                sx++;
+                rtext = content[sx];
+                rlink = undefined;
+            }
+            const el = $('<span>',
+                         { 'class': 'Style_' + rstyle } );
+            if (rlink == undefined) {
+                insert_text_detecting(el, rtext);
+            }
+            else {
+                const ael = $('<a>',
+                              { 'href': '#', 'class': 'Internal' } );
+                ael.text(rtext);
+                ael.on('click', (ev) => {}); // ignore clicks
+                el.append(ael);
+            }
+            divel.append(el);
+        }
+        
     }
 }
 
