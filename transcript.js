@@ -20,8 +20,8 @@ function set_dir_path(dir)
 
 function reload_transcripts()
 {
-    //### should be async with a guard flag
     //### should only call rebuild_list() if the list has materially changed (order, size, any modtimes)
+    //### after rebuilding the list, set the cached dir timestamp
     
     if (!transcriptdir) {
         return;
@@ -361,6 +361,7 @@ electron.ipcRenderer.on('set-darklight-mode', function(ev, arg) {
 });
 
 $(document).on('ready', function() {
+    //### kick off a timer (two seconds?) which watches the dir timestamp
     $('#list').on('click', { filename:null }, evhan_set_selection);
     $('#openbutton').on('click', evhan_open_transcript);
     $('#deletebutton').on('click', evhan_delete_transcript);
