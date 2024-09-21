@@ -5,6 +5,7 @@ const fs = require('fs');
 const path_mod = require('path');
 
 const formats = require('./formats.js');
+const traread = require('./traread.js');
 
 var package_json = {}; /* parsed form of our package.json file */
 var main_extension = {}; /* extra code for bound games */
@@ -733,19 +734,34 @@ function reset_game(game)
 function open_transcript_display_window(filename)
 {
     var path = path_mod.join(app.getPath('userData'), 'transcripts', filename);
+    
+    var iter = traread.stanza_reader(path);
+    iter.next()
+        .then((res) => {
+            iter.return();
+            iter = null;
+            var dat = { filename:filename, path:path, title:'???' };
+            if (res && res.value && res.value.metadata && res.value.metadata.title)
+                dat.title = res.value.metadata.title;
+            open_transcript_display_window_next(dat);
+        })
+        .catch((ex) => {
+            electron.dialog.showErrorBox('The transcript could not be read.', ''+ex);
+        });
+}
 
-    try {
-        var stat = fs.statSync(path);
-    }
-    catch (ex) {
-        electron.dialog.showErrorBox('The transcript could not be read.', ''+ex);
-        return;
-    }
+/* Callback, invoked when we have all the transcript metadata.
+*/
+function open_transcript_display_window_next(dat)
+{
+    var filename = dat.filename;
+    var path = dat.path;
     
     var win = null;
     var tra = {
         filename: filename,
-        path: path
+        path: path,
+        title: dat.title,
     }
     
     var winopts = { 
@@ -810,7 +826,8 @@ function open_transcript_display_window(filename)
         funcs.push({
             key: 'load_transcript',
             arg: {
-                path: tra.path, filename: tra.filename
+                path: tra.path, filename: tra.filename,
+                title: tra.title
             } });
 
         invoke_app_hook(win, 'sequence', funcs);
