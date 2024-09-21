@@ -24,14 +24,13 @@ function load_transcript(arg)
     async function readall() {
         var iter = traread.stanza_reader(tra_path);
         for await (var obj of iter) {
-            hide_loading();
             add_stanza(obj);
         }
     }
 
     readall()
         .then(() => {
-            console.log('done reading'); //###
+            hide_loading();
         })
         .catch((ex) => {
             glkote_error('Error reading transcript: ' + ex);
@@ -40,7 +39,9 @@ function load_transcript(arg)
 
 function add_stanza(obj)
 {
-    console.log('###', obj.output);
+    if (obj.output) {
+        console.log('###', obj.output);
+    }
 }
 
 function hide_loading() {
