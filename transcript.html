@@ -6,14 +6,14 @@
 <style id="bodycss" type="text/css">
 
 body {
-  background: #EEE;
+  background: #E4E4E4;
   color: black;
   font-family: "Lora", Georgia, serif;
   margin: 0px;
   font-size: 1.0em;
 }
 body.DarkMode {
-  background: #2C2C2C;
+  background: #343434;
   color: white;
 }
 
@@ -35,6 +35,18 @@ body.DarkMode {
 
 button {
   font-size: 1.0em;
+  border: 1px solid #888;
+  border-radius: 4px;
+}
+
+.DarkMode button {
+  background: #111;
+  color: white;
+}
+
+.DarkMode button:disabled {
+  background: #555;
+  color: #888;
 }
 
 #list {
