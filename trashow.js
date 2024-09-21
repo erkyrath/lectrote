@@ -75,7 +75,10 @@ function add_stanza_linedata(text)
         if (textarg.append) {
             if (!content || !content.length)
                 continue;
-            divel = buffer_last_line();
+            divel = null;
+            var udivel = last_child_of(frameel); /* not wrapped */
+            if (udivel)
+                divel = $(divel);
         }
         if (divel == null) {
             /* Create a new paragraph div */
@@ -116,7 +119,8 @@ function add_stanza_linedata(text)
             const el = $('<span>',
                          { 'class': 'Style_' + rstyle } );
             if (rlink == undefined) {
-                insert_text_detecting(el, rtext);
+                // Autodetect URLs?
+                el.append(document.createTextNode(rtext));
             }
             else {
                 const ael = $('<a>',
@@ -167,6 +171,13 @@ function remove_children(parent) {
         const obj = ls.item(0);
         parent.removeChild(obj);
     }
+}
+
+function last_child_of(obj) {
+    const ls = obj.children();
+    if (!ls || !ls.length)
+        return null;
+    return ls.get(ls.length-1);
 }
 
 /* Preference-handling functions are copied from apphooks.js. Could be
