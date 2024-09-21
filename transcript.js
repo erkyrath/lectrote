@@ -163,7 +163,7 @@ function evhan_open_transcript()
     if (!curselected)
         return;
 
-    console.log('### open', curselected);
+    electron.ipcRenderer.send('open_transcript', curselected);
 }
 
 function evhan_delete_transcript()

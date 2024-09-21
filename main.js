@@ -793,7 +793,7 @@ function open_transcript_display_window_next(dat)
     }
     
     win.on('closed', function() {
-        delete trawins[tra.id];
+        delete trawins[tra.filename];
         tra = null;
         win = null;
     });
@@ -1624,6 +1624,14 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
         // Bang the focus event to update the "Display Cover Art" menu item.
         window_focus_update(game.win, game);
     }
+});
+
+electron.ipcMain.on('open_transcript', function(ev, arg) {
+    var tra = trawins[arg];
+    if (tra)
+        tra.win.show();
+    else
+        open_transcript_display_window(arg);
 });
 
 electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {
