@@ -21,6 +21,8 @@ function load_transcript(arg)
     tra_filename = arg.filename;
     tra_path = arg.path;
 
+    document.title = arg.title + ' - Transcript';
+
     async function readall() {
         var iter = traread.stanza_reader(tra_path);
         for await (var obj of iter) {
