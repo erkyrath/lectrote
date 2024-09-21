@@ -733,7 +733,14 @@ function reset_game(game)
 function open_transcript_display_window(filename)
 {
     var path = path_mod.join(app.getPath('userData'), 'transcripts', filename);
-    //### check if filename exists
+
+    try {
+	var stat = fs.statSync(path);
+    }
+    catch (ex) {
+        electron.dialog.showErrorBox('The transcript could not be read.', ''+ex);
+        return;
+    }
     
     var win = null;
     var tra = {
@@ -801,7 +808,7 @@ function open_transcript_display_window(filename)
             key: 'set_font',
             arg: { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont } });
         funcs.push({
-            key: 'load_named_game',
+            key: 'load_transcript',
             arg: {
                 path: tra.path, filename: tra.filename
             } });
