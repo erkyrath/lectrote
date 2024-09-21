@@ -12,6 +12,7 @@ var main_extension = {}; /* extra code for bound games */
 var isbound = false; /* true if we're a single-game app */
 var bound_game_path = null;
 var gamewins = {}; /* maps window ID to a game structure */
+var trawins = {}; /* maps transcript filenames to a traone structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
 var prefswin = null; /* the preferences window, if active */
@@ -226,6 +227,10 @@ function set_zoom_factor_all(val)
     for (var id in gamewins) {
         var game = gamewins[id];
         invoke_app_hook(game.win, 'set_zoom_factor', val);
+    }
+    for (var id in trawins) {
+        var tra = trawins[id];
+        invoke_app_hook(tra.win, 'set_zoom_factor', val);
     }
     if (main_extension.set_zoom_factor)
         main_extension.set_zoom_factor(val);
@@ -1428,6 +1433,10 @@ electron.nativeTheme.on('updated', function() {
         var game = gamewins[id];
         invoke_app_hook(game.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
     }
+    for (var id in trawins) {
+        var tra = trawins[id];
+        invoke_app_hook(tra.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
+    }
     if (prefswin)
         prefswin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
     if (aboutwin)
@@ -1502,6 +1511,10 @@ electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {
         var game = gamewins[id];
         invoke_app_hook(game.win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
     }
+    for (var id in trawins) {
+        var tra = trawins[id];
+        invoke_app_hook(tra.win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
+    }
 });
 
 electron.ipcMain.on('pref_color_theme', function(ev, arg) {
@@ -1511,6 +1524,10 @@ electron.ipcMain.on('pref_color_theme', function(ev, arg) {
         var game = gamewins[id];
         invoke_app_hook(game.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
     }
+    for (var id in trawins) {
+        var tra = trawins[id];
+        invoke_app_hook(tra.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
+    }
 });
 
 electron.ipcMain.on('pref_margin_level', function(ev, arg) {
@@ -1519,6 +1536,10 @@ electron.ipcMain.on('pref_margin_level', function(ev, arg) {
     for (var id in gamewins) {
         var game = gamewins[id];
         invoke_app_hook(game.win, 'set_margin_level', prefs.gamewin_marginlevel);
+    }
+    for (var id in trawins) {
+        var tra = trawins[id];
+        invoke_app_hook(tra.win, 'set_margin_level', prefs.gamewin_marginlevel);
     }
 });
 
