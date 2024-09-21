@@ -735,7 +735,7 @@ function open_transcript_display_window(filename)
     var path = path_mod.join(app.getPath('userData'), 'transcripts', filename);
 
     try {
-	var stat = fs.statSync(path);
+        var stat = fs.statSync(path);
     }
     catch (ex) {
         electron.dialog.showErrorBox('The transcript could not be read.', ''+ex);
@@ -744,17 +744,17 @@ function open_transcript_display_window(filename)
     
     var win = null;
     var tra = {
-	filename: filename,
-	path: path
+        filename: filename,
+        path: path
     }
     
     var winopts = { 
         webPreferences: {
-	    nodeIntegration: true,
-	    contextIsolation: false,
-	    enableRemoteModule: false,
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: false,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
-	},
+        },
         width: 600, height: 530,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
     };
@@ -765,7 +765,7 @@ function open_transcript_display_window(filename)
     
     win = new electron.BrowserWindow(winopts);
     if (!win)
-	return;
+        return;
 
     tra.win = win;
     trawins[filename] = tra;
@@ -777,7 +777,7 @@ function open_transcript_display_window(filename)
     }
     
     win.on('closed', function() {
-	delete trawins[tra.id];
+        delete trawins[tra.id];
         tra = null;
         win = null;
     });
