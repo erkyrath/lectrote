@@ -11,6 +11,8 @@ var tra_path = null;
 
 var loading_visible = null;
 
+var windowdic = new Map(); // Glk window information
+
 /* Not yet implemented. */
 var search_input_el = null;
 var search_body_el = null;
@@ -42,7 +44,23 @@ function load_transcript(arg)
 function add_stanza(obj)
 {
     if (obj.output) {
-        console.log('###', obj.output);
+        if (obj.output.windows) {
+            windowdic.clear();
+            for (var win of obj.output.windows) {
+                windowdic.set(win.id, win);
+            }
+        }
+        if (obj.output.content) {
+            for (var dat of obj.output.content) {
+                var win = windowdic.get(dat.id);
+                if (win && win.type == 'buffer') {
+                    //### if dat.clear, show a horizontal rule?
+                    for (var el of dat.text) {
+                        //###
+                    }
+                }
+            }
+        }
     }
 }
 
