@@ -7,6 +7,14 @@
 <link rel="stylesheet" href="./el-glkote.css" type="text/css">
 <link id="bodycss" rel="stylesheet" href="./play.css" type="text/css">
 
+<style type="text/css">
+#window {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+</style>
+
 <script type="text/javascript">
 
 window.$ = window.jQuery = require('./quixe/lib/jquery-1.12.4.min.js');
@@ -23,6 +31,8 @@ require('./trashow.js');
 <div id="windowport">
   <div id="window" class="WindowFrame BufferWindow">
     <div class="BufferLine"><span class="Style_normal">You are in a room.</span></div>
+    <div class="BufferLine BlankPara"><span class="BlankLineSpan"> </span></div>
+    <div class="BufferLine"><span class="Style_normal">This is a very long paragraph, which is long enough to wrap, which is what we're testing here.</span></div>
   </div>
 </div>
 <div id="loadingpane">
