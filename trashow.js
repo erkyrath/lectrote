@@ -9,6 +9,8 @@ const traread = require('./traread.js');
 var tra_filename = null;
 var tra_path = null;
 
+var loading_visible = null;
+
 /* Not yet implemented. */
 var search_input_el = null;
 var search_body_el = null;
@@ -19,15 +21,10 @@ function load_transcript(arg)
     tra_filename = arg.filename;
     tra_path = arg.path;
 
-    var firsttime = true;
-
     async function readall() {
         var iter = traread.stanza_reader(tra_path);
         for await (var obj of iter) {
-            if (firsttime) {
-                $('#loadingpane').remove();
-                firsttime = false;
-            }
+            hide_loading();
             add_stanza(obj);
         }
     }
@@ -37,13 +34,51 @@ function load_transcript(arg)
             console.log('done reading'); //###
         })
         .catch((ex) => {
-            console.log('transcript read failed:', ex);
+            glkote_error('Error reading transcript: ' + ex);
         });
 }
 
 function add_stanza(obj)
 {
     console.log('###', obj.output);
+}
+
+function hide_loading() {
+    if (loading_visible == false)
+        return;
+    loading_visible = false;
+
+    const el = document.getElementById('loadingpane');
+    if (el) {
+        el.style.display = 'none';  /* el.hide() */
+    }
+}
+
+function glkote_error(msg) {
+    if (!msg)
+        msg = '???';
+
+    let el = document.getElementById('errorcontent');
+    if (!el) return;
+    
+    remove_children(el);
+    el.appendChild(document.createTextNode(msg));
+
+    el = document.getElementById('errorpane');
+    if (el.className == 'WarningPane')
+        el.className = null;
+    el.style.display = '';   /* el.show() */
+    //error_visible = true;
+
+    hide_loading();
+}
+
+function remove_children(parent) {
+    const ls = parent.childNodes;
+    while (ls.length > 0) {
+        const obj = ls.item(0);
+        parent.removeChild(obj);
+    }
 }
 
 /* Preference-handling functions are copied from apphooks.js. Could be
