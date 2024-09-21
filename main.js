@@ -12,7 +12,7 @@ var main_extension = {}; /* extra code for bound games */
 var isbound = false; /* true if we're a single-game app */
 var bound_game_path = null;
 var gamewins = {}; /* maps window ID to a game structure */
-var trawins = {}; /* maps transcript filenames to a traone structure */
+var trawins = {}; /* maps transcript filenames to a trashow structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
 var prefswin = null; /* the preferences window, if active */
@@ -71,6 +71,19 @@ function game_for_webcontents(webcontents)
         var game = gamewins[id];
         if (game.win && game.win.webContents === webcontents)
             return game;
+    }    
+    return undefined;
+}
+
+/* Return the trashow object for a given webcontents. */
+function trashowwin_for_webcontents(webcontents)
+{
+    if (!webcontents)
+        return undefined;
+    for (var filename in trawins) {
+        var tra = trawins[filename];
+        if (tra.win && tra.win.webContents === webcontents)
+            return tra;
     }    
     return undefined;
 }
@@ -712,6 +725,91 @@ function reset_game(game)
         /* Load the game UI and go. */
         win.loadURL('file://' + __dirname + '/' + game.basehtml);
     }
+}
+
+/* Open a transcript browser window. (We must not already have one for this
+   filename.)
+*/
+function open_transcript_display_window(filename)
+{
+    var path = path_mod.join(app.getPath('userData'), 'transcripts', filename);
+    //### check if filename exists
+    
+    var win = null;
+    var tra = {
+	filename: filename,
+	path: path
+    }
+    
+    var winopts = { 
+        webPreferences: {
+	    nodeIntegration: true,
+	    contextIsolation: false,
+	    enableRemoteModule: false,
+            zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
+	},
+        width: 600, height: 530,
+        backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
+    };
+    if (window_icon)
+        winopts.icon = window_icon;
+
+    window_position_prefs(winopts, 'trashow'); //### offsetting?
+    
+    win = new electron.BrowserWindow(winopts);
+    if (!win)
+	return;
+
+    tra.win = win;
+    trawins[filename] = tra;
+
+    if (process.platform != 'darwin') {
+        var template = construct_menu_template('trashow');
+        var menu = electron.Menu.buildFromTemplate(template);
+        win.setMenu(menu);
+    }
+    
+    win.on('closed', function() {
+	delete trawins[tra.id];
+        tra = null;
+        win = null;
+    });
+    win.on('focus', function() {
+        window_focus_update(win, null);
+    });
+    win.on('move', window_position_prefs_handler('trashow', win)); //### offset?
+
+    win.webContents.on('dom-ready', function() {
+        if (!win) {
+            return;
+        }
+        var tra = trashowwin_for_webcontents(win.webContents);
+        if (!tra) {
+            return;
+        }
+        var funcs = [];
+        funcs.push({
+            key: 'set_zoom_factor',
+            arg: winopts.webPreferences.zoomFactor });
+        funcs.push({
+            key: 'set_margin_level',
+            arg: prefs.gamewin_marginlevel });
+        funcs.push({
+            key: 'set_color_theme',
+            arg: { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors } });
+        funcs.push({
+            key: 'set_font',
+            arg: { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont } });
+        funcs.push({
+            key: 'load_named_game',
+            arg: {
+                path: tra.path, filename: tra.filename
+            } });
+
+        invoke_app_hook(win, 'sequence', funcs);
+    });
+
+    win.loadURL('file://' + __dirname + '/trashow.html');
 }
 
 /* Open the "About Lectrote" window. (It must not already exist.)
