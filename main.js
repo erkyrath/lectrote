@@ -1009,6 +1009,23 @@ function open_transcript_window()
     transcriptwin.loadURL('file://' + __dirname + '/transcript.html');
 }
 
+function try_delete_transcript(filename)
+{
+    var winopts = {
+        type: 'question',
+        message: 'Really delete this transcript?',
+        buttons: ['Yes', 'No'],
+        cancelId: 1
+    };
+    if (window_icon)
+        winopts.icon = window_icon;
+
+    var res = electron.dialog.showMessageBoxSync(transcriptwin, winopts);
+    if (res == 0) {
+        console.log('### really delete', filename);
+    }
+}
+
 function window_focus_update(win, game)
 {
     /* Determine whether the "Display Cover Art" option should be
@@ -1636,6 +1653,10 @@ electron.ipcMain.on('open_transcript', function(ev, arg) {
         tra.win.show();
     else
         open_transcript_display_window(arg);
+});
+
+electron.ipcMain.on('delete_transcript', function(ev, arg) {
+    try_delete_transcript(arg);
 });
 
 electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {
