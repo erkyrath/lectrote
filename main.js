@@ -708,7 +708,7 @@ function reset_game(game)
         type: 'question',
         message: 'Are you sure you want to reset the game to the beginning? This will discard all your progress since your last SAVE command.',
         buttons: ['Reset', 'Cancel'],
-        cancelId: 0
+        cancelId: 1
     };
     if (window_icon)
         winopts.icon = window_icon;
@@ -718,7 +718,7 @@ function reset_game(game)
        that causes weird results (e.g., cmd-Q fails to shut down the blocked
        game window). */
     var res = electron.dialog.showMessageBoxSync(game.win, winopts);
-    if (res == winopts.cancelId) {
+    if (res == 0) {
         var win = game.win;
         /* Set a flag to inhibit autorestore (but not autosave). This
            will be cleared when the page finishes loading. */
