@@ -206,7 +206,7 @@ function evhan_delete_transcript()
     if (!curselected)
         return;
 
-    console.log('### delete', curselected);
+    electron.ipcRenderer.send('delete_transcript', curselected);
 }
 
 function evhan_set_selection(ev)
@@ -268,7 +268,6 @@ electron.ipcRenderer.on('on-focus', function(ev, arg) {
 });
 
 $(document).on('ready', function() {
-    //### kick off a timer (two seconds?) which watches the dir timestamp
     $('#list').on('click', { filename:null }, evhan_set_selection);
     $('#openbutton').on('click', evhan_open_transcript);
     $('#deletebutton').on('click', evhan_delete_transcript);
