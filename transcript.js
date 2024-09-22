@@ -23,7 +23,6 @@ function set_dir_path(dir)
 function reload_transcripts()
 {
     //### should only call rebuild_list() if the list has materially changed (order, size, any modtimes)
-    //### after rebuilding the list, set the cached dir timestamp
     
     if (!transcriptdir) {
         return;
@@ -158,6 +157,32 @@ function rebuild_list()
     }
 }
 
+var dirmodtime = null;
+
+function timer_watchdirtime()
+{
+    if (!transcriptdir)
+        return;
+
+    try {
+        var stat = fs.statSync(transcriptdir);
+    }
+    catch (ex) {
+        return;
+    }
+
+    if (dirmodtime === null) {
+        // First call, just store the timestamp.
+        dirmodtime = stat.mtime;
+        return;
+    }
+
+    if (dirmodtime < stat.mtime) {
+        dirmodtime = stat.mtime;
+        reload_transcripts();
+    }
+}
+
 function evhan_open_transcript()
 {
     if (!curselected)
@@ -237,4 +262,6 @@ $(document).on('ready', function() {
     $('#list').on('click', { filename:null }, evhan_set_selection);
     $('#openbutton').on('click', evhan_open_transcript);
     $('#deletebutton').on('click', evhan_delete_transcript);
+
+    setInterval(timer_watchdirtime, 1000); // every second
 });
