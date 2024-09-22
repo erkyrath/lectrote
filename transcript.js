@@ -122,13 +122,17 @@ function rebuild_list()
     var listel = $('#list');
     listel.empty();
 
+    var foundselected = false;
+
     for (var filename of tralist) {
         var obj = tramap.get(filename);
 
         var parel = $('<div>', { 'class':'EntryBox' });
         var el = $('<div>', { 'class':'Entry', id:id_for_filename(filename) });
-        if (filename == curselected)
+        if (filename == curselected) {
             el.addClass('Selected');
+            foundselected = true;
+        }
 
         var subel = $('<div>', { 'class':'Data' });
         subel.append($('<span>', { 'class':'Title' }).text(obj.title ?? '???'));
@@ -154,6 +158,12 @@ function rebuild_list()
 
         parel.append(el);
         listel.append(parel);
+    }
+
+    if (!foundselected) {
+        curselected = null;
+        $('#openbutton').prop('disabled', true);
+        $('#deletebutton').prop('disabled', true);
     }
 }
 
