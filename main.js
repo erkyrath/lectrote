@@ -992,7 +992,11 @@ function open_transcript_window()
             transcriptwin = null;
         });
     transcriptwin.on('focus', function() {
-            window_focus_update(transcriptwin, null);
+        window_focus_update(transcriptwin, null);
+        transcriptwin.webContents.send('on-focus', true);
+        });
+    transcriptwin.on('blur', function() {
+        transcriptwin.webContents.send('on-focus', false);
         });
     transcriptwin.on('resize', window_size_prefs_handler('transcriptwin', transcriptwin));
     transcriptwin.on('move', window_position_prefs_handler('transcriptwin', transcriptwin));

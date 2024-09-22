@@ -222,6 +222,15 @@ electron.ipcRenderer.on('set-dir-path', function(ev, arg) {
 electron.ipcRenderer.on('set-darklight-mode', function(ev, arg) {
     apply_darklight(arg);
 });
+electron.ipcRenderer.on('on-focus', function(ev, arg) {
+    var el = $('body');
+    if (arg) {
+        el.removeClass('InBackground');
+    }
+    else {
+        el.addClass('InBackground');
+    }
+});
 
 $(document).on('ready', function() {
     //### kick off a timer (two seconds?) which watches the dir timestamp
