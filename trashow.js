@@ -78,7 +78,7 @@ function add_stanza_linedata(text)
             divel = null;
             var udivel = last_child_of(frameel); /* not wrapped */
             if (udivel)
-                divel = $(divel);
+                divel = $(udivel);
         }
         if (divel == null) {
             /* Create a new paragraph div */
