@@ -733,19 +733,10 @@ function reset_game(game)
 */
 function open_transcript_display_window(filename)
 {
-    var path = path_mod.join(app.getPath('userData'), 'transcripts', filename);
-    
-    var iter = traread.stanza_reader(path);
-    iter.next()
-        .then((res) => {
-            iter.return();
-            iter = null;
-            var dat = { filename:filename, path:path, title:'???' };
-            if (res && res.value && res.value.metadata && res.value.metadata.title)
-                dat.title = res.value.metadata.title;
-            open_transcript_display_window_next(dat);
-        })
-        .catch((ex) => {
+    check_transcript_andthen(
+        filename,
+        open_transcript_display_window_next,
+        (ex) => {
             electron.dialog.showErrorBox('The transcript could not be read.', ''+ex);
         });
 }
@@ -1024,6 +1015,23 @@ function try_delete_transcript(filename)
     if (res == 0) {
         console.log('### really delete', filename);
     }
+}
+
+function check_transcript_andthen(filename, onthen, oncatch)
+{
+    var path = path_mod.join(app.getPath('userData'), 'transcripts', filename);
+    
+    var iter = traread.stanza_reader(path);
+    iter.next()
+        .then((res) => {
+            iter.return();
+            iter = null;
+            var dat = { filename:filename, path:path, title:'???' };
+            if (res && res.value && res.value.metadata && res.value.metadata.title)
+                dat.title = res.value.metadata.title;
+            onthen(dat);
+        })
+        .catch(oncatch);
 }
 
 function window_focus_update(win, game)
