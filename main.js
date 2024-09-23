@@ -1002,9 +1002,20 @@ function open_transcript_window()
 
 function try_delete_transcript(filename)
 {
+    check_transcript_andthen(
+        filename,
+        try_delete_transcript_next,
+        (ex) => {
+            electron.dialog.showErrorBox('This does not appear to be a transcript.', ''+ex);
+        });
+}
+
+function try_delete_transcript_next(dat)
+{
     var winopts = {
         type: 'question',
         message: 'Really delete this transcript?',
+        detail: 'Transcript for "' + dat.title + '"',
         buttons: ['Yes', 'No'],
         cancelId: 1
     };
@@ -1013,7 +1024,12 @@ function try_delete_transcript(filename)
 
     var res = electron.dialog.showMessageBoxSync(transcriptwin, winopts);
     if (res == 0) {
-        console.log('### really delete', filename);
+        try {
+            fs.unlinkSync(dat.path);
+        }
+        catch (ex) { 
+            electron.dialog.showErrorBox('Unable to delete.', ''+ex);
+        }
     }
 }
 
