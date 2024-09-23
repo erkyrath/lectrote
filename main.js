@@ -1025,6 +1025,12 @@ function try_delete_transcript_next(dat)
     var res = electron.dialog.showMessageBoxSync(transcriptwin, winopts);
     if (res == 0) {
         try {
+            var trawin = trawins[dat.filename];
+            if (trawin && trawin.win) {
+                // Close the associated transcript window
+                setTimeout( function() { trawin.win.close(); }, 50);
+            }
+
             fs.unlinkSync(dat.path);
             //### signal rebuild?
         }
