@@ -202,6 +202,14 @@ function evhan_open_transcript()
     electron.ipcRenderer.send('open_transcript', curselected);
 }
 
+function evhan_save_transcript_text()
+{
+    if (!curselected)
+        return;
+
+    //### electron.ipcRenderer.send('save_transcript_text', curselected);
+}
+
 function evhan_delete_transcript()
 {
     if (!curselected)
@@ -272,6 +280,7 @@ electron.ipcRenderer.on('on-focus', function(ev, arg) {
 $(document).on('ready', function() {
     $('#list').on('click', { filename:null }, evhan_set_selection);
     $('#openbutton').on('click', evhan_open_transcript);
+    $('#savetextbutton').on('click', evhan_save_transcript_text);
     $('#deletebutton').on('click', evhan_delete_transcript);
 
     setInterval(timer_watchdirtime, 1000); // every second
