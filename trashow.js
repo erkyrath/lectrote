@@ -41,6 +41,18 @@ function load_transcript(arg)
         });
 }
 
+/* Add a stanza to the output "buffer window". This is almost exactly
+   what glkote.js does when an update message arrives.
+
+   Differences:
+   - We only pay attention to buffer windows. The status line (assuming
+     that's a grid) is lost.
+   - If there's more than one buffer window, the output is interleaved
+     in a single display stream.
+   - We ignore window-clears.
+   - Hyperlinks are clickable but do nothing.
+   - Graphics are currently not supported.
+*/
 function add_stanza(obj)
 {
     if (obj.output) {
