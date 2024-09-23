@@ -163,6 +163,7 @@ function rebuild_list()
     if (!foundselected) {
         curselected = null;
         $('#openbutton').prop('disabled', true);
+        $('#savetextbutton').prop('disabled', true);
         $('#deletebutton').prop('disabled', true);
     }
 }
@@ -233,6 +234,7 @@ function evhan_set_selection(ev)
     }
 
     $('#openbutton').prop('disabled', (curselected == null));
+    $('#savetextbutton').prop('disabled', (curselected == null));
     $('#deletebutton').prop('disabled', (curselected == null));
 }
 
