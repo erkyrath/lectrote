@@ -66,7 +66,9 @@ function add_stanza(obj)
             for (var dat of obj.output.content) {
                 var win = windowdic.get(dat.id);
                 if (win && win.type == 'buffer') {
-                    //### if dat.clear, show a horizontal rule?
+                    if (dat.clear) {
+                        add_hrule();
+                    }
                     if (dat.text) {
                         add_stanza_linedata(dat.text);
                     }
@@ -89,7 +91,7 @@ function add_stanza_linedata(text)
                 continue;
             divel = null;
             var udivel = last_child_of(frameel); /* not wrapped */
-            if (udivel)
+            if (udivel && udivel.tagName == 'DIV')
                 divel = $(udivel);
         }
         if (divel == null) {
@@ -145,6 +147,13 @@ function add_stanza_linedata(text)
         }
         
     }
+}
+
+function add_hrule()
+{
+    var frameel = $('#window');
+    var el = $('<hr>');
+    frameel.append(el);
 }
 
 function hide_loading() {
