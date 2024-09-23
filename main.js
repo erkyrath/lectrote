@@ -963,6 +963,7 @@ function open_transcript_window()
 {
     var winopts = { 
         webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: false },
+        minWidth: 500, minHeight: 300,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
         useContentSize: true
     };
