@@ -49,7 +49,7 @@ function load_transcript(arg)
      that's a grid) is lost.
    - If there's more than one buffer window, the output is interleaved
      in a single display stream.
-   - We ignore window-clears.
+   - Window-clear events are shown as horizontal rules.
    - Hyperlinks are clickable but do nothing.
    - Graphics are currently not supported.
 */
