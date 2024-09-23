@@ -762,13 +762,13 @@ function open_transcript_display_window_next(dat)
             enableRemoteModule: false,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         },
-        width: 600, height: 530,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
     };
     if (window_icon)
         winopts.icon = window_icon;
 
     window_position_prefs(winopts, 'trashow'); //### offsetting?
+    window_size_prefs(winopts, 'trashow', 600, 530);
     
     win = new electron.BrowserWindow(winopts);
     if (!win)
@@ -791,6 +791,7 @@ function open_transcript_display_window_next(dat)
     win.on('focus', function() {
         window_focus_update(win, null);
     });
+    win.on('resize', window_size_prefs_handler('trashow', win));
     win.on('move', window_position_prefs_handler('trashow', win)); //### offset?
 
     win.webContents.on('dom-ready', function() {
