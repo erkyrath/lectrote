@@ -1026,6 +1026,7 @@ function try_delete_transcript_next(dat)
     if (res == 0) {
         try {
             fs.unlinkSync(dat.path);
+            //### signal rebuild?
         }
         catch (ex) { 
             electron.dialog.showErrorBox('Unable to delete.', ''+ex);
