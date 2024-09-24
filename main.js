@@ -1025,9 +1025,7 @@ function try_save_transcript_text_next(dat)
         if (!res || res.canceled)
             return;
         traread.stanzas_write_to_file(res.filePath, dat.path)
-            .then(() => {
-                console.log('### success');
-            })
+            .then(() => {})
             .catch((ex) => {
                 electron.dialog.showErrorBox('Unable to write.', ''+ex);
             });
