@@ -218,6 +218,8 @@ async function stanzas_write_to_file(path, trapath)
         for await (var obj of stanza_reader(trapath)) {
             await add_stanza(obj);
         }
+        
+        await fhan.write('\n');
     }
     finally {
         // If we throw or return early...
