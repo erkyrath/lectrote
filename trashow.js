@@ -70,7 +70,7 @@ function add_stanza(obj)
                         add_hrule();
                     }
                     if (dat.text) {
-                        add_stanza_linedata(dat.text);
+                        add_stanza_linedata(dat.text, obj.timestamp, obj.outtimestamp);
                     }
                 }
             }
@@ -78,9 +78,10 @@ function add_stanza(obj)
     }
 }
 
-function add_stanza_linedata(text)
+function add_stanza_linedata(text, intimestamp, outtimestamp)
 {
     var frameel = $('#window');
+    var firsttime = true;
     
     for (let ix=0; ix<text.length; ix++) {
         const textarg = text[ix];
@@ -110,6 +111,21 @@ function add_stanza_linedata(text)
             divel.data('blankpara', false);
             divel.removeClass('BlankPara');
             divel.empty();
+        }
+
+        if (firsttime) {
+            firsttime = false;
+            var date = new Date(intimestamp);
+            var intimestr = date.toTimeString().slice(0, 8) + ', ' + date.toDateString().slice(4);
+            var durstr = 'executed in ' + (outtimestamp - intimestamp) + ' ms';
+            divel.find('.TimeAnchor').remove(); // only one per paragraph please
+            const timeel = $('<div>', { 'class':'TimeAnchor' });
+            timeel.append($('<span>', { 'class':'Dot' }).text('\u25C6'));
+            const popel = $('<div>', { 'class':'Popup' }).text(intimestr);
+            popel.append($('<br>'));
+            popel.append($('<span>').text(durstr));
+            timeel.prepend(popel);
+            divel.prepend(timeel);
         }
 
         for (let sx=0; sx<content.length; sx++) {
