@@ -100,8 +100,7 @@ function format_timestamp(val)
     var date = new Date();
     date.setTime(val);
 
-    var res = date.toDateString().slice(4);
-    res = res + ' ' + date.toTimeString().slice(0, 8);
+    var res = date.toTimeString().slice(0, 5) + ', ' + date.toDateString().slice(4);
     return res;
 }
 
