@@ -115,7 +115,7 @@ function add_stanza_linedata(text)
         for (let sx=0; sx<content.length; sx++) {
             const rdesc = content[sx];
             let rstyle, rtext, rlink;
-            if (jQuery.type(rdesc) === 'object') {
+            if (!(typeof rdesc === 'string' || rdesc instanceof String)) {
                 if (rdesc.special !== undefined) {
                     // skip specials for now
                     continue;
