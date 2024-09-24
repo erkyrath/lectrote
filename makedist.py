@@ -64,6 +64,8 @@ appfiles = [
     './about.html',
     './transcript.html',
     './transcript.js',
+    './transhow.html',
+    './transhow.js',
     './if-card.html',
     './if-card.js',
     './fonts.css',
