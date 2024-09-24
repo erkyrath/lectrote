@@ -141,5 +141,27 @@ async function* stanza_reader(path)
     }
 }
 
+async function stanzas_write_to_file(path, trapath)
+{
+    var fhan = null;
+
+    try {
+	fhan = await fsp.open(path, "w");
+	
+	for await (var obj of stanza_reader(trapath)) {
+	    console.log('### obj.output', obj.output);
+	    await fhan.write('### turn...\n'); //###
+	}
+
+    }
+    finally {
+        // If we throw or return early...
+        if (fhan !== null) {
+            await fhan.close();
+            fhan = null;
+        }
+    }
+}
 
 exports.stanza_reader = stanza_reader;
+exports.stanzas_write_to_file = stanzas_write_to_file;
