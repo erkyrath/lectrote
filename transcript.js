@@ -97,9 +97,7 @@ async function get_transcript_info()
 
 function format_timestamp(val)
 {
-    var date = new Date();
-    date.setTime(val);
-
+    var date = new Date(val);
     var res = date.toTimeString().slice(0, 5) + ', ' + date.toDateString().slice(4);
     return res;
 }
