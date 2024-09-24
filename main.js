@@ -1002,6 +1002,21 @@ function open_transcript_window()
     transcriptwin.loadURL('file://' + __dirname + '/transcript.html');
 }
 
+function try_save_transcript_text(filename)
+{
+    check_transcript_andthen(
+        filename,
+        try_save_transcript_text_next,
+        (ex) => {
+            electron.dialog.showErrorBox('This does not appear to be a transcript.', ''+ex);
+        });
+}
+
+function try_save_transcript_text_next(dat)
+{
+    console.log('###', dat);
+}
+
 function try_delete_transcript(filename)
 {
     check_transcript_andthen(
@@ -1686,6 +1701,10 @@ electron.ipcMain.on('open_transcript', function(ev, arg) {
         tra.win.show();
     else
         open_transcript_display_window(arg);
+});
+
+electron.ipcMain.on('save_transcript_text', function(ev, arg) {
+    try_save_transcript_text(arg);
 });
 
 electron.ipcMain.on('delete_transcript', function(ev, arg) {

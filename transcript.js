@@ -207,7 +207,7 @@ function evhan_save_transcript_text()
     if (!curselected)
         return;
 
-    //### electron.ipcRenderer.send('save_transcript_text', curselected);
+    electron.ipcRenderer.send('save_transcript_text', curselected);
 }
 
 function evhan_delete_transcript()
