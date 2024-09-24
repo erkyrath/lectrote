@@ -762,6 +762,7 @@ function open_transcript_display_window_next(dat)
             enableRemoteModule: false,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         },
+        minWidth: 400, minHeight: 400,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
     };
     if (window_icon)
