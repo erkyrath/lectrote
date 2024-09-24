@@ -1264,6 +1264,18 @@ function construct_menu_template(special)
             id: 'close_window',
             accelerator: 'CmdOrCtrl+W',
             role: 'close'
+        },
+        { type: 'separator' },
+        {
+            label: 'Transcript Browser',
+            accelerator: 'CmdOrCtrl+Shift+T',
+            enabled: (special != 'transcript'),
+            click: function(item, win) {
+                if (!transcriptwin)
+                    open_transcript_window();
+                else
+                    transcriptwin.show();
+            }
         }
         ]
     },
@@ -1402,17 +1414,6 @@ function construct_menu_template(special)
                 if (main_extension.cover_image_info)
                     dat = main_extension.cover_image_info;
                 invoke_app_hook(game.win, 'display_cover_art', dat);
-            }
-        },
-        {
-            label: 'Transcript Browser',
-            accelerator: 'CmdOrCtrl+Shift+T',
-            enabled: (special != 'transcript'),
-            click: function(item, win) {
-                if (!transcriptwin)
-                    open_transcript_window();
-                else
-                    transcriptwin.show();
             }
         }
         ]
