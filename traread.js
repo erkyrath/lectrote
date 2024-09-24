@@ -144,15 +144,80 @@ async function* stanza_reader(path)
 async function stanzas_write_to_file(path, trapath)
 {
     var fhan = null;
+    var windowdic = new Map(); // Glk window information
+
+    async function add_stanza(obj)
+    {
+        if (obj.output) {
+            if (obj.output.windows) {
+                windowdic.clear();
+                for (var win of obj.output.windows) {
+                    windowdic.set(win.id, win);
+                }
+            }
+            if (obj.output.content) {
+                for (var dat of obj.output.content) {
+                    var win = windowdic.get(dat.id);
+                    if (win && win.type == 'buffer') {
+                        if (dat.clear) {
+                            await fhan.write('\n - - - - - - - - - -\n');
+                        }
+                        if (dat.text) {
+                            await add_stanza_linedata(dat.text);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    async function add_stanza_linedata(text)
+    {
+        for (let ix=0; ix<text.length; ix++) {
+            const textarg = text[ix];
+            const content = textarg.content;
+            if (textarg.append) {
+                if (!content || !content.length)
+                    continue;
+            }
+            else {
+                await fhan.write('\n');
+            }
+            // skip textarg.flowbreak for now
+            if (!content || !content.length) {
+                continue;
+            }
+
+            for (let sx=0; sx<content.length; sx++) {
+                const rdesc = content[sx];
+                let rstyle, rtext, rlink;
+                if (!(typeof rdesc === 'string' || rdesc instanceof String)) {
+                    if (rdesc.special !== undefined) {
+                        // skip specials for now
+                        continue;
+                    }
+                    rstyle = rdesc.style;
+                    rtext = rdesc.text;
+                    rlink = rdesc.hyperlink;
+                }
+                else {
+                    rstyle = rdesc;
+                    sx++;
+                    rtext = content[sx];
+                    rlink = undefined;
+                }
+                // ignore rlink
+                await fhan.write(rtext);
+            }
+        }
+    }
 
     try {
-	fhan = await fsp.open(path, "w");
-	
-	for await (var obj of stanza_reader(trapath)) {
-	    console.log('### obj.output', obj.output);
-	    await fhan.write('### turn...\n'); //###
-	}
-
+        fhan = await fsp.open(path, "w");
+        
+        for await (var obj of stanza_reader(trapath)) {
+            await add_stanza(obj);
+        }
     }
     finally {
         // If we throw or return early...
