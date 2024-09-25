@@ -84,6 +84,10 @@ function add_stanza(obj)
     if (obj.output) {
         if (obj.output.content) {
             for (var dat of obj.output.content) {
+                /* We assume that if a content stanza has "text", it's a
+                   buffer window. It would be tidier to track open window
+                   types, but this might be a partial transcript with no
+                   "arrange" event, so we can't do that. */
                 if (dat.text) {
                     if (dat.clear) {
                         add_hrule();
