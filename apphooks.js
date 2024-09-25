@@ -52,16 +52,15 @@ function load_named_game(arg)
         obj.title = title;
 
     if (Blorb && Blorb.get_metadata) {
-        var val;
-        val = Blorb.get_metadata('author');
-        if (val)
-            obj.author = val;
-        val = Blorb.get_metadata('headline');
-        if (val)
-            obj.headline = val;
-        val = Blorb.get_metadata('firstpublished');
-        if (val)
-            obj.firstpublished = val;
+        const keylist = [
+            'author', 'headline', 'firstpublished',
+            'ifid', 'format', 'tuid'
+        ];
+        for (var key of keylist) {
+            var val = Blorb.get_metadata(key);
+            if (val)
+                obj[key] = val;
+        }
     }
 
     if (engine.get_signature) {
