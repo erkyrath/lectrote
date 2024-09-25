@@ -260,7 +260,7 @@ function evhan_delete_transcript()
 
 function evhan_save_transcript_text()
 {
-    electron.ipcRenderer.send('save_transcript_text', tra_filename);
+    electron.ipcRenderer.send('save_transcript_text', tra_filename, true);
 }
 
 /* Preference-handling functions are copied from apphooks.js. Could be

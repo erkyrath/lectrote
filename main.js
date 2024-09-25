@@ -1003,7 +1003,7 @@ function open_transcript_window()
     transcriptwin.loadURL('file://' + __dirname + '/transcript.html');
 }
 
-function try_save_transcript_text(filename)
+function try_save_transcript_text(filename, onshowwin)
 {
     check_transcript_andthen(
         filename,
@@ -1014,8 +1014,14 @@ function try_save_transcript_text(filename)
                 filters: [ { name: 'Text', extensions: ['txt'] } ],
                 properties: ['dontAddToRecent'],
             };
+
+            var showwin = null;
+            if (onshowwin && trawins[filename])
+                showwin = trawins[filename].win;
+            if (!showwin)
+                showwin = transcriptwin;
             
-            electron.dialog.showSaveDialog(transcriptwin, opts).then(function(res) {
+            electron.dialog.showSaveDialog(showwin, opts).then(function(res) {
                 if (!res || res.canceled)
                     return;
                 traread.stanzas_write_to_file(res.filePath, dat.path)
@@ -1724,8 +1730,8 @@ electron.ipcMain.on('open_transcript', function(ev, arg) {
         open_transcript_display_window(arg);
 });
 
-electron.ipcMain.on('save_transcript_text', function(ev, arg) {
-    try_save_transcript_text(arg);
+electron.ipcMain.on('save_transcript_text', function(ev, arg, onshowwin) {
+    try_save_transcript_text(arg, onshowwin);
 });
 
 electron.ipcMain.on('delete_transcript', function(ev, arg, onshowwin) {
