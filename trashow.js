@@ -70,7 +70,11 @@ function add_stanza(obj)
                 var metel = $('<div>');
                 metel.append($('<span>', { 'class':'MetadataKey' }).text(key+':'));
                 metel.append($('<span>').text(' '));
-                metel.append($('<span>', { 'class':'MetadataValue' }).text(obj.metadata[key]));
+                var valel = $('<span>', { 'class':'MetadataValue' });
+                if (key == 'title')
+                    valel.addClass('MetadataTitle');
+                valel.text(obj.metadata[key]);
+                metel.append(valel);
                 bioel.append(metel);
             }
         }
