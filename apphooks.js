@@ -44,16 +44,9 @@ function load_named_game(arg)
         title: default_name
     };
 
-    var title = undefined;
-    if (Blorb && Blorb.get_metadata) {
-        var title = Blorb.get_metadata('title');
-    }
-    if (title)
-        obj.title = title;
-
     if (Blorb && Blorb.get_metadata) {
         const keylist = [
-            'author', 'headline', 'firstpublished',
+            'title', 'author', 'headline', 'firstpublished',
             'ifid', 'format', 'tuid'
         ];
         for (var key of keylist) {
