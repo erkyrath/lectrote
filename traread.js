@@ -148,6 +148,26 @@ async function stanzas_write_to_file(path, trapath)
 
     async function add_stanza(obj)
     {
+        if (obj.metadata) {
+            var anylines = false;
+            // See keylist in apphooks.js.
+            const keylist = [
+                'title', 'author', 'headline', 'firstpublished',
+                'ifid', 'format', 'tuid'
+            ];
+            for (var key of keylist) {
+                if (obj.metadata[key]) {
+                    if (!anylines) {
+                        anylines = true;
+                        await fhan.write(('--'.repeat(36)) + '-\n');
+                    }
+                    var val = key + ': ' + obj.metadata[key] + '\n';
+                    await fhan.write(val);
+                }
+            }
+            if (anylines)
+                await fhan.write(('--'.repeat(36)) + '-\n');
+        }
         if (obj.output) {
             if (obj.output.windows) {
                 windowdic.clear();
@@ -160,7 +180,7 @@ async function stanzas_write_to_file(path, trapath)
                     var win = windowdic.get(dat.id);
                     if (win && win.type == 'buffer') {
                         if (dat.clear) {
-                            await fhan.write('\n - - - - - - - - - -\n');
+                            await fhan.write('\n' + ('- '.repeat(36)) + '-\n');
                         }
                         if (dat.text) {
                             await add_stanza_linedata(dat.text);
