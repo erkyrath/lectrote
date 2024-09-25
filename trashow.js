@@ -253,6 +253,16 @@ function evhan_showtime()
     }
 }
 
+function evhan_delete_transcript()
+{
+    electron.ipcRenderer.send('delete_transcript', tra_filename);
+}
+
+function evhan_save_transcript_text()
+{
+    electron.ipcRenderer.send('save_transcript_text', tra_filename);
+}
+
 /* Preference-handling functions are copied from apphooks.js. Could be
    refactored. */
 
@@ -379,4 +389,6 @@ for (var name in namespace) {
 
 $(document).on('ready', function() {
     $('#showtime').on('change', evhan_showtime);
+    $('#savetextbutton').on('click', evhan_save_transcript_text);
+    $('#deletebutton').on('click', evhan_delete_transcript);
 });
