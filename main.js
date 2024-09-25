@@ -1037,40 +1037,43 @@ function try_delete_transcript(filename, onshowwin)
 {
     check_transcript_andthen(
         filename,
-        try_delete_transcript_next,
+        (dat) => {
+            var winopts = {
+                type: 'question',
+                message: 'Really delete this transcript?',
+                detail: 'Transcript for "' + dat.title + '"',
+                buttons: ['Yes', 'No'],
+                cancelId: 1
+            };
+            if (window_icon)
+                winopts.icon = window_icon;
+
+            var showwin = null;
+            if (onshowwin && trawins[filename])
+                showwin = trawins[filename].win;
+            if (!showwin)
+                showwin = transcriptwin;
+            
+            var res = electron.dialog.showMessageBoxSync(showwin, winopts);
+            if (res == 0) {
+                try {
+                    var trawin = trawins[filename];
+                    if (trawin && trawin.win) {
+                        // Close the associated transcript window
+                        setTimeout( function() { trawin.win.close(); }, 50);
+                    }
+
+                    fs.unlinkSync(dat.path);
+                    //### signal rebuild?
+                }
+                catch (ex) { 
+                    electron.dialog.showErrorBox('Unable to delete.', ''+ex);
+                }
+            }
+        },
         (ex) => {
             electron.dialog.showErrorBox('This does not appear to be a transcript.', ''+ex);
         });
-}
-
-function try_delete_transcript_next(dat)
-{
-    var winopts = {
-        type: 'question',
-        message: 'Really delete this transcript?',
-        detail: 'Transcript for "' + dat.title + '"',
-        buttons: ['Yes', 'No'],
-        cancelId: 1
-    };
-    if (window_icon)
-        winopts.icon = window_icon;
-
-    var res = electron.dialog.showMessageBoxSync(transcriptwin, winopts);
-    if (res == 0) {
-        try {
-            var trawin = trawins[dat.filename];
-            if (trawin && trawin.win) {
-                // Close the associated transcript window
-                setTimeout( function() { trawin.win.close(); }, 50);
-            }
-
-            fs.unlinkSync(dat.path);
-            //### signal rebuild?
-        }
-        catch (ex) { 
-            electron.dialog.showErrorBox('Unable to delete.', ''+ex);
-        }
-    }
 }
 
 function check_transcript_andthen(filename, onthen, oncatch)
