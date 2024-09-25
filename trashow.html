@@ -30,6 +30,13 @@
   font-size: 0.9em;
 }
 
+#toolbar .ToolRight {
+  float: right;
+  margin-right: 20px;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
 #windowport {
   position: relative;
 }
@@ -131,6 +138,10 @@ require('./trashow.js');
 <body id="trashow">
 
 <div id="toolbar">
+  <div class="ToolRight">
+    <button id="savetextbutton">Save as Text</button>
+    <button id="deletebutton">Delete</button>
+  </div>
   <div class="Tool">
     <input id="showtime" name="showtime" type="checkbox">
     <label for="showtime">Show timestamps</label>
