@@ -1092,6 +1092,8 @@ function check_transcript_andthen(filename, onthen, oncatch)
 
 function window_focus_update(win, game)
 {
+    /* Game will only be set if this is a game window. */
+    
     /* Determine whether the "Display Cover Art" option should be
        enabled or not. */
     var showoption = false;
@@ -1106,6 +1108,10 @@ function window_focus_update(win, game)
         var item = menu.getMenuItemById('view_cover_art');
         if (item)
             item.enabled = showoption;
+
+        var item = menu.getMenuItemById('reset_game');
+        if (item)
+            item.enabled = (game != null);
     }
 }
 
