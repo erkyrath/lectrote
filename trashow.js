@@ -19,7 +19,6 @@ var search_body_el = null;
 
 function load_transcript(arg)
 {
-    console.log('### load_transcript', arg);
     tra_filename = arg.filename;
     tra_path = arg.path;
 
@@ -217,6 +216,19 @@ function last_child_of(obj) {
     return ls.get(ls.length-1);
 }
 
+function evhan_showtime()
+{
+    var flag = $('#showtime').prop('checked');
+
+    var bodyel = $('body');
+    if (flag) {
+        bodyel.addClass('DisplayAnchors');
+    }
+    else {
+        bodyel.removeClass('DisplayAnchors');
+    }
+}
+
 /* Preference-handling functions are copied from apphooks.js. Could be
    refactored. */
 
@@ -340,3 +352,7 @@ function attach(name, func)
 for (var name in namespace) {
     attach(name, namespace[name]);
 }
+
+$(document).on('ready', function() {
+    $('#showtime').on('change', evhan_showtime);
+});

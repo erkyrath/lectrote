@@ -49,7 +49,11 @@ hr {
 }
 
 .TimeAnchor {
+  display: none;
   position: relative;
+}
+
+.DisplayAnchors .TimeAnchor {
   display: inline-block;
 }
 
@@ -107,7 +111,7 @@ require('./trashow.js');
 
 <div id="toolbar">
   <div class="Tool">
-    <input id="showtime" name="reqall" type="checkbox">
+    <input id="showtime" name="showtime" type="checkbox">
     <label for="showtime">Show timestamps</label>
   </div>
 </div>
