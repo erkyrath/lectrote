@@ -143,7 +143,7 @@ function add_stanza_linedata(text, intimestamp, outtimestamp)
             var durstr = 'executed in ' + (outtimestamp - intimestamp) + ' ms';
             divel.find('.TimeAnchor').remove(); // only one per paragraph please
             const timeel = $('<div>', { 'class':'TimeAnchor' });
-            timeel.append($('<span>', { 'class':'Dot' }).text('\u25C6'));
+            timeel.append($('<div>', { 'class':'Dot' }).text('\u25C6'));
             const popel = $('<div>', { 'class':'Popup' }).text(intimestr);
             popel.append($('<br>'));
             popel.append($('<span>').text(durstr));

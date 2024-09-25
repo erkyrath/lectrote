@@ -79,21 +79,23 @@ hr {
 .TimeAnchor {
   display: none;
   position: relative;
+  white-space: nowrap;
 }
 
 .DisplayAnchors .TimeAnchor {
-  display: inline-block;
+  display: block;
 }
 
 .TimeAnchor .Dot {
+  position: absolute;
+  left: -0.75em;
   color: #8899FF;
 }
 
 .TimeAnchor .Popup {
   position: absolute;
   display: none;
-  left: 1.0em;
-  white-space: nowrap;
+  left: 0.25em;
   background: #E4F4FF;
   color: #000066;
   border: 1px solid #888;
