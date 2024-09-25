@@ -54,6 +54,27 @@ function load_transcript(arg)
 */
 function add_stanza(obj)
 {
+    if (obj.metadata) {
+        var anylines = false;
+        // See keylist in apphooks.js.
+        const keylist = [
+            'title', 'author', 'headline', 'firstpublished',
+            'ifid', 'format', 'tuid'
+        ];
+        for (var key of keylist) {
+            if (obj.metadata[key]) {
+                if (!anylines) {
+                    anylines = true;
+                }
+                var val = key + ': ' + obj.metadata[key] + '\n';
+                var metel = $('<div>').text(val);
+                $('#window').append(metel);
+            }
+        }
+        if (anylines) 
+            add_hrule();
+    }
+    
     if (obj.output) {
         if (obj.output.windows) {
             windowdic.clear();
