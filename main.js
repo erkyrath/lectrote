@@ -1259,7 +1259,6 @@ function construct_menu_template(special)
                 export_game_file(get_export_game_path());
             }
         },
-        { type: 'separator' },
         {
             label: 'Close Window',
             id: 'close_window',
