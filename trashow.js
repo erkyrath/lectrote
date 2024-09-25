@@ -255,7 +255,7 @@ function evhan_showtime()
 
 function evhan_delete_transcript()
 {
-    electron.ipcRenderer.send('delete_transcript', tra_filename);
+    electron.ipcRenderer.send('delete_transcript', tra_filename, true);
 }
 
 function evhan_save_transcript_text()

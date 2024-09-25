@@ -1033,7 +1033,7 @@ function try_save_transcript_text_next(dat)
     });
 }
 
-function try_delete_transcript(filename)
+function try_delete_transcript(filename, onshowwin)
 {
     check_transcript_andthen(
         filename,
@@ -1728,8 +1728,8 @@ electron.ipcMain.on('save_transcript_text', function(ev, arg) {
     try_save_transcript_text(arg);
 });
 
-electron.ipcMain.on('delete_transcript', function(ev, arg) {
-    try_delete_transcript(arg);
+electron.ipcMain.on('delete_transcript', function(ev, arg, onshowwin) {
+    try_delete_transcript(arg, onshowwin);
 });
 
 electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {
