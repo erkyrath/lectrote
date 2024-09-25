@@ -55,7 +55,7 @@ function load_transcript(arg)
 function add_stanza(obj)
 {
     if (obj.metadata) {
-        var anylines = false;
+        var bioel = null;
         // See keylist in apphooks.js.
         const keylist = [
             'title', 'author', 'headline', 'firstpublished',
@@ -63,16 +63,17 @@ function add_stanza(obj)
         ];
         for (var key of keylist) {
             if (obj.metadata[key]) {
-                if (!anylines) {
-                    anylines = true;
+                if (!bioel) {
+                    bioel = $('<div>', { 'class':'MetadataBox' });
+                    $('#window').append(bioel);
                 }
-                var val = key + ': ' + obj.metadata[key] + '\n';
-                var metel = $('<div>').text(val);
-                $('#window').append(metel);
+                var metel = $('<div>');
+                metel.append($('<span>', { 'class':'MetadataKey' }).text(key+':'));
+                metel.append($('<span>').text(' '));
+                metel.append($('<span>', { 'class':'MetadataValue' }).text(obj.metadata[key]));
+                bioel.append(metel);
             }
         }
-        if (anylines) 
-            add_hrule();
     }
     
     if (obj.output) {
