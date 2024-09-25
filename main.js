@@ -1007,30 +1007,27 @@ function try_save_transcript_text(filename)
 {
     check_transcript_andthen(
         filename,
-        try_save_transcript_text_next,
+        (dat) => {
+            var opts = {
+                title: 'Save transcript as text',
+                message: 'Transcript for "' + dat.title + '"',
+                filters: [ { name: 'Text', extensions: ['txt'] } ],
+                properties: ['dontAddToRecent'],
+            };
+            
+            electron.dialog.showSaveDialog(transcriptwin, opts).then(function(res) {
+                if (!res || res.canceled)
+                    return;
+                traread.stanzas_write_to_file(res.filePath, dat.path)
+                    .then(() => {})
+                    .catch((ex) => {
+                        electron.dialog.showErrorBox('Unable to write.', ''+ex);
+                    });
+            });
+        },
         (ex) => {
             electron.dialog.showErrorBox('This does not appear to be a transcript.', ''+ex);
         });
-}
-
-function try_save_transcript_text_next(dat)
-{
-    var opts = {
-        title: 'Save transcript as text',
-        message: 'Transcript for "' + dat.title + '"',
-        filters: [ { name: 'Text', extensions: ['txt'] } ],
-        properties: ['dontAddToRecent'],
-    };
-    
-    electron.dialog.showSaveDialog(transcriptwin, opts).then(function(res) {
-        if (!res || res.canceled)
-            return;
-        traread.stanzas_write_to_file(res.filePath, dat.path)
-            .then(() => {})
-            .catch((ex) => {
-                electron.dialog.showErrorBox('Unable to write.', ''+ex);
-            });
-    });
 }
 
 function try_delete_transcript(filename, onshowwin)
