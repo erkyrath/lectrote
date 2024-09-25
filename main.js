@@ -1269,7 +1269,6 @@ function construct_menu_template(special)
         {
             label: 'Transcript Browser',
             accelerator: 'CmdOrCtrl+Shift+T',
-            enabled: (special != 'transcript'),
             click: function(item, win) {
                 if (!transcriptwin)
                     open_transcript_window();
