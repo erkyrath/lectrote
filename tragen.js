@@ -14,7 +14,6 @@ var fd = null;
 function set_transcriptdir(path)
 {
     transcriptdir = path;
-    console.log('### path', transcriptdir); //###
 
     /* We try to create a directory for transcripts at init time.
        This will usually fail because there's already a directory there.
@@ -53,7 +52,7 @@ function record_update(obj)
     if (path === null) {
         // First time! Open the file.
         var writemeta = false;
-        //### more human-readable filenames would be great, but saving that in the autorestore info is hard.
+        //TODO: more human-readable filenames would be great, but saving that in the autorestore info is hard.
         path = path_mod.join(transcriptdir, obj.sessionId+'.glktra');
         try {
             // Will fail if path already exists.
@@ -73,7 +72,6 @@ function record_update(obj)
             console.log('Could not open auto-transcript file', path);
             return;
         }
-        console.log('### fd', fd);
         
         if (writemeta && metadata != null) {
             var metaobj = {
@@ -89,13 +87,11 @@ function record_update(obj)
 
     if (firstobj !== null) {
         if (firstobj.sessionId == obj.sessionId) {
-            console.log('### record-init', firstobj.sessionId, JSON.stringify(firstobj.input)); //###
             fs.writeSync(fd, JSON.stringify(firstobj)+'\n');
         }
         firstobj = null;
     }
 
-    console.log('### record', obj.sessionId, JSON.stringify(obj.input)); //###
     fs.writeSync(fd, JSON.stringify(obj)+'\n');
 }
 
