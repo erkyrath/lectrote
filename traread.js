@@ -144,7 +144,6 @@ async function* stanza_reader(path)
 async function stanzas_write_to_file(path, trapath)
 {
     var fhan = null;
-    var windowdic = new Map(); // Glk window information
 
     async function add_stanza(obj)
     {
@@ -169,16 +168,9 @@ async function stanzas_write_to_file(path, trapath)
                 await fhan.write(('--'.repeat(36)) + '-\n');
         }
         if (obj.output) {
-            if (obj.output.windows) {
-                windowdic.clear();
-                for (var win of obj.output.windows) {
-                    windowdic.set(win.id, win);
-                }
-            }
             if (obj.output.content) {
                 for (var dat of obj.output.content) {
-                    var win = windowdic.get(dat.id);
-                    if (win && win.type == 'buffer') {
+                    if (dat.text) {
                         if (dat.clear) {
                             await fhan.write('\n' + ('- '.repeat(36)) + '-\n');
                         }
