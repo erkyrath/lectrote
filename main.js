@@ -13,7 +13,7 @@ var main_extension = {}; /* extra code for bound games */
 var isbound = false; /* true if we're a single-game app */
 var bound_game_path = null;
 var gamewins = {}; /* maps window ID to a game structure */
-var trawins = {}; /* maps transcript filenames to a trashow structure */
+var trawins = {}; /* maps window ID to a trashow structure */
 var aboutwin = null; /* the splash/about window, if active */
 var cardwin = null; /* the postcard window, if active */
 var prefswin = null; /* the preferences window, if active */
@@ -28,6 +28,8 @@ var prefs = {
     gamewin_font: 'lora',
     gamewin_customfont: null,
     gamewin_zoomlevel: 0,
+    trashowwin_width: 600,
+    trashowwin_height: 530,
     glulx_terp: 'quixe'   // engine.id from formats.js
     // could also have zcode_terp, hugo_terp, ink-json_terp here. (I know, ink-json_terp is ugly, I should rename that.)
 };
@@ -76,14 +78,35 @@ function game_for_webcontents(webcontents)
     return undefined;
 }
 
+/* Return the trashow object for a given window. */
+function trashowwin_for_window(win)
+{
+    if (!win)
+        return undefined;
+    return trawins[win.id];
+}
+
 /* Return the trashow object for a given webcontents. */
 function trashowwin_for_webcontents(webcontents)
 {
     if (!webcontents)
         return undefined;
-    for (var filename in trawins) {
-        var tra = trawins[filename];
+    for (var id in trawins) {
+        var tra = trawins[id];
         if (tra.win && tra.win.webContents === webcontents)
+            return tra;
+    }    
+    return undefined;
+}
+
+/* Return the trashow object for a given transcript filename. */
+function trashowwin_for_filename(filename)
+{
+    if (!filename)
+        return undefined;
+    for (var id in trawins) {
+        var tra = trawins[id];
+        if (tra.filename == filename)
             return tra;
     }    
     return undefined;
@@ -164,6 +187,7 @@ function add_recent_game(path)
    should not be offset. Sorry, it's messy to describe and messy to
    implement.
    The effect is to pick the lowest offset value not used by any window.
+   The map argument should be a window collection (gamewins or trawins).
 */
 function pick_window_offset(map)
 {
@@ -762,38 +786,55 @@ function open_transcript_display_window_next(dat)
             enableRemoteModule: false,
             zoomFactor: zoom_factor_for_level(prefs.gamewin_zoomlevel)
         },
+        width: prefs.trashowwin_width, height: prefs.trashowwin_height,
         minWidth: 400, minHeight: 400,
         backgroundColor: (electron.nativeTheme.shouldUseDarkColors ? '#000' : '#FFF'),
     };
     if (window_icon)
         winopts.icon = window_icon;
 
-    window_position_prefs(winopts, 'trashow'); //### offsetting?
-    window_size_prefs(winopts, 'trashow', 600, 530);
+    var offset = pick_window_offset(trawins);
+    if (prefs.trashowwin_x !== undefined)
+        winopts.x = prefs.trashowwin_x + 20 * offset;
+    if (prefs.trashowwin_y !== undefined)
+        winopts.y = prefs.trashowwin_y + 20 * offset;
     
     win = new electron.BrowserWindow(winopts);
     if (!win)
         return;
 
     tra.win = win;
-    trawins[filename] = tra;
+    tra.id = win.id;
+    tra.offset = offset;
+    trawins[tra.id] = tra;
 
     if (process.platform != 'darwin') {
-        var template = construct_menu_template('trashow');
+        var template = construct_menu_template('trashowwin');
         var menu = electron.Menu.buildFromTemplate(template);
         win.setMenu(menu);
     }
     
     win.on('closed', function() {
-        delete trawins[tra.filename];
+        delete trawins[tra.id];
         tra = null;
         win = null;
     });
     win.on('focus', function() {
         window_focus_update(win, null);
     });
-    win.on('resize', window_size_prefs_handler('trashow', win));
-    win.on('move', window_position_prefs_handler('trashow', win)); //### offset?
+    win.on('resize', window_size_prefs_handler('trashowwin', win));
+    win.on('move', function() {
+        prefs.trashowwin_x = win.getPosition()[0];
+        prefs.trashowwin_y = win.getPosition()[1];
+        note_prefs_dirty();
+
+        /* We're starting with a new position, so erase the history of
+           what windows go here. */
+        clear_window_offsets(trawins);
+        var tra = trashowwin_for_window(win);
+        if (tra)
+            tra.offset = 0;
+    });
 
     win.webContents.on('dom-ready', function() {
         if (!win) {
@@ -1016,8 +1057,8 @@ function try_save_transcript_text(filename, onshowwin)
             };
 
             var showwin = null;
-            if (onshowwin && trawins[filename])
-                showwin = trawins[filename].win;
+            if (onshowwin)
+                showwin = trashowwin_for_filename(filename);
             if (!showwin)
                 showwin = transcriptwin;
             
@@ -1052,15 +1093,15 @@ function try_delete_transcript(filename, onshowwin)
                 winopts.icon = window_icon;
 
             var showwin = null;
-            if (onshowwin && trawins[filename])
-                showwin = trawins[filename].win;
+            if (onshowwin)
+                showwin = trashowwin_for_filename(filename);
             if (!showwin)
                 showwin = transcriptwin;
             
             var res = electron.dialog.showMessageBoxSync(showwin, winopts);
             if (res == 0) {
                 try {
-                    var trawin = trawins[filename];
+                    var trawin = trashowwin_for_filename(filename);
                     if (trawin && trawin.win) {
                         // Close the associated transcript window
                         setTimeout( function() { trawin.win.close(); }, 50);
@@ -1723,7 +1764,7 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
 });
 
 electron.ipcMain.on('open_transcript', function(ev, arg) {
-    var tra = trawins[arg];
+    var tra = trashowwin_for_filename(arg);
     if (tra)
         tra.win.show();
     else
