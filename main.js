@@ -165,12 +165,12 @@ function add_recent_game(path)
    implement.
    The effect is to pick the lowest offset value not used by any window.
 */
-function pick_window_offset()
+function pick_window_offset(map)
 {
     /* Create a list of all offsets currently in use. */
     var offsets = [];
-    for (var id in gamewins) {
-        var offset = gamewins[id].offset;
+    for (var id in map) {
+        var offset = map[id].offset;
         if (offset !== undefined)
             offsets[offset] = true;
     }
@@ -184,10 +184,10 @@ function pick_window_offset()
 /* If a game window is moved, we no longer care about offsets, because we're
    now offsetting from a new position. Clear our existing offset info.
 */
-function clear_window_offsets()
+function clear_window_offsets(map)
 {
-    for (var id in gamewins) {
-        delete gamewins[id].offset;
+    for (var id in map) {
+        delete map[id].offset;
     }
 }
 
@@ -584,7 +584,7 @@ function launch_game(path)
 
     /* BUG: The offsetting only applies if you have a window location
        preference. For a brand-new user this will not be true. */
-    var offset = pick_window_offset();
+    var offset = pick_window_offset(gamewins);
     if (prefs.gamewin_x !== undefined)
         winopts.x = prefs.gamewin_x + 20 * offset;
     if (prefs.gamewin_y !== undefined)
@@ -687,7 +687,7 @@ function launch_game(path)
 
         /* We're starting with a new position, so erase the history of
            what windows go here. */
-        clear_window_offsets();
+        clear_window_offsets(gamewins);
         var game = game_for_window(win);
         if (game)
             game.offset = 0;
