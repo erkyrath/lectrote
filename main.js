@@ -579,6 +579,7 @@ function launch_game(path)
 
     var win = null;
     var game = {
+        type: 'game',
         path: path,
         basehtml: engine.html,
         engineid: engine.id,
@@ -786,6 +787,7 @@ function open_transcript_display_window_next(dat)
     
     var win = null;
     var tra = {
+        type: 'trashow',
         filename: filename,
         path: path,
         title: dat.title,
@@ -1162,10 +1164,10 @@ function window_focus_update(win, game)
     
     /* Determine whether the "Display Cover Art" option should be
        enabled or not. */
-    var showoption = false;
+    var view_cover_art = false;
     if (win && game) {
         if (game.coverimageres !== undefined || main_extension.cover_image_info) {
-            showoption = true;
+            view_cover_art = true;
         }
     }
 
@@ -1173,7 +1175,7 @@ function window_focus_update(win, game)
     if (menu) {
         var item = menu.getMenuItemById('view_cover_art');
         if (item)
-            item.enabled = showoption;
+            item.enabled = view_cover_art;
 
         var item = menu.getMenuItemById('reset_game');
         if (item)
