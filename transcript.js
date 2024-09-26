@@ -12,6 +12,9 @@ var transcriptdir = null;
 var tralist = []; // filenames, ordered by modtime
 var tramap = new Map(); // maps filenames to data
 
+var dirmodtime = null; // last time we checked the dir timestamp
+var reading_dir = false; // in the middle of get_transcript_info()
+
 var curselected = null;
 
 function set_dir_path(dir)
@@ -27,9 +30,16 @@ function reload_transcripts()
     if (!transcriptdir) {
         return;
     }
+
+    if (reading_dir) {
+        // async op in progress; let that finish.
+        return;
+    }
     
     get_transcript_info()
         .then((ls) => {
+            if (ls === null)
+                return;
             tramap.clear();
             tralist.length = 0;
             for (var obj of ls) {
@@ -46,8 +56,6 @@ function reload_transcripts()
 
 async function get_transcript_info()
 {
-    var ls = await fsp.readdir(transcriptdir);
-
     async function readone(filename) {
         var path = path_mod.join(transcriptdir, filename);
         var stat = await fsp.stat(path);
@@ -77,22 +85,43 @@ async function get_transcript_info()
         return res;
     }
 
-    var reqs = []; // array of Promises
-    for (var filename of ls) {
-        if (filename.endsWith('.glktra')) {
-            reqs.push(readone(filename));
-        }
+    if (reading_dir) {
+        return null;
     }
-    
-    var settled = await Promise.allSettled(reqs);
-    var results = [];
-    for (var obj of settled) {
-        if (obj.status == 'fulfilled') {
-            results.push(obj.value);
-        }
-    }
+    reading_dir = true;
 
-    return results;
+    try {
+        try {
+            var stat = await fsp.stat(transcriptdir);
+            dirmodtime = stat.mtime;
+        }
+        catch (ex) {
+            // It's not an error for the transcript dir to not exist yet.
+            return null;
+        }
+        
+        var ls = await fsp.readdir(transcriptdir);
+        
+        var reqs = []; // array of Promises
+        for (var filename of ls) {
+            if (filename.endsWith('.glktra')) {
+                reqs.push(readone(filename));
+            }
+        }
+        
+        var settled = await Promise.allSettled(reqs);
+        var results = [];
+        for (var obj of settled) {
+            if (obj.status == 'fulfilled') {
+                results.push(obj.value);
+            }
+        }
+        
+        return results;
+    }
+    finally {
+        reading_dir = false;
+    }
 }
 
 function format_timestamp(val)
@@ -165,28 +194,20 @@ function rebuild_list()
     }
 }
 
-var dirmodtime = null;
-
 function timer_watchdirtime()
 {
     if (!transcriptdir)
         return;
 
+    var stat = null;
     try {
-        var stat = fs.statSync(transcriptdir);
+        stat = fs.statSync(transcriptdir);
     }
     catch (ex) {
         return;
     }
 
-    if (dirmodtime === null) {
-        // First call, just store the timestamp.
-        dirmodtime = stat.mtime;
-        return;
-    }
-
-    if (dirmodtime < stat.mtime) {
-        dirmodtime = stat.mtime;
+    if (dirmodtime === null || dirmodtime < stat.mtime) {
         reload_transcripts();
     }
 }
