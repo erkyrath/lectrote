@@ -1292,9 +1292,11 @@ function index_in_template(template, key)
     return -1;
 };
 
-function construct_menu_template(special)
+function construct_menu_template(wintype)
 {
     var name = require('electron').app.getName();
+
+    var isgame = (wintype == 'game');
 
     var template = [
     {
@@ -1320,7 +1322,7 @@ function construct_menu_template(special)
             label: 'Reset Game...',
             id: 'reset_game',
             accelerator: 'CmdOrCtrl+R',
-            enabled: (!special),
+            enabled: isgame,
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
@@ -1362,7 +1364,7 @@ function construct_menu_template(special)
         {
             label: 'Cut',
             accelerator: 'CmdOrCtrl+X',
-            enabled: (!special),
+            enabled: isgame,
             role: 'cut'
         },
         {
@@ -1373,7 +1375,7 @@ function construct_menu_template(special)
         {
             label: 'Paste',
             accelerator: 'CmdOrCtrl+V',
-            enabled: (!special),
+            enabled: isgame,
             role: 'paste'
         },
         {
@@ -1386,7 +1388,7 @@ function construct_menu_template(special)
             label: 'Find...',
             id: 'find',
             accelerator: 'CmdOrCtrl+F',
-            enabled: !special,
+            enabled: isgame,
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
@@ -1398,7 +1400,7 @@ function construct_menu_template(special)
             label: 'Find Next',
             id: 'find_next',
             accelerator: 'CmdOrCtrl+G',
-            enabled: !special,
+            enabled: isgame,
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
@@ -1410,7 +1412,7 @@ function construct_menu_template(special)
             label: 'Find Previous',
             id: 'find_prev',
             accelerator: 'CmdOrCtrl+Shift+G',
-            enabled: !special,
+            enabled: isgame,
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
@@ -1423,7 +1425,7 @@ function construct_menu_template(special)
             label: 'Preferences',
             id: 'preferences',
             accelerator: 'CmdOrCtrl+,',
-            enabled: (special != 'prefs'),
+            enabled: (wintype != 'prefs'),
             click: function() {
                 if (!prefswin)
                     open_prefs_window();
@@ -1533,7 +1535,7 @@ function construct_menu_template(special)
         {
             label: 'IF Reference Card',
             id: 'if_ref_card',
-            enabled: (special != 'card'),
+            enabled: (wintype != 'card'),
             click: function(item, win) {
                 if (!cardwin)
                     open_card_window();
@@ -1574,7 +1576,7 @@ function construct_menu_template(special)
             {
                 label: 'About ' + name,
                 id: 'about_app',
-                enabled: (special != 'about'),
+                enabled: (wintype != 'about'),
                 click: function() {
                     if (!aboutwin)
                         open_about_window();
@@ -1621,7 +1623,7 @@ function construct_menu_template(special)
             stanza.submenu.push({
                 label: 'About ' + name,
                 id: 'about_app',
-                enabled: (special != 'about'),
+                enabled: (wintype != 'about'),
                 click: function(item, win) {
                     if (!aboutwin)
                         open_about_window();
@@ -1632,8 +1634,8 @@ function construct_menu_template(special)
             });
         }
 
-        if (special) {
-            /* Drop the View menu for special windows. */
+        if (!isgame) {
+            /* Drop the View menu for nongame windows. */
             var pos = index_in_template(template, 'menu_view');
             if (pos >= 0) {
                 template.splice(pos, 1);
@@ -1642,7 +1644,7 @@ function construct_menu_template(special)
     }
 
     if (main_extension.construct_menu_template)
-        template = main_extension.construct_menu_template(template, special);
+        template = main_extension.construct_menu_template(template, wintype);
     
     return template;
 }
@@ -1940,7 +1942,7 @@ app.on('ready', function() {
         tray_icon.setContextMenu(traymenu)
     }
     
-    var template = construct_menu_template();
+    var template = construct_menu_template('game');
     var menu = electron.Menu.buildFromTemplate(template);
     electron.Menu.setApplicationMenu(menu);
 
