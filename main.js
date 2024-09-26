@@ -112,6 +112,22 @@ function trashowwin_for_filename(filename)
     return undefined;
 }
 
+function get_all_game_trashow_windows()
+{
+    var res = [];
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        if (game.win)
+            res.push(game.win);
+    }
+    for (var id in trawins) {
+        var tra = trawins[id];
+        if (tra.win)
+            res.push(tra.win);
+    }
+    return res;
+}
+
 function construct_recent_game_menu()
 {
     var res = [];
@@ -262,13 +278,8 @@ function zoom_factor_for_level(val)
 */
 function set_zoom_factor_all(val)
 {
-    for (var id in gamewins) {
-        var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_zoom_factor', val);
-    }
-    for (var id in trawins) {
-        var tra = trawins[id];
-        invoke_app_hook(tra.win, 'set_zoom_factor', val);
+    for (var win of get_all_game_trashow_windows()) {
+        invoke_app_hook(win, 'set_zoom_factor', val);
     }
     if (main_extension.set_zoom_factor)
         main_extension.set_zoom_factor(val);
@@ -633,6 +644,7 @@ function launch_game(path)
 
     win.on('closed', function() {
         delete gamewins[game.id];
+        game.win = null;
         game = null;
         win = null;
         /* In the bound version, closing the game window means closing
@@ -816,6 +828,7 @@ function open_transcript_display_window_next(dat)
     
     win.on('closed', function() {
         delete trawins[tra.id];
+        tra.win = null;
         tra = null;
         win = null;
     });
@@ -1695,13 +1708,8 @@ app.on('will-quit', function() {
 });
 
 electron.nativeTheme.on('updated', function() {
-    for (var id in gamewins) {
-        var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
-    }
-    for (var id in trawins) {
-        var tra = trawins[id];
-        invoke_app_hook(tra.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
+    for (var win of get_all_game_trashow_windows()) {
+        invoke_app_hook(win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
     }
     if (prefswin)
         prefswin.webContents.send('set-darklight-mode', electron.nativeTheme.shouldUseDarkColors);
@@ -1789,39 +1797,24 @@ electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {
     prefs.gamewin_font = fontkey;
     prefs.gamewin_customfont = customfont;
     note_prefs_dirty();
-    for (var id in gamewins) {
-        var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
-    }
-    for (var id in trawins) {
-        var tra = trawins[id];
-        invoke_app_hook(tra.win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
+    for (var win of get_all_game_trashow_windows()) {
+        invoke_app_hook(win, 'set_font', { font:prefs.gamewin_font, customfont:prefs.gamewin_customfont });
     }
 });
 
 electron.ipcMain.on('pref_color_theme', function(ev, arg) {
     prefs.gamewin_colortheme = arg;
     note_prefs_dirty();
-    for (var id in gamewins) {
-        var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
-    }
-    for (var id in trawins) {
-        var tra = trawins[id];
-        invoke_app_hook(tra.win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
+    for (var win of get_all_game_trashow_windows()) {
+        invoke_app_hook(win, 'set_color_theme', { theme:prefs.gamewin_colortheme, darklight:electron.nativeTheme.shouldUseDarkColors });
     }
 });
 
 electron.ipcMain.on('pref_margin_level', function(ev, arg) {
     prefs.gamewin_marginlevel = arg;
     note_prefs_dirty();
-    for (var id in gamewins) {
-        var game = gamewins[id];
-        invoke_app_hook(game.win, 'set_margin_level', prefs.gamewin_marginlevel);
-    }
-    for (var id in trawins) {
-        var tra = trawins[id];
-        invoke_app_hook(tra.win, 'set_margin_level', prefs.gamewin_marginlevel);
+    for (var win of get_all_game_trashow_windows()) {
+        invoke_app_hook(win, 'set_margin_level', prefs.gamewin_marginlevel);
     }
 });
 
