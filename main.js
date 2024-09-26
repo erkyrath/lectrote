@@ -1057,8 +1057,11 @@ function try_save_transcript_text(filename, onshowwin)
             };
 
             var showwin = null;
-            if (onshowwin)
-                showwin = trashowwin_for_filename(filename);
+            if (onshowwin) {
+                var tra = trashowwin_for_filename(filename);
+                if (tra && tra.win)
+                    showwin = tra.win;
+            }
             if (!showwin)
                 showwin = transcriptwin;
             
@@ -1093,18 +1096,21 @@ function try_delete_transcript(filename, onshowwin)
                 winopts.icon = window_icon;
 
             var showwin = null;
-            if (onshowwin)
-                showwin = trashowwin_for_filename(filename);
+            if (onshowwin) {
+                var tra = trashowwin_for_filename(filename);
+                if (tra && tra.win)
+                    showwin = tra.win;
+            }
             if (!showwin)
                 showwin = transcriptwin;
             
             var res = electron.dialog.showMessageBoxSync(showwin, winopts);
             if (res == 0) {
                 try {
-                    var trawin = trashowwin_for_filename(filename);
-                    if (trawin && trawin.win) {
+                    var tra = trashowwin_for_filename(filename);
+                    if (tra && tra.win) {
                         // Close the associated transcript window
-                        setTimeout( function() { trawin.win.close(); }, 50);
+                        setTimeout( function() { tra.win.close(); }, 50);
                     }
 
                     fs.unlinkSync(dat.path);
