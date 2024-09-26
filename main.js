@@ -1162,8 +1162,8 @@ function window_focus_update(win, arg)
 {
     /* The arg will be a game object, a trashow object, or null for a singleton window. */
     
-    var isgame = (arg && arg.type == 'game');
-    var istrashow = (arg && arg.type == 'trashow');
+    var isgame = ((arg && arg.type == 'game') == true);
+    var istrashow = ((arg && arg.type == 'trashow') == true);
     
     /* Determine whether the "Display Cover Art" option should be
        enabled or not. */
@@ -1183,6 +1183,18 @@ function window_focus_update(win, arg)
         var item = menu.getMenuItemById('reset_game');
         if (item)
             item.enabled = isgame;
+        
+        var item = menu.getMenuItemById('open_transcript_display');
+        if (item)
+            item.enabled = (win == transcriptwin); //### && selected
+        
+        var item = menu.getMenuItemById('save_transcript_text');
+        if (item)
+            item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+        
+        var item = menu.getMenuItemById('delete_transcript');
+        if (item)
+            item.enabled = (istrashow || (win == transcriptwin)); //### && selected
     }
 }
 
@@ -1497,6 +1509,36 @@ function construct_menu_template(wintype)
         ]
     },
     {
+        label: 'Transcript',
+        id: 'menu_transcript',
+        submenu: [
+        {
+            label: 'Open Transcript',
+            id: 'open_transcript_display',
+            enabled: false,
+            click: function(item, win) {
+                console.log('### open_transcript_display');
+            }
+        },
+        {
+            label: 'Save as Text',
+            id: 'save_transcript_text',
+            enabled: false,
+            click: function(item, win) {
+                console.log('### save_transcript_text');
+            }
+        },
+        {
+            label: 'Delete Transcript',
+            id: 'delete_transcript',
+            enabled: false,
+            click: function(item, win) {
+                console.log('### delete_transcript_text');
+            }
+        }
+        ]
+    },
+    {
         label: 'Window',
         id: 'menu_window',
         role: 'window',
@@ -1616,7 +1658,8 @@ function construct_menu_template(wintype)
         });
     }
     else {
-        /* Windows and Linux... */
+        /* Windows and Linux case: we construct a separate menu for every
+           window. This lets us drop some menus entirely. */
 
         var stanza = find_in_template(template, 'menu_help');
         if (stanza) {
@@ -1637,6 +1680,14 @@ function construct_menu_template(wintype)
         if (!isgame) {
             /* Drop the View menu for nongame windows. */
             var pos = index_in_template(template, 'menu_view');
+            if (pos >= 0) {
+                template.splice(pos, 1);
+            }
+        }
+
+        if (!(wintype == 'trashowwin' || wintype == 'transcript')) {
+            /* Drop the Transcript menu for non-transcripty windows. */
+            var pos = index_in_template(template, 'menu_transcript');
             if (pos >= 0) {
                 template.splice(pos, 1);
             }
