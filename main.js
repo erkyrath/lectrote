@@ -1129,7 +1129,9 @@ function try_delete_transcript(filename, onshowwin)
                     }
 
                     fs.unlinkSync(dat.path);
-                    //### signal rebuild?
+                    
+                    if (transcriptwin)
+                        transcriptwin.send('reload_transcripts');
                 }
                 catch (ex) { 
                     electron.dialog.showErrorBox('Unable to delete.', ''+ex);

@@ -282,6 +282,9 @@ function apply_darklight(val)
 electron.ipcRenderer.on('set-dir-path', function(ev, arg) {
     set_dir_path(arg);
 });
+electron.ipcRenderer.on('reload_transcripts', function(ev, arg) {
+    reload_transcripts();
+});
 electron.ipcRenderer.on('set-darklight-mode', function(ev, arg) {
     apply_darklight(arg);
 });
