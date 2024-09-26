@@ -835,7 +835,7 @@ function open_transcript_display_window_next(dat)
         win = null;
     });
     win.on('focus', function() {
-        window_focus_update(win, null);
+        window_focus_update(win, tra);
     });
     win.on('resize', window_size_prefs_handler('trashowwin', win));
     win.on('move', function() {
@@ -1158,15 +1158,18 @@ function check_transcript_andthen(filename, onthen, oncatch)
         .catch(oncatch);
 }
 
-function window_focus_update(win, game)
+function window_focus_update(win, arg)
 {
-    /* Game will only be set if this is a game window. */
+    /* The arg will be a game object, a trashow object, or null for a singleton window. */
+    
+    var isgame = (arg && arg.type == 'game');
+    var istrashow = (arg && arg.type == 'trashow');
     
     /* Determine whether the "Display Cover Art" option should be
        enabled or not. */
     var view_cover_art = false;
-    if (win && game) {
-        if (game.coverimageres !== undefined || main_extension.cover_image_info) {
+    if (win && isgame) {
+        if (arg.coverimageres !== undefined || main_extension.cover_image_info) {
             view_cover_art = true;
         }
     }
@@ -1179,7 +1182,7 @@ function window_focus_update(win, game)
 
         var item = menu.getMenuItemById('reset_game');
         if (item)
-            item.enabled = (game != null);
+            item.enabled = isgame;
     }
 }
 
