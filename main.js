@@ -1210,7 +1210,9 @@ function window_focus_update(win, arg)
         if (item) {
             item.visible = istrashow;
             item.enabled = istrashow;
-            item.checked = (arg && arg.type == 'trashow' && arg.timestamps);
+            if (istrashow) {
+                item.checked = (arg && arg.type == 'trashow' && arg.timestamps);
+            }
         }
     }
 }
@@ -1540,16 +1542,11 @@ function construct_menu_template(wintype)
         {
             label: 'Show Transcript Timestamps',
             id: 'show_transcript_timestamps',
+            type: 'checkbox',
             click: function(item, win) {
                 var tra = trashow_for_window(win);
                 if (tra) {
-                    tra.timestamps = !tra.timestamps;
-                    var menu = electron.Menu.getApplicationMenu();
-                    if (menu) {
-                        var item = menu.getMenuItemById('show_transcript_timestamps');
-                        if (item)
-                            item.checked = tra.timestamps;
-                    }
+                    tra.timestamps = item.checked;
                     win.webContents.send('set_show_timestamps', tra.timestamps);
                 }
             }
