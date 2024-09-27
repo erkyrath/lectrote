@@ -39,7 +39,9 @@ function load_transcript(arg)
 }
 
 /* Add a stanza to the output "buffer window". This is almost exactly
-   what glkote.js does when an update message arrives.
+   what glkote.js does when an update message arrives. It is also
+   almost the same code as stanzas_write_to_file(), just creating DOM
+   elements rather than writing text.
 
    Differences:
    - We only pay attention to buffer windows. The status line (assuming

@@ -141,6 +141,19 @@ async function* stanza_reader(path)
     }
 }
 
+/* Parse a transcript file and write a plain-text equivalent to a new file.
+
+   See add_stanza() etc in trashow.js for a similar implementation. Yes,
+   there's a refactor opportunity here.
+
+   Differences:
+   - We only pay attention to buffer windows. The status line (assuming
+     that's a grid) is lost.
+   - If there's more than one buffer window, the output is interleaved
+     in a single display stream.
+   - Window-clear events are shown as horizontal rules.
+   - Graphics are currently not supported. (Not even the alt text.)
+ */
 async function stanzas_write_to_file(path, trapath)
 {
     var fhan = null;
