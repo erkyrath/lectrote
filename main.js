@@ -80,7 +80,7 @@ function game_for_webcontents(webcontents)
 }
 
 /* Return the trashow object for a given window. */
-function trashowwin_for_window(win)
+function trashow_for_window(win)
 {
     if (!win)
         return undefined;
@@ -95,7 +95,7 @@ function get_active_transcript(win)
     if (win == transcriptwin)
         return selected_transcript;
     
-    var tra = trashowwin_for_window(win);
+    var tra = trashow_for_window(win);
     if (tra)
         return tra.filename;
 
@@ -103,7 +103,7 @@ function get_active_transcript(win)
 }
 
 /* Return the trashow object for a given webcontents. */
-function trashowwin_for_webcontents(webcontents)
+function trashow_for_webcontents(webcontents)
 {
     if (!webcontents)
         return undefined;
@@ -116,7 +116,7 @@ function trashowwin_for_webcontents(webcontents)
 }
 
 /* Return the trashow object for a given transcript filename. */
-function trashowwin_for_filename(filename)
+function trashow_for_filename(filename)
 {
     if (!filename)
         return undefined;
@@ -863,7 +863,7 @@ function open_transcript_display_window_next(dat)
         /* We're starting with a new position, so erase the history of
            what windows go here. */
         clear_window_offsets(trawins);
-        var tra = trashowwin_for_window(win);
+        var tra = trashow_for_window(win);
         if (tra)
             tra.offset = 0;
     });
@@ -872,7 +872,7 @@ function open_transcript_display_window_next(dat)
         if (!win) {
             return;
         }
-        var tra = trashowwin_for_webcontents(win.webContents);
+        var tra = trashow_for_webcontents(win.webContents);
         if (!tra) {
             return;
         }
@@ -1124,7 +1124,7 @@ function try_delete_transcript(filename, fromwin)
             var res = electron.dialog.showMessageBoxSync(fromwin, winopts);
             if (res == 0) {
                 try {
-                    var tra = trashowwin_for_filename(filename);
+                    var tra = trashow_for_filename(filename);
                     if (tra && tra.win) {
                         // Close the associated transcript window
                         setTimeout( function() { tra.win.close(); }, 50);
@@ -1541,7 +1541,7 @@ function construct_menu_template(wintype)
             label: 'Show Transcript Timestamps',
             id: 'show_transcript_timestamps',
             click: function(item, win) {
-                var tra = trashowwin_for_window(win);
+                var tra = trashow_for_window(win);
                 if (tra) {
                     tra.timestamps = !tra.timestamps;
                     var menu = electron.Menu.getApplicationMenu();
@@ -1861,7 +1861,7 @@ electron.ipcMain.on('game_metadata', function(ev, arg) {
 });
 
 electron.ipcMain.on('open_transcript', function(ev, arg) {
-    var tra = trashowwin_for_filename(arg);
+    var tra = trashow_for_filename(arg);
     if (tra)
         tra.win.show();
     else
