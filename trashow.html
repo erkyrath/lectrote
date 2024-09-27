@@ -11,30 +11,9 @@
 
 #trashow #content {
   position: absolute;
-  top: 42px;
+  top: 0px;
   bottom: 0px;
   height: unset;
-}
-
-#toolbar {
-  position: absolute;
-  width: 100%;
-  top: 0px;
-  height: 42px;
-  background: #CCC;
-}
-
-#toolbar .Tool {
-  margin-left: 20px;
-  margin-top: 10px;
-  font-size: 0.9em;
-}
-
-#toolbar .ToolRight {
-  float: right;
-  margin-right: 20px;
-  margin-top: 10px;
-  font-size: 0.9em;
 }
 
 #windowport {
@@ -139,16 +118,6 @@ require('./trashow.js');
 </head>
 <body id="trashow">
 
-<div id="toolbar">
-  <div class="ToolRight">
-    <button id="savetextbutton">Save as Text</button>
-    <button id="deletebutton">Delete</button>
-  </div>
-  <div class="Tool">
-    <input id="showtime" name="showtime" type="checkbox">
-    <label for="showtime">Show timestamps</label>
-  </div>
-</div>
 <div id="content">
 <div id="gameport">
 <div id="windowport">
