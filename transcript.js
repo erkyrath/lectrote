@@ -127,6 +127,8 @@ async function get_transcript_info()
     }
 }
 
+/* Format a Unix timestamp (in milliseconds) as "12:30 Oct 31 2024".
+*/
 function format_timestamp(val)
 {
     var date = new Date(val);
@@ -136,6 +138,13 @@ function format_timestamp(val)
 
 var idmap = new Map();
 
+/* Very simple mechanism to make sure every filename is associated with
+   a DOM id. (We don't want to use the filename directory, because who
+   knows what funny characters it might contain.)
+
+   We make no effort to clean up old entries. The idmap will grow until
+   the transcript window is closed. Big deal.
+*/
 function id_for_filename(filename)
 {
     var id = idmap.get(filename);
