@@ -17,22 +17,6 @@ body.DarkMode {
   color: white;
 }
 
-#header {
-  position: absolute;
-  width: 100%;
-  top: 0px;
-  height: 40px;
-  background: #CCC;
-}
-.DarkMode #header {
-  background: #555;
-}
-
-#buttonrow {
-  padding: 8px 16px;
-  text-align: right;
-}
-
 button {
   font-size: 1.0em;
   border: 1px solid #888;
@@ -60,7 +44,7 @@ button:active {
 #list {
   position: absolute;
   width: 100%;
-  top: 40px;
+  top: 0px;
   bottom: 0px;
   overflow-y: scroll;
   padding-top: 4px;
@@ -126,13 +110,6 @@ require('./transcript.js');
 </head>
 
 <body>
-<div id="header">
-  <div id="buttonrow">
-    <button id="openbutton" disabled>Open</button>
-    <button id="savetextbutton" disabled>Save as Text</button>
-    <button id="deletebutton" disabled>Delete</button>
-  </div>
-</div>
 <div id="list">
 </div>
 
