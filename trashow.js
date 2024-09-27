@@ -56,12 +56,7 @@ function add_stanza(obj)
 {
     if (obj.metadata) {
         var bioel = null;
-        // See keylist in apphooks.js.
-        const keylist = [
-            'title', 'author', 'headline', 'firstpublished',
-            'ifid', 'format', 'tuid'
-        ];
-        for (var key of keylist) {
+        for (var key of traread.metadata_keylist) {
             if (obj.metadata[key]) {
                 if (!bioel) {
                     bioel = $('<div>', { 'class':'MetadataBox' });

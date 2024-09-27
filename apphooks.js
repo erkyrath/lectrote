@@ -8,6 +8,7 @@ const fs = require('fs');
 
 const fonts = require('./fonts.js');
 const formats = require('./formats.js');
+const traread = require('./traread.js');
 const transcript = require('./tragen.js');
 
 function load_named_game(arg)
@@ -45,11 +46,7 @@ function load_named_game(arg)
     };
 
     if (Blorb && Blorb.get_metadata) {
-        const keylist = [
-            'title', 'author', 'headline', 'firstpublished',
-            'ifid', 'format', 'tuid'
-        ];
-        for (var key of keylist) {
+        for (var key of traread.metadata_keylist) {
             var val = Blorb.get_metadata(key);
             if (val)
                 obj[key] = val;

@@ -141,6 +141,13 @@ async function* stanza_reader(path)
     }
 }
 
+/* Metadata keys that we are interested in, in the order we are interested
+   in them. */
+const metadata_keylist = [
+    'title', 'author', 'headline', 'firstpublished',
+    'ifid', 'format', 'tuid'
+];
+
 /* Parse a transcript file and write a plain-text equivalent to a new file.
 
    See add_stanza() etc in trashow.js for a similar implementation. Yes,
@@ -162,12 +169,7 @@ async function stanzas_write_to_file(path, trapath)
     {
         if (obj.metadata) {
             var anylines = false;
-            // See keylist in apphooks.js.
-            const keylist = [
-                'title', 'author', 'headline', 'firstpublished',
-                'ifid', 'format', 'tuid'
-            ];
-            for (var key of keylist) {
+            for (var key of metadata_keylist) {
                 if (obj.metadata[key]) {
                     if (!anylines) {
                         anylines = true;
@@ -257,3 +259,4 @@ async function stanzas_write_to_file(path, trapath)
 
 exports.stanza_reader = stanza_reader;
 exports.stanzas_write_to_file = stanzas_write_to_file;
+exports.metadata_keylist = metadata_keylist;
