@@ -180,6 +180,10 @@ function rebuild_list()
         }
         el.append(subel);
 
+        var butel = $('<button>');
+        butel.text('Open');
+        el.append(butel);
+        
         el.on('click', { filename:filename }, evhan_set_selection);
 
         parel.append(el);
