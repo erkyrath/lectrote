@@ -28,6 +28,14 @@ function set_metadata(obj)
     metadata = Object.assign({}, obj); // copy
 }
 
+/* This is called by the GlkOte recording handler for every game turn.
+   The obj argument contains the player's input and the game's output,
+   in GlkOte JSON form. We write this to the transcript file, being
+   careful to follow it with a newline.
+
+   If this is the first turn, we first write out the metadata stanza (if
+   we have one).
+*/
 function record_update(obj)
 {
     if (path === null) {
