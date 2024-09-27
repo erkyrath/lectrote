@@ -26,7 +26,6 @@ function set_transcriptdir(path)
 function set_metadata(obj)
 {
     metadata = Object.assign({}, obj); // copy
-    console.log('### metadata', metadata); //###
 }
 
 function record_update(obj)
