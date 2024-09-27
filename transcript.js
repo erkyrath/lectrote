@@ -182,6 +182,7 @@ function rebuild_list()
 
         var butel = $('<button>');
         butel.text('Open');
+        butel.on('click', { filename:filename }, evhan_open_transcript);
         el.append(butel);
         
         el.on('click', { filename:filename }, evhan_set_selection);
@@ -192,7 +193,6 @@ function rebuild_list()
 
     if (!foundselected) {
         curselected = null;
-        $('#openbutton').prop('disabled', true); //###
     }
 }
 
@@ -214,12 +214,9 @@ function timer_watchdirtime()
     }
 }
 
-function evhan_open_transcript()
+function evhan_open_transcript(ev)
 {
-    if (!curselected)
-        return;
-
-    electron.ipcRenderer.send('open_transcript', curselected);
+    electron.ipcRenderer.send('open_transcript', ev.data.filename);
 }
 
 function evhan_set_selection(ev)
@@ -246,8 +243,6 @@ function evhan_set_selection(ev)
     }
 
     electron.ipcRenderer.send('set_selected_transcript', curselected);
-
-    $('#openbutton').prop('disabled', (curselected == null)); //###
 }
 
 function apply_darklight(val)
@@ -286,7 +281,6 @@ electron.ipcRenderer.on('on-focus', function(ev, arg) {
 
 $(document).on('ready', function() {
     $('#list').on('click', { filename:null }, evhan_set_selection);
-    $('#openbutton').on('click', evhan_open_transcript); //###
 
     setInterval(timer_watchdirtime, 1000); // every second
 });
