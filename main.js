@@ -1208,25 +1208,25 @@ function window_focus_update(win, arg)
         var item = menu.getMenuItemById('open_transcript_display');
         if (item) {
             item.visible = (istrashow || (win == transcriptwin));
-            item.enabled = (win == transcriptwin); //### && selected
+            item.enabled = (win == transcriptwin && selected_transcript);
         }
         
         var item = menu.getMenuItemById('save_transcript_text');
         if (item) {
             item.visible = (istrashow || (win == transcriptwin));
-            item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+            item.enabled = (istrashow || (win == transcriptwin && selected_transcript));
         }
         
         var item = menu.getMenuItemById('delete_transcript');
         if (item) {
             item.visible = (istrashow || (win == transcriptwin));
-            item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+            item.enabled = (istrashow || (win == transcriptwin && selected_transcript));
         }
         
         var item = menu.getMenuItemById('show_transcript_timestamps');
         if (item) {
             item.visible = istrashow;
-            item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+            item.enabled = istrashow;
         }
     }
 }
