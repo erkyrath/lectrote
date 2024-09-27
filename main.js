@@ -1078,7 +1078,7 @@ function open_transcript_window()
     transcriptwin.loadURL('file://' + __dirname + '/transcript.html');
 }
 
-function try_save_transcript_text(filename, onshowwin)
+function try_save_transcript_text(filename, fromwin)
 {
     check_transcript_andthen(
         filename,
@@ -1090,16 +1090,7 @@ function try_save_transcript_text(filename, onshowwin)
                 properties: ['dontAddToRecent'],
             };
 
-            var showwin = null;
-            if (onshowwin) {
-                var tra = trashowwin_for_filename(filename);
-                if (tra && tra.win)
-                    showwin = tra.win;
-            }
-            if (!showwin)
-                showwin = transcriptwin;
-            
-            electron.dialog.showSaveDialog(showwin, opts).then(function(res) {
+            electron.dialog.showSaveDialog(fromwin, opts).then(function(res) {
                 if (!res || res.canceled)
                     return;
                 traread.stanzas_write_to_file(res.filePath, dat.path)
@@ -1114,7 +1105,7 @@ function try_save_transcript_text(filename, onshowwin)
         });
 }
 
-function try_delete_transcript(filename, onshowwin)
+function try_delete_transcript(filename, fromwin)
 {
     check_transcript_andthen(
         filename,
@@ -1128,17 +1119,8 @@ function try_delete_transcript(filename, onshowwin)
             };
             if (window_icon)
                 winopts.icon = window_icon;
-
-            var showwin = null;
-            if (onshowwin) {
-                var tra = trashowwin_for_filename(filename);
-                if (tra && tra.win)
-                    showwin = tra.win;
-            }
-            if (!showwin)
-                showwin = transcriptwin;
             
-            var res = electron.dialog.showMessageBoxSync(showwin, winopts);
+            var res = electron.dialog.showMessageBoxSync(fromwin, winopts);
             if (res == 0) {
                 try {
                     var tra = trashowwin_for_filename(filename);
@@ -1378,7 +1360,8 @@ function construct_menu_template(wintype)
             enabled: false,
             click: function(item, win) {
                 var filename = get_active_transcript(win);
-                console.log('### save_transcript_text', filename);
+                if (filename)
+                    try_save_transcript_text(filename, win);
             }
         },
         {
@@ -1387,7 +1370,8 @@ function construct_menu_template(wintype)
             enabled: false,
             click: function(item, win) {
                 var filename = get_active_transcript(win);
-                console.log('### delete_transcript_text', filename);
+                if (filename)
+                    try_delete_transcript(filename, win);
             }
         },
         {
@@ -1870,14 +1854,6 @@ electron.ipcMain.on('open_transcript', function(ev, arg) {
         tra.win.show();
     else
         open_transcript_display_window(arg);
-});
-
-electron.ipcMain.on('save_transcript_text', function(ev, arg, onshowwin) {
-    try_save_transcript_text(arg, onshowwin);
-});
-
-electron.ipcMain.on('delete_transcript', function(ev, arg, onshowwin) {
-    try_delete_transcript(arg, onshowwin);
 });
 
 electron.ipcMain.on('set_selected_transcript', function(ev, arg) {

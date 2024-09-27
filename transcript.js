@@ -188,9 +188,7 @@ function rebuild_list()
 
     if (!foundselected) {
         curselected = null;
-        $('#openbutton').prop('disabled', true);
-        $('#savetextbutton').prop('disabled', true);
-        $('#deletebutton').prop('disabled', true);
+        $('#openbutton').prop('disabled', true); //###
     }
 }
 
@@ -220,22 +218,6 @@ function evhan_open_transcript()
     electron.ipcRenderer.send('open_transcript', curselected);
 }
 
-function evhan_save_transcript_text()
-{
-    if (!curselected)
-        return;
-
-    electron.ipcRenderer.send('save_transcript_text', curselected);
-}
-
-function evhan_delete_transcript()
-{
-    if (!curselected)
-        return;
-
-    electron.ipcRenderer.send('delete_transcript', curselected);
-}
-
 function evhan_set_selection(ev)
 {
     ev.stopPropagation();
@@ -261,9 +243,7 @@ function evhan_set_selection(ev)
 
     electron.ipcRenderer.send('set_selected_transcript', curselected);
 
-    $('#openbutton').prop('disabled', (curselected == null));
-    $('#savetextbutton').prop('disabled', (curselected == null));
-    $('#deletebutton').prop('disabled', (curselected == null));
+    $('#openbutton').prop('disabled', (curselected == null)); //###
 }
 
 function apply_darklight(val)
@@ -302,9 +282,7 @@ electron.ipcRenderer.on('on-focus', function(ev, arg) {
 
 $(document).on('ready', function() {
     $('#list').on('click', { filename:null }, evhan_set_selection);
-    $('#openbutton').on('click', evhan_open_transcript);
-    $('#savetextbutton').on('click', evhan_save_transcript_text);
-    $('#deletebutton').on('click', evhan_delete_transcript);
+    $('#openbutton').on('click', evhan_open_transcript); //###
 
     setInterval(timer_watchdirtime, 1000); // every second
 });
