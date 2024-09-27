@@ -13,7 +13,7 @@ var tralist = []; // filenames, ordered by modtime
 var tramap = new Map(); // maps filenames to data
 
 var dirmodtime = null; // last time we checked the dir timestamp
-var reading_dir = false; // in the middle of get_transcript_info()
+var reading_dir = false; // set while in the middle of get_transcript_info()
 
 var curselected = null;
 
@@ -23,6 +23,9 @@ function set_dir_path(dir)
     reload_transcripts();
 }
 
+/* Read the list of transcript files, grabbing the metadata for each
+   (if possible).
+*/
 function reload_transcripts()
 {
     //### should only call rebuild_list() if the list has materially changed (order, size, any modtimes)
@@ -143,6 +146,8 @@ function id_for_filename(filename)
     return id;
 }
 
+/* Recreate the displayed list of transcript entries.
+*/
 function rebuild_list()
 {
     var listel = $('#list');
@@ -196,6 +201,12 @@ function rebuild_list()
     }
 }
 
+/* Check to see if the transcript directory has changed. This will notice
+   if a file is added or deleted. (But not if an existing transcript file
+   has been extended.)
+
+   Called once per second.
+*/
 function timer_watchdirtime()
 {
     if (!transcriptdir)
