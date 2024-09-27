@@ -1187,16 +1187,22 @@ function window_focus_update(win, arg)
             item.enabled = isgame;
         
         var item = menu.getMenuItemById('open_transcript_display');
-        if (item)
+        if (item) {
+            item.visible = (istrashow || (win == transcriptwin));
             item.enabled = (win == transcriptwin); //### && selected
+        }
         
         var item = menu.getMenuItemById('save_transcript_text');
-        if (item)
+        if (item) {
+            item.visible = (istrashow || (win == transcriptwin));
             item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+        }
         
         var item = menu.getMenuItemById('delete_transcript');
-        if (item)
+        if (item) {
+            item.visible = (istrashow || (win == transcriptwin));
             item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+        }
         
         var item = menu.getMenuItemById('show_transcript_timestamps');
         if (item) {
@@ -1347,7 +1353,7 @@ function construct_menu_template(wintype)
             }
         },
         {
-            label: 'Save as Text',
+            label: 'Save as Text...',
             id: 'save_transcript_text',
             enabled: false,
             click: function(item, win) {
