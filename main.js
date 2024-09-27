@@ -41,6 +41,7 @@ var app_ready = false; /* true once the ready event occurs */
 var app_quitting = false; /* true once the will-quit event occurs */
 var launch_paths = []; /* game files passed in before app_ready */
 var aboutwin_initial = false; /* true if the aboutwin was auto-opened */
+var selected_transcript = null; /* in the transcript window */
 var window_icon = null; /* icon to apply to all windows (only used on Linux) */
 var tray_icon = null; /* icon to use for system tray (only on Windows) */
 
@@ -84,6 +85,21 @@ function trashowwin_for_window(win)
     if (!win)
         return undefined;
     return trawins[win.id];
+}
+
+/* Get the transcript selected in the given window. This may be a
+   trashow window, or the highlighted entry in the transcript browser
+   window. */
+function get_active_transcript(win)
+{
+    if (win == transcriptwin)
+        return selected_transcript;
+    
+    var tra = trashowwin_for_window(win);
+    if (tra)
+        return tra.filename;
+
+    return null;
 }
 
 /* Return the trashow object for a given webcontents. */
@@ -1030,6 +1046,8 @@ function open_transcript_window()
     if (window_icon)
         winopts.icon = window_icon;
 
+    selected_transcript = null;
+    
     transcriptwin = new electron.BrowserWindow(winopts);
 
     if (process.platform != 'darwin') {
@@ -1039,7 +1057,8 @@ function open_transcript_window()
     }
     
     transcriptwin.on('closed', function() {
-            transcriptwin = null;
+        transcriptwin = null;
+        selected_transcript = null;
         });
     transcriptwin.on('focus', function() {
         window_focus_update(transcriptwin, null);
@@ -1349,7 +1368,8 @@ function construct_menu_template(wintype)
             id: 'open_transcript_display',
             enabled: false,
             click: function(item, win) {
-                console.log('### open_transcript_display');
+                var filename = get_active_transcript(win);
+                console.log('### open_transcript_display', filename);
             }
         },
         {
@@ -1357,7 +1377,8 @@ function construct_menu_template(wintype)
             id: 'save_transcript_text',
             enabled: false,
             click: function(item, win) {
-                console.log('### save_transcript_text');
+                var filename = get_active_transcript(win);
+                console.log('### save_transcript_text', filename);
             }
         },
         {
@@ -1365,7 +1386,8 @@ function construct_menu_template(wintype)
             id: 'delete_transcript',
             enabled: false,
             click: function(item, win) {
-                console.log('### delete_transcript_text');
+                var filename = get_active_transcript(win);
+                console.log('### delete_transcript_text', filename);
             }
         },
         {
@@ -1856,6 +1878,15 @@ electron.ipcMain.on('save_transcript_text', function(ev, arg, onshowwin) {
 
 electron.ipcMain.on('delete_transcript', function(ev, arg, onshowwin) {
     try_delete_transcript(arg, onshowwin);
+});
+
+electron.ipcMain.on('set_selected_transcript', function(ev, arg) {
+    if (selected_transcript != arg) {
+        selected_transcript = arg;
+        
+        // Bang the focus event to update the transcript menu items.
+        window_focus_update(transcriptwin, null);
+    }
 });
 
 electron.ipcMain.on('pref_font', function(ev, fontkey, customfont) {

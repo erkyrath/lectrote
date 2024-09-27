@@ -259,6 +259,8 @@ function evhan_set_selection(ev)
             curselected = null;
     }
 
+    electron.ipcRenderer.send('set_selected_transcript', curselected);
+
     $('#openbutton').prop('disabled', (curselected == null));
     $('#savetextbutton').prop('disabled', (curselected == null));
     $('#deletebutton').prop('disabled', (curselected == null));
