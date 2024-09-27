@@ -240,10 +240,8 @@ function last_child_of(obj) {
     return ls.get(ls.length-1);
 }
 
-function evhan_showtime()
+function set_show_timestamps(flag)
 {
-    var flag = $('#showtime').prop('checked');
-
     var bodyel = $('body');
     if (flag) {
         bodyel.addClass('DisplayAnchors');
@@ -366,6 +364,7 @@ function sequence(argls)
     
 const namespace = {
     load_transcript : load_transcript,
+    set_show_timestamps : set_show_timestamps,
     set_zoom_factor : set_zoom_factor,
     set_margin_level : set_margin_level,
     set_color_theme : set_color_theme,
@@ -387,8 +386,3 @@ for (var name in namespace) {
     attach(name, namespace[name]);
 }
 
-$(document).on('ready', function() {
-    $('#showtime').on('change', evhan_showtime);
-    $('#savetextbutton').on('click', evhan_save_transcript_text);
-    $('#deletebutton').on('click', evhan_delete_transcript);
-});

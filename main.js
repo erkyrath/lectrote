@@ -807,6 +807,7 @@ function open_transcript_display_window_next(dat)
         filename: filename,
         path: path,
         title: dat.title,
+        timestamps: false,
     }
     
     var winopts = { 
@@ -1209,6 +1210,7 @@ function window_focus_update(win, arg)
         if (item) {
             item.visible = istrashow;
             item.enabled = istrashow;
+            item.checked = (arg && arg.type == 'trashow' && arg.timestamps);
         }
     }
 }
@@ -1539,7 +1541,17 @@ function construct_menu_template(wintype)
             label: 'Show Transcript Timestamps',
             id: 'show_transcript_timestamps',
             click: function(item, win) {
-                console.log('### show_transcript_timestamps');
+                var tra = trashowwin_for_window(win);
+                if (tra) {
+                    tra.timestamps = !tra.timestamps;
+                    var menu = electron.Menu.getApplicationMenu();
+                    if (menu) {
+                        var item = menu.getMenuItemById('show_transcript_timestamps');
+                        if (item)
+                            item.checked = tra.timestamps;
+                    }
+                    win.webContents.send('set_show_timestamps', tra.timestamps);
+                }
             }
         },
         { type: 'separator' },
