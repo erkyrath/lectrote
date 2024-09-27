@@ -720,8 +720,6 @@ function launch_game(path)
             game.foundinpage = res;
         }
 
-        //console.log('### found-in-page', game.foundinpage);
-
         if (game.foundinpage.finalUpdate && game.foundinpage.activeMatchOrdinal == game.foundinpage.matches && game.foundinpage.matches > 1) {
             /* The last match, by definition, is in the one in the search
                widget. If we've landed on it, search *again* to jump around
