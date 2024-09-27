@@ -9,7 +9,7 @@ const fs = require('fs');
 const fonts = require('./fonts.js');
 const formats = require('./formats.js');
 const traread = require('./traread.js');
-const transcript = require('./tragen.js');
+const tragen = require('./tragen.js');
 
 function load_named_game(arg)
 {
@@ -26,7 +26,7 @@ function load_named_game(arg)
     game_options.default_page_title = default_name;
     game_options.game_format_name = engine.name; /* label used for loading error messages */
     game_options.engine_name = engine.name; /* label used in page title */
-    game_options.recording_handler = transcript.record_update;
+    game_options.recording_handler = tragen.record_update;
     
     var arr = null;
     if (engine.load)
@@ -40,7 +40,8 @@ function load_named_game(arg)
         console.log('Blorb is not inited after load_run()!');
     }
 
-    /* Pass some metadata back to the app */
+    /* Pass some metadata back to the app. A fallback title at the
+       very least. */
     var obj = {
         title: default_name
     };
@@ -67,8 +68,9 @@ function load_named_game(arg)
         obj.coverimageres = coverimageres;
     }
 
-    transcript.set_transcriptdir(arg.transcriptdir);
-    transcript.set_metadata(obj);
+    /* Also pass the info to the transcript module. */
+    tragen.set_transcriptdir(arg.transcriptdir);
+    tragen.set_metadata(obj);
     
     electron.ipcRenderer.send('game_metadata', obj);
 }
