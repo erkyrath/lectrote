@@ -127,7 +127,7 @@ async function get_transcript_info()
     }
 }
 
-/* Format a Unix timestamp (in milliseconds) as "12:30 Oct 31 2024".
+/* Format a Unix timestamp (in milliseconds) as "12:30, Oct 31 2024".
 */
 function format_timestamp(val)
 {
