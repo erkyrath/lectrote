@@ -1197,6 +1197,12 @@ function window_focus_update(win, arg)
         var item = menu.getMenuItemById('delete_transcript');
         if (item)
             item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+        
+        var item = menu.getMenuItemById('show_transcript_timestamps');
+        if (item) {
+            item.visible = istrashow;
+            item.enabled = (istrashow || (win == transcriptwin)); //### && selected
+        }
     }
 }
 
@@ -1332,6 +1338,30 @@ function construct_menu_template(wintype)
             submenu: construct_recent_game_menu()
         },
         { type: 'separator' },
+        {
+            label: 'Open Transcript',
+            id: 'open_transcript_display',
+            enabled: false,
+            click: function(item, win) {
+                console.log('### open_transcript_display');
+            }
+        },
+        {
+            label: 'Save as Text',
+            id: 'save_transcript_text',
+            enabled: false,
+            click: function(item, win) {
+                console.log('### save_transcript_text');
+            }
+        },
+        {
+            label: 'Delete Transcript',
+            id: 'delete_transcript',
+            enabled: false,
+            click: function(item, win) {
+                console.log('### delete_transcript_text');
+            }
+        },
         {
             label: 'Reset Game...',
             id: 'reset_game',
@@ -1493,6 +1523,13 @@ function construct_menu_template(wintype)
                     prefswin.webContents.send('set-zoom-level', prefs.gamewin_zoomlevel);
             }
         },
+        {
+            label: 'Show Transcript Timestamps',
+            id: 'show_transcript_timestamps',
+            click: function(item, win) {
+                console.log('### show_transcript_timestamps');
+            }
+        },
         { type: 'separator' },
         {
             label: 'Display Cover Art',
@@ -1506,36 +1543,6 @@ function construct_menu_template(wintype)
                 if (main_extension.cover_image_info)
                     dat = main_extension.cover_image_info;
                 invoke_app_hook(game.win, 'display_cover_art', dat);
-            }
-        }
-        ]
-    },
-    {
-        label: 'Transcript',
-        id: 'menu_transcript',
-        submenu: [
-        {
-            label: 'Open Transcript',
-            id: 'open_transcript_display',
-            enabled: false,
-            click: function(item, win) {
-                console.log('### open_transcript_display');
-            }
-        },
-        {
-            label: 'Save as Text',
-            id: 'save_transcript_text',
-            enabled: false,
-            click: function(item, win) {
-                console.log('### save_transcript_text');
-            }
-        },
-        {
-            label: 'Delete Transcript',
-            id: 'delete_transcript',
-            enabled: false,
-            click: function(item, win) {
-                console.log('### delete_transcript_text');
             }
         }
         ]
@@ -1682,14 +1689,6 @@ function construct_menu_template(wintype)
         if (!isgame) {
             /* Drop the View menu for nongame windows. */
             var pos = index_in_template(template, 'menu_view');
-            if (pos >= 0) {
-                template.splice(pos, 1);
-            }
-        }
-
-        if (!(wintype == 'trashowwin' || wintype == 'transcript')) {
-            /* Drop the Transcript menu for non-transcripty windows. */
-            var pos = index_in_template(template, 'menu_transcript');
             if (pos >= 0) {
                 template.splice(pos, 1);
             }
