@@ -1355,7 +1355,13 @@ function construct_menu_template(wintype)
             enabled: false,
             click: function(item, win) {
                 var filename = get_active_transcript(win);
-                console.log('### open_transcript_display', filename);
+                if (filename) {
+                    var tra = trashow_for_filename(filename);
+                    if (tra)
+                        tra.win.show();
+                    else
+                        open_transcript_display_window(filename);
+                }
             }
         },
         {
