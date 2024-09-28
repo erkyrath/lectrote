@@ -150,6 +150,8 @@ const metadata_keylist = [
 
 /* Parse a transcript file and write a plain-text equivalent to a new file.
 
+   This is a JS port of the read-glktra.py utility in the GlkOte repo.
+   
    See add_stanza() etc in trashow.js for a similar implementation. Yes,
    there's a refactor opportunity here.
 
