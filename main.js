@@ -838,7 +838,7 @@ function open_transcript_display_window_next(dat)
     trawins[tra.id] = tra;
 
     if (process.platform != 'darwin') {
-        var template = construct_menu_template('trashowwin');
+        var template = construct_menu_template('trashow');
         var menu = electron.Menu.buildFromTemplate(template);
         win.setMenu(menu);
     }
@@ -1326,6 +1326,13 @@ function construct_menu_template(wintype)
     var name = require('electron').app.getName();
 
     var isgame = (wintype == 'game');
+    var istrashow = (wintype == 'trashow');
+
+    /* This is called both for the Mac case (universal menu bar) and the
+       Win/Linux case (one menu bar per window). So the initial state
+       of menu items should be correct for Win/Linux. Mac will apply
+       changes in window_focus_update(). Same goes for window state
+       updates. */
 
     var template = [
     {
@@ -1711,8 +1718,8 @@ function construct_menu_template(wintype)
             });
         }
 
-        if (!isgame) {
-            /* Drop the View menu for nongame windows. */
+        if (!(isgame || istrashow)) {
+            /* Drop the View menu for non-game/trashow windows. */
             var pos = index_in_template(template, 'menu_view');
             if (pos >= 0) {
                 template.splice(pos, 1);
