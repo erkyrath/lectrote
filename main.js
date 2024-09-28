@@ -651,6 +651,12 @@ function launch_game(path)
     game.offset = offset;
     gamewins[game.id] = game;
 
+    if (process.platform != 'darwin') {
+        var template = construct_menu_template('game');
+        var menu = electron.Menu.buildFromTemplate(template);
+        win.setMenu(menu);
+    }
+    
     if (process.platform == 'darwin' && !isbound) {
         /* On Mac, set the window document link to the game file URL.
            (But not in the bound version.) */
@@ -2027,7 +2033,7 @@ app.on('ready', function() {
         tray_icon.setContextMenu(traymenu)
     }
     
-    var template = construct_menu_template('game');
+    var template = construct_menu_template();
     var menu = electron.Menu.buildFromTemplate(template);
     electron.Menu.setApplicationMenu(menu);
 
