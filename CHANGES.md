@@ -2,7 +2,7 @@
 ## 1.5.0 (###)
 
 - Universal transcript mode! A transcript is saved for every game you play. Select the "Browse Transcripts" menu option to see a list. Transcripts are displayed as rich text (the same Glk stylesheet as the original game); the "Save as Text" option allows you to save a plain text version.
-- Updated emglken to 0.6.0 (TADS save/restore bugs, monospace support, increased undo limit; consistent RNG behavior for Glulx interpreters).
+- Updated emglken to 0.6.0 (fixed TADS save/restore bugs, monospace support, increased undo limit; consistent RNG behavior for Glulx interpreters; fixed a Unicode bug).
 - Updated inkjs to 2.3.0.
 - Minor Quixe optimizations.
 
