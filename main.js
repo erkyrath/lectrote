@@ -669,6 +669,7 @@ function launch_game(path)
 
     win.on('closed', function() {
         delete gamewins[game.id];
+        delete winmenus[game.id];
         game.win = null;
         game = null;
         win = null;
@@ -854,6 +855,7 @@ function open_transcript_display_window_next(dat)
     
     win.on('closed', function() {
         delete trawins[tra.id];
+        delete winmenus[tra.id];
         tra.win = null;
         tra = null;
         win = null;
@@ -940,8 +942,9 @@ function open_about_window()
     }
     
     aboutwin.on('closed', function() {
-            aboutwin = null;
-        });
+        delete winmenus[aboutwin.id];
+        aboutwin = null;
+    });
     aboutwin.on('focus', function() {
             window_focus_update(aboutwin, null);
         });
@@ -985,8 +988,9 @@ function open_prefs_window()
     }
     
     prefswin.on('closed', function() {
-            prefswin = null;
-        });
+        delete winmenus[prefswin.id];
+        prefswin = null;
+    });
     prefswin.on('focus', function() {
             window_focus_update(prefswin, null);
         });
@@ -1024,8 +1028,9 @@ function open_card_window()
     }
     
     cardwin.on('closed', function() {
-            cardwin = null;
-        });
+        delete winmenus[cardwin.id];
+        cardwin = null;
+    });
     cardwin.on('focus', function() {
             window_focus_update(cardwin, null);
         });
@@ -1069,9 +1074,10 @@ function open_transcript_window()
     }
     
     transcriptwin.on('closed', function() {
+        delete winmenus[transcriptwin.id];
         transcriptwin = null;
         selected_transcript = null;
-        });
+    });
     transcriptwin.on('focus', function() {
         window_focus_update(transcriptwin, null);
         transcriptwin.webContents.send('on-focus', true);
