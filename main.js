@@ -12,6 +12,7 @@ var main_extension = {}; /* extra code for bound games */
 
 var isbound = false; /* true if we're a single-game app */
 var bound_game_path = null;
+var winmenus = {}; /* maps window ID to a Menu (Win/Linux only) */
 var gamewins = {}; /* maps window ID to a game structure */
 var trawins = {}; /* maps window ID to a trashow structure */
 var aboutwin = null; /* the splash/about window, if active */
@@ -655,6 +656,7 @@ function launch_game(path)
         var template = construct_menu_template('game');
         var menu = electron.Menu.buildFromTemplate(template);
         win.setMenu(menu);
+        winmenus[win.id] = menu;
     }
     
     if (process.platform == 'darwin' && !isbound) {
@@ -847,6 +849,7 @@ function open_transcript_display_window_next(dat)
         var template = construct_menu_template('trashow');
         var menu = electron.Menu.buildFromTemplate(template);
         win.setMenu(menu);
+        winmenus[win.id] = menu;
     }
     
     win.on('closed', function() {
@@ -933,6 +936,7 @@ function open_about_window()
         var template = construct_menu_template('about');
         var menu = electron.Menu.buildFromTemplate(template);
         aboutwin.setMenu(menu);
+        winmenus[aboutwin.id] = menu;
     }
     
     aboutwin.on('closed', function() {
@@ -977,6 +981,7 @@ function open_prefs_window()
         var template = construct_menu_template('prefs');
         var menu = electron.Menu.buildFromTemplate(template);
         prefswin.setMenu(menu);
+        winmenus[prefswin.id] = menu;
     }
     
     prefswin.on('closed', function() {
@@ -1015,6 +1020,7 @@ function open_card_window()
         var template = construct_menu_template('card');
         var menu = electron.Menu.buildFromTemplate(template);
         cardwin.setMenu(menu);
+        winmenus[cardwin.id] = menu;
     }
     
     cardwin.on('closed', function() {
@@ -1059,6 +1065,7 @@ function open_transcript_window()
         var template = construct_menu_template('transcript');
         var menu = electron.Menu.buildFromTemplate(template);
         transcriptwin.setMenu(menu);
+        winmenus[transcriptwin.id] = menu;
     }
     
     transcriptwin.on('closed', function() {
@@ -1182,7 +1189,14 @@ function window_focus_update(win, arg)
         }
     }
 
-    var menu = electron.Menu.getApplicationMenu();
+    var menu = null;
+    if (process.platform == 'darwin') {
+        menu = electron.Menu.getApplicationMenu();
+    }
+    else {
+        menu = winmenus[win.id];
+    }
+
     if (menu) {
         var item = menu.getMenuItemById('view_cover_art');
         if (item)
