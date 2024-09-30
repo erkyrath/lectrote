@@ -90,7 +90,7 @@ function trashow_for_window(win)
 
 /* Get the transcript selected in the given window. This may be a
    trashow window, or the highlighted entry in the transcript browser
-   window. */
+   window. Returns the transcript filename. */
 function get_active_transcript(win)
 {
     if (win == transcriptwin)
@@ -1212,6 +1212,12 @@ function window_focus_update(win, arg)
         if (item)
             item.enabled = isgame;
         
+        var item = menu.getMenuItemById('show_file_location');
+        if (item) {
+            item.visible = (isgame || istrashow || (win == transcriptwin));
+            item.enabled = (isgame || istrashow || (win == transcriptwin && selected_transcript));
+        }
+        
         var item = menu.getMenuItemById('open_transcript_display');
         if (item) {
             item.visible = (istrashow || (win == transcriptwin));
@@ -1433,6 +1439,33 @@ function construct_menu_template(wintype)
             visible: (isbound && get_export_game_path() != null),
             click: function(item, win) {
                 export_game_file(get_export_game_path());
+            }
+        },
+        {
+            label: 'Show File Location',
+            id: 'show_file_location',
+            enabled: false,
+            click: function(item, win) {
+                var path = null;
+                if (win == transcriptwin) {
+                    if (selected_transcript)
+                        path = path_mod.join(app.getPath('userData'), 'transcripts', selected_transcript);
+                }
+                else {
+                    var game = game_for_window(win);
+                    if (game) {
+                        if (game)
+                            path = game.path;
+                    }
+                    else {
+                        var tra = trashow_for_window(win);
+                        if (tra)
+                            path = tra.path;
+                    }
+                }
+                if (path) {
+                    electron.shell.showItemInFolder(path);
+                }
             }
         },
         {
