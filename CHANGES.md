@@ -1,12 +1,12 @@
 
-## 1.5.0 (###)
+## 1.5.0 (Sep 29, 2024)
 
 - Universal transcript mode! A transcript is saved for every game you play. Select the "Browse Transcripts" menu option to see a list. Transcripts are displayed as rich text (the same Glk stylesheet as the original game); the "Save as Text" option allows you to save a plain text version.
 - Updated emglken to 0.6.0 (fixed TADS save/restore bugs, monospace support, increased undo limit; consistent RNG behavior for Glulx interpreters; fixed a Unicode bug).
 - Updated inkjs to 2.3.0.
 - Minor Quixe optimizations.
 
-## 1.4.6  (June 3, 2024)
+## 1.4.6  (Jun 3, 2024)
 
 - The margin preference can now go up to 35%.
 - Updated inkjs to 2.2.4.
