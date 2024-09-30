@@ -222,7 +222,14 @@ async function stanzas_write_to_file(path, trapath)
                 let rstyle, rtext, rlink;
                 if (!(typeof rdesc === 'string' || rdesc instanceof String)) {
                     if (rdesc.special !== undefined) {
-                        // skip specials for now
+                        if (rdesc.special == 'image') {
+                            var val;
+                            if (rdesc.alttext)
+                                val = '[image: ' + rdesc.alttext + ']';
+                            else
+                                val = '[image ' + rdesc.image + ']';
+                            await fhan.write(val);
+                        }
                         continue;
                     }
                     rstyle = rdesc.style;
