@@ -1111,7 +1111,11 @@ function try_save_transcript_text(filename, fromwin)
             electron.dialog.showSaveDialog(fromwin, opts).then(function(res) {
                 if (!res || res.canceled)
                     return;
-                traread.stanzas_write_to_file(res.filePath, dat.path)
+                var writeopts = {};
+                var tra = trashow_for_filename(filename);
+                if (tra && tra.timestamps)
+                    writeopts.timestamps = true;
+                traread.stanzas_write_to_file(res.filePath, dat.path, writeopts)
                     .then(() => {})
                     .catch((ex) => {
                         electron.dialog.showErrorBox('Unable to write.', ''+ex);
