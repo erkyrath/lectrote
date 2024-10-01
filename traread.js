@@ -163,7 +163,7 @@ const metadata_keylist = [
    - Window-clear events are shown as horizontal rules.
    - Graphics are currently not supported. (Not even the alt text.)
  */
-async function stanzas_write_to_file(path, trapath)
+async function stanzas_write_to_file(path, trapath, options)
 {
     var fhan = null;
 
@@ -185,6 +185,12 @@ async function stanzas_write_to_file(path, trapath)
                 await fhan.write(('--'.repeat(36)) + '-\n');
         }
         if (obj.output) {
+            if (options && options.timestamps) {
+                var date = new Date(obj.timestamp);
+                var intimestr = date.toTimeString().slice(0, 8) + ', ' + date.toDateString().slice(4);
+                var durstr = ': ' + (obj.outtimestamp - obj.timestamp) + ' ms';
+                await fhan.write('[' + intimestr + durstr + '] ');
+            }
             if (obj.output.content) {
                 for (var dat of obj.output.content) {
                     if (dat.text) {
