@@ -1,4 +1,8 @@
 
+## 1.5.1 (Oct 12, 2024)
+
+- Bumped Electron to 31.7.0.
+
 ## 1.5.0 (Sep 29, 2024)
 
 - Universal transcript mode! A transcript is saved for every game you play. Select the "Browse Transcripts" menu option to see a list. Transcripts are displayed as rich text (the same Glk stylesheet as the original game); the "Save as Text" option allows you to save a plain text version.
