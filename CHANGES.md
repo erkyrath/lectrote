@@ -1,6 +1,9 @@
 
 ## 1.5.1 (Oct 12, 2024)
 
+- Added a "Show File Location" menu option (shows the current game file or transcript file in the OS file browser).
+- Show the text "Image N" or the provided alt text where an image was displayed in the original game. (Story windows only).
+- If the timestamp option is on for a transcript window, saving as text will include timestamps in the text file.
 - Bumped Electron to 31.7.0.
 
 ## 1.5.0 (Sep 29, 2024)
