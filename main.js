@@ -1216,6 +1216,16 @@ function window_focus_update(win, arg)
         if (item)
             item.enabled = isgame;
         
+        var item = menu.getMenuItemById('find');
+        if (item)
+            item.enabled = isgame;
+        var item = menu.getMenuItemById('find_next');
+        if (item)
+            item.enabled = isgame;
+        var item = menu.getMenuItemById('find_prev');
+        if (item)
+            item.enabled = isgame;
+        
         var item = menu.getMenuItemById('show_file_location');
         if (item) {
             item.visible = (isgame || istrashow || (win == transcriptwin));
