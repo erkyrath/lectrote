@@ -2054,17 +2054,17 @@ electron.ipcMain.on('pref_glulx_terp', function(ev, arg) {
 });
 
 electron.ipcMain.on('search_done', function(ev, arg) {
-    var game = game_for_webcontents(ev.sender);
-    if (!game)
+    var obj = game_trashow_for_webcontents(ev.sender);
+    if (!obj)
         return;
-    search_cancel(game);
+    search_cancel(obj);
 });
 
 electron.ipcMain.on('search_text', function(ev, arg) {
-    var game = game_for_webcontents(ev.sender);
-    if (!game)
+    var obj = game_trashow_for_webcontents(ev.sender);
+    if (!obj)
         return;
-    search_text(game, arg);
+    search_text(obj, arg);
 });
 
 electron.ipcMain.on('search_again', function(ev, arg) {
