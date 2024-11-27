@@ -750,7 +750,7 @@ function launch_game(path)
     });
 
     win.webContents.on('found-in-page', function(ev, res) {
-        var game = game_for_webcontents(ev.sender);
+        var game = game_for_window(win);
         if (!game)
             return;
         if (game.foundinpage && game.foundinpage.requestId == res.requestId) {
@@ -898,7 +898,7 @@ function open_transcript_display_window_next(dat)
     });
 
     win.webContents.on('found-in-page', function(ev, res) {
-        var tra = trashow_for_webcontents(ev.sender);
+        var tra = trashow_for_window(win);
         if (!tra)
             return;
         if (tra.foundinpage && tra.foundinpage.requestId == res.requestId) {
