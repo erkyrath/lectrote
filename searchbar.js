@@ -2,66 +2,6 @@
 
 const electron = require('electron');
 
-const searchbar_styles = `
-
-input {
-  width: 200px;
-  font-size: 14px;
-  height: 20px;
-  margin-left: 4px;
-  margin-right: 4px;
-  border: 1px solid #BBB;
-}
-
-#searchbar_done {
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-.SepiaTheme input {
-  background: white;
-  color: black;
-  border: 1px solid #BBB;
-}
-.SlateTheme input {
-  background: black;
-  color: white;
-  border: 1px solid #555;
-}
-.DarkTheme input {
-  background: black;
-  color: white;
-  border: 1px solid #555;
-}
-
-button {
-  -webkit-appearance: none;
-  font-size: 12px;
-  width: 22px;
-  height: 22px;
-  background: #C0C0C0;
-  border: 1px solid #AAA;
-  -webkit-border-radius: 2px;
-  padding: 0px;
-}
-
-.SepiaTheme button {
-  background: #C0C0C0;
-  border: 1px solid #AAA;
-  color: black;
-}
-.SlateTheme button {
-  background: #505050;
-  border: 1px solid #666;
-  color: white;
-}
-.DarkTheme button {
-  background: #505050;
-  border: 1px solid #666;
-  color: white;
-}
-`;
-
 var search_input_el = null;
 var search_body_el = null;
 
@@ -152,6 +92,66 @@ function get_search_body()
 {
     return search_body_el;
 }
+
+const searchbar_styles = `
+
+input {
+  width: 200px;
+  font-size: 14px;
+  height: 20px;
+  margin-left: 4px;
+  margin-right: 4px;
+  border: 1px solid #BBB;
+}
+
+#searchbar_done {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.SepiaTheme input {
+  background: white;
+  color: black;
+  border: 1px solid #BBB;
+}
+.SlateTheme input {
+  background: black;
+  color: white;
+  border: 1px solid #555;
+}
+.DarkTheme input {
+  background: black;
+  color: white;
+  border: 1px solid #555;
+}
+
+button {
+  -webkit-appearance: none;
+  font-size: 12px;
+  width: 22px;
+  height: 22px;
+  background: #C0C0C0;
+  border: 1px solid #AAA;
+  -webkit-border-radius: 2px;
+  padding: 0px;
+}
+
+.SepiaTheme button {
+  background: #C0C0C0;
+  border: 1px solid #AAA;
+  color: black;
+}
+.SlateTheme button {
+  background: #505050;
+  border: 1px solid #666;
+  color: white;
+}
+.DarkTheme button {
+  background: #505050;
+  border: 1px solid #666;
+  color: white;
+}
+`;
 
 exports.construct_searchbar = construct_searchbar;
 exports.search_request = search_request;
