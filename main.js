@@ -745,6 +745,7 @@ function launch_game(path)
         }
 
         if (game.foundinpage.finalUpdate && game.foundinpage.activeMatchOrdinal == game.foundinpage.matches && game.foundinpage.matches > 1) {
+            //###?
             /* The last match, by definition, is in the one in the search
                widget. If we've landed on it, search *again* to jump around
                to the beginning (or back, as the case may be). */
@@ -878,6 +879,30 @@ function open_transcript_display_window_next(dat)
     win.on('focus', function() {
         window_focus_update(win, tra);
     });
+
+    win.webContents.on('found-in-page', function(ev, res) {
+        var tra = trashow_for_webcontents(ev.sender);
+        if (!tra)
+            return;
+        if (tra.foundinpage && tra.foundinpage.requestId == res.requestId) {
+            /* merge fields into tra.foundinpage */
+            Object.assign(tra.foundinpage, res);
+        }
+        else {
+            tra.foundinpage = res;
+        }
+
+        if (tra.foundinpage.finalUpdate && tra.foundinpage.activeMatchOrdinal == tra.foundinpage.matches && tra.foundinpage.matches > 1) {
+            //###?
+            /* The last match, by definition, is in the one in the search
+               widget. If we've landed on it, search *again* to jump around
+               to the beginning (or back, as the case may be). */
+            var webcontents = tra.win.webContents;
+            var forward = tra.searchforward;
+            webcontents.findInPage(tra.last_search, { findNext:true, forward:forward });
+        }
+    });
+
     win.on('resize', window_size_prefs_handler('trashowwin', win));
     win.on('move', function() {
         prefs.trashowwin_x = win.getPosition()[0];
@@ -1342,6 +1367,7 @@ function get_export_game_path()
 
 function search_text(game, text)
 {
+    //### obj
     if (!text)
         return;
 
@@ -1354,6 +1380,7 @@ function search_text(game, text)
 
 function search_again(game, forward)
 {
+    //### obj
     var text = game.last_search;
     if (!text)
         return;
@@ -1368,6 +1395,7 @@ function search_again(game, forward)
 
 function search_cancel(game)
 {
+    //### obj
     var webcontents = game.win.webContents;
     webcontents.stopFindInPage('keepSelection');
 }
@@ -1549,8 +1577,8 @@ function construct_menu_template(wintype)
             accelerator: 'CmdOrCtrl+F',
             enabled: (isgame || istrashow),
             click: function(item, win) {
-                var game = game_for_window(win);
-                if (!game)
+                var obj = game_trashow_for_window(win);
+                if (!obj)
                     return;
                 invoke_app_hook(win, 'search_request', { inittext:search_string, focus:true });
             }
@@ -1561,10 +1589,10 @@ function construct_menu_template(wintype)
             accelerator: 'CmdOrCtrl+G',
             enabled: (isgame || istrashow),
             click: function(item, win) {
-                var game = game_for_window(win);
-                if (!game)
+                var obj = game_trashow_for_window(win);
+                if (!obj)
                     return;
-                search_again(game, true);
+                search_again(obj, true);
             }
         },
         {
@@ -1573,10 +1601,10 @@ function construct_menu_template(wintype)
             accelerator: 'CmdOrCtrl+Shift+G',
             enabled: (isgame || istrashow),
             click: function(item, win) {
-                var game = game_for_window(win);
-                if (!game)
+                var obj = game_trashow_for_window(win);
+                if (!obj)
                     return;
-                search_again(game, false);
+                search_again(obj, false);
             }
         },
         { type: 'separator' },
@@ -2025,10 +2053,10 @@ electron.ipcMain.on('search_text', function(ev, arg) {
 });
 
 electron.ipcMain.on('search_again', function(ev, arg) {
-    var game = game_for_webcontents(ev.sender);
-    if (!game)
+    var obj = game_trashow_for_webcontents(ev.sender);
+    if (!obj)
         return;
-    search_again(game, arg);
+    search_again(obj, arg);
 });
 
 /* Called at applicationWillFinishLaunching time (or before ready).
