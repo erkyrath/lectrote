@@ -11,10 +11,6 @@ var tra_path = null;
 
 var loading_visible = null;
 
-/* Not yet implemented. */
-var search_input_el = null;
-var search_body_el = null;
-
 function load_transcript(arg)
 {
     tra_filename = arg.filename;
@@ -354,6 +350,9 @@ function set_font(obj)
         el.text(text);
     }
 }
+
+var search_input_el = null;
+var search_body_el = null;
 
 function sequence(argls)
 {
