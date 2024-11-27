@@ -762,7 +762,6 @@ function launch_game(path)
         }
 
         if (game.foundinpage.finalUpdate && game.foundinpage.activeMatchOrdinal == game.foundinpage.matches && game.foundinpage.matches > 1) {
-            //###?
             /* The last match, by definition, is in the one in the search
                widget. If we've landed on it, search *again* to jump around
                to the beginning (or back, as the case may be). */
@@ -910,7 +909,6 @@ function open_transcript_display_window_next(dat)
         }
 
         if (tra.foundinpage.finalUpdate && tra.foundinpage.activeMatchOrdinal == tra.foundinpage.matches && tra.foundinpage.matches > 1) {
-            //###?
             /* The last match, by definition, is in the one in the search
                widget. If we've landed on it, search *again* to jump around
                to the beginning (or back, as the case may be). */
