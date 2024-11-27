@@ -4,6 +4,7 @@ const fs = require('fs');
 const path_mod = require('path');
 
 const fonts = require('./fonts.js');
+const searchbar = require('./searchbar.js');
 const traread = require('./traread.js');
 
 var tra_filename = null;
@@ -297,6 +298,8 @@ function set_color_theme(obj)
     bodyel.removeClass('SlateTheme');
     bodyel.removeClass('DarkTheme');
 
+    var search_body_el = searchbar.get_search_body();
+    
     if (search_body_el) {
         search_body_el.removeClass('SepiaTheme');
         search_body_el.removeClass('SlateTheme');
@@ -351,9 +354,6 @@ function set_font(obj)
     }
 }
 
-var search_input_el = null;
-var search_body_el = null;
-
 function sequence(argls)
 {
     /* The argument is a list of { key, arg } pairs. */
@@ -374,6 +374,7 @@ const namespace = {
     set_margin_level : set_margin_level,
     set_color_theme : set_color_theme,
     set_font : set_font,
+    search_request : searchbar.search_request,
     sequence : sequence
 };
 
@@ -390,4 +391,8 @@ function attach(name, func)
 for (var name in namespace) {
     attach(name, namespace[name]);
 }
+
+$(document).ready(function() {
+    searchbar.construct_searchbar();
+});
 
