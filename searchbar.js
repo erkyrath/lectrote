@@ -2,9 +2,22 @@
 
 const electron = require('electron');
 
+/* Manage the search UI for both game and trashow windows.
+   
+   This assumes that the document has a #searchbar div.
+   (For various reasons, this div must have the .CanHaveInputFocus
+   class.)
+
+   The search process is a rather confusing back-and-forth between this
+   code (in the game window) and main.js. Note that main.js has a bunch
+   of handlers defined for both game and trashow objects, and those
+   objects share the search-related properties.
+*/
+
 var search_input_el = null;
 var search_body_el = null;
 
+/* Construct the search UI in the shadow DOM. */
 function construct_searchbar()
 {
     var barel = $('#searchbar');
@@ -64,6 +77,9 @@ function construct_searchbar()
     });
 }
 
+/* Handle the Find (Find Next, etc) menu command. Display the UI and
+   set its contents if needed.
+*/
 function search_request(arg)
 {
     if ($('#searchbar').css('display') == 'block') {
@@ -88,6 +104,8 @@ function search_request(arg)
     }
 }
 
+/* Pull out the search body element. (Needed for font/theme adjustment.)
+*/
 function get_search_body()
 {
     return search_body_el;
