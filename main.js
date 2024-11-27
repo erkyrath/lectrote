@@ -1218,13 +1218,13 @@ function window_focus_update(win, arg)
         
         var item = menu.getMenuItemById('find');
         if (item)
-            item.enabled = isgame;
+            item.enabled = (isgame || istrashow);
         var item = menu.getMenuItemById('find_next');
         if (item)
-            item.enabled = isgame;
+            item.enabled = (isgame || istrashow);
         var item = menu.getMenuItemById('find_prev');
         if (item)
-            item.enabled = isgame;
+            item.enabled = (isgame || istrashow);
         
         var item = menu.getMenuItemById('show_file_location');
         if (item) {
@@ -1532,7 +1532,7 @@ function construct_menu_template(wintype)
             label: 'Find...',
             id: 'find',
             accelerator: 'CmdOrCtrl+F',
-            enabled: isgame,
+            enabled: (isgame || istrashow),
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
@@ -1544,7 +1544,7 @@ function construct_menu_template(wintype)
             label: 'Find Next',
             id: 'find_next',
             accelerator: 'CmdOrCtrl+G',
-            enabled: isgame,
+            enabled: (isgame || istrashow),
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
@@ -1556,7 +1556,7 @@ function construct_menu_template(wintype)
             label: 'Find Previous',
             id: 'find_prev',
             accelerator: 'CmdOrCtrl+Shift+G',
-            enabled: isgame,
+            enabled: (isgame || istrashow),
             click: function(item, win) {
                 var game = game_for_window(win);
                 if (!game)
