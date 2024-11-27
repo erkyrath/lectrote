@@ -61,6 +61,7 @@ appfiles = [
     './prefs.html',
     './prefs.js',
     './fonts.js',
+    './searchbar.js',
     './about.html',
     './transcript.html',
     './transcript.js',
