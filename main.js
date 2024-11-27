@@ -129,6 +129,21 @@ function trashow_for_filename(filename)
     return undefined;
 }
 
+/* A game *or* trashow object. */
+function game_trashow_for_window(win)
+{
+    if (!win)
+        return undefined;
+    var game = gamewins[win.id];
+    if (game)
+        return game;
+    var tra = trawins[win.id];
+    if (tra)
+        return tra;
+    return undefined;
+}
+
+/* Windows for all games and trashow objects. */
 function get_all_game_trashow_windows()
 {
     var res = [];
