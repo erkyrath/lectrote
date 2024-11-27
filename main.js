@@ -143,6 +143,23 @@ function game_trashow_for_window(win)
     return undefined;
 }
 
+function game_trashow_for_webcontents(webcontents)
+{
+    if (!webcontents)
+        return undefined;
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        if (game.win && game.win.webContents === webcontents)
+            return game;
+    }    
+    for (var id in trawins) {
+        var tra = trawins[id];
+        if (tra.win && tra.win.webContents === webcontents)
+            return tra;
+    }    
+    return undefined;
+}
+
 /* Windows for all games and trashow objects. */
 function get_all_game_trashow_windows()
 {
