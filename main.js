@@ -1382,38 +1382,36 @@ function get_export_game_path()
     return path;
 }
 
-function search_text(game, text)
+/* The obj could be a game or trashow object; they search the same. */
+function search_text(obj, text)
 {
-    //### obj
     if (!text)
         return;
 
     search_string = text;
-    game.last_search = text;
+    obj.last_search = text;
 
-    var webcontents = game.win.webContents;
+    var webcontents = obj.win.webContents;
     webcontents.findInPage(text, {});
 }
 
-function search_again(game, forward)
+function search_again(obj, forward)
 {
-    //### obj
-    var text = game.last_search;
+    var text = obj.last_search;
     if (!text)
         return;
 
     /* If the search widget isn't open, open it. */
-    invoke_app_hook(game.win, 'search_request', { inittext:text });
+    invoke_app_hook(obj.win, 'search_request', { inittext:text });
 
-    var webcontents = game.win.webContents;
-    game.searchforward = forward;
+    var webcontents = obj.win.webContents;
+    obj.searchforward = forward;
     webcontents.findInPage(text, { findNext:true, forward:forward });
 }
 
-function search_cancel(game)
+function search_cancel(obj)
 {
-    //### obj
-    var webcontents = game.win.webContents;
+    var webcontents = obj.win.webContents;
     webcontents.stopFindInPage('keepSelection');
 }
 
