@@ -1,4 +1,8 @@
 
+## 1.5.2 (Dec ###, 2024)
+
+- Fixed the Find menu options in game windows. They now also work in transcript windows.
+
 ## 1.5.1 (Oct 12, 2024)
 
 - Added a "Show File Location" menu option (shows the current game file or transcript file in the OS file browser).
