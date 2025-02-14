@@ -281,8 +281,6 @@ def builddir(dir, pack, pkg):
     if os.path.exists(val):
         os.unlink(val)
 
-# rm dist/whatever/Lectrote.zip and dist/whatever.dmg
-# create-dmg --volicon resources/appicon-dmg.icns --window-size 640 508 --icon-size 80 --text-size 12 --background resources/pack-dmg-background.png --volname 'Install Lectrote' --app-drop-link 448 200 --icon Lectrote.app 192 200 --icon LICENSE 160 360 --icon LICENSES-FONTS.txt 320 360 --icon LICENSES.chromium.html 480 360 dist/Lectrote-1.5.2-macos-universal.dmg dist/Lectrote-darwin-universal
         
 def makezip(dir, unwrapped=False):
     prefix = product_name + '-'
@@ -295,14 +293,11 @@ def makezip(dir, unwrapped=False):
     if 'darwin' in zipfile:
         zipfile = zipfile.replace('darwin', 'macos')
         print('AppDMGing up: %s to %s' % (dir, zipfile))
-        specfile = 'resources/pack-dmg-spec.json'
+        specfile = 'resources/create-dmg-args.txt'
         if opts.gamedir and os.path.exists(os.path.join(opts.gamedir, specfile)):
             specfile = os.path.join(opts.gamedir, specfile)
-        tmpspecfile = specfile.replace('/pack-dmg-spec.json', '/pack-dmg-spec-tmp.json')
-        dat = open(specfile).read()
-        dat = dat.replace('$PLATFORM$', platform)
-        open(tmpspecfile, 'w').write(dat)
-        subprocess.call('rm -f "dist/%s.dmg"; node_modules/.bin/appdmg "%s" "dist/%s.dmg"' % (zipfile, tmpspecfile, zipfile),
+        quotargs = open(specfile).read().strip()
+        subprocess.call('rm -f "dist/%s.dmg"; create-dmg %s "dist/%s.dmg" "%s"' % (zipfile, quotargs, zipfile, dir),
                         shell=True)
         return
     print('Zipping up: %s to %s (%s)' % (dir, zipfile, ('unwrapped' if unwrapped else 'wrapped')))
