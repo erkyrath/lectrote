@@ -281,6 +281,7 @@ def builddir(dir, pack, pkg):
     if os.path.exists(val):
         os.unlink(val)
 
+# rm dist/whatever/Lectrote.zip and dist/whatever.dmg
 # create-dmg --volicon resources/appicon-dmg.icns --window-size 640 508 --icon-size 80 --text-size 12 --background resources/pack-dmg-background.png --volname 'Install Lectrote' --app-drop-link 448 200 --icon Lectrote.app 192 200 --icon LICENSE 160 360 --icon LICENSES-FONTS.txt 320 360 --icon LICENSES.chromium.html 480 360 dist/Lectrote-1.5.2-macos-universal.dmg dist/Lectrote-darwin-universal
         
 def makezip(dir, unwrapped=False):
