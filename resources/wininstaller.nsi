@@ -55,12 +55,12 @@
 
   !insertmacro MUI_PAGE_INSTFILES
 
-!define MUI_FINISHPAGE_TITLE "Installation complete"
-!define MUI_FINISHPAGE_TEXT_LARGE
-!define MUI_FINISHPAGE_TEXT "Lectrote ${VERSION} is installed."
-!define MUI_FINISHPAGE_RUN "$INSTDIR\Lectrote.exe"
+  !define MUI_FINISHPAGE_TITLE "Installation complete"
+  !define MUI_FINISHPAGE_TEXT_LARGE
+  !define MUI_FINISHPAGE_TEXT "Lectrote ${VERSION} is installed."
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\Lectrote.exe"
 
-!insertmacro MUI_PAGE_FINISH
+  !insertmacro MUI_PAGE_FINISH
 
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
