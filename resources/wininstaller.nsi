@@ -16,7 +16,7 @@
 ;General
 
   ;Name and file
-  Name "Lectrote for Windows"
+  Name "Lectrote"
   OutFile "..\dist\Lectrote-${VERSION}-WinInstall.exe"
   Unicode True
 
@@ -46,7 +46,7 @@
   
   !insertmacro MUI_PAGE_DIRECTORY
 
-  !define MUI_STARTMENUPAGE_DEFAULTFOLDER "Lectrote"
+  !define MUI_STARTMENUPAGE_TEXT_CHECKBOX "Do not create Start Menu items"
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
   !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Lectrote" 
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
