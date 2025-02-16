@@ -37,7 +37,7 @@
 ;--------------------------------
 ;Pages
 
-  !insertmacro MUI_PAGE_LICENSE "${NSISDIR}\Docs\Modern UI\License.txt"
+  ; !insertmacro MUI_PAGE_LICENSE "..."
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -55,6 +55,7 @@
 
 Section "Lectrote" SecMain
 
+  SectionIn RO
   SetOutPath "$INSTDIR"
   
   File /r "wininstall-link\*.*"
@@ -83,8 +84,21 @@ SectionEnd
 
 Section "Uninstall"
 
+  ; Note that we install "*.*", but delete files/dirs explicitly. This
+  ; is because I'm nervous about wildcard deletion. If Electron changes
+  ; its install setup, we might need to update this list.
+  
   Delete "$INSTDIR\Lectrote.exe"
-  ;ADD YOUR OWN FILES HERE...
+  Delete "$INSTDIR\LICENSE"
+  Delete "$INSTDIR\*.dll"
+  Delete "$INSTDIR\*.bin"
+  Delete "$INSTDIR\*.dat"
+  Delete "$INSTDIR\*.txt"
+  Delete "$INSTDIR\*.html"
+  Delete "$INSTDIR\*.json"
+  Delete "$INSTDIR\*.pak"
+  RMDir /r "$INSTDIR\locales"
+  RMDir /r "$INSTDIR\resources"
 
   Delete "$INSTDIR\Uninstall Lectrote.exe"
 
