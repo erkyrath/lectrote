@@ -1,6 +1,6 @@
 ; NSIS installer-creator for Lectrote
 ; To use:
-;   makensis resources/wininstaller.nsi
+;   makensis -dVERSION=1.X.Y resources/wininstaller.nsi
 
 ; based on the example at:
 ;   https://nsis.sourceforge.io/Examples/Modern%20UI/Basic.nsi
@@ -17,7 +17,7 @@
 
   ;Name and file
   Name "Lectrote for Windows"
-  OutFile "..\dist\Install Lectrote.exe"
+  OutFile "..\dist\Lectrote-${VERSION}-WinInstall.exe"
   Unicode True
 
   ;Default installation folder
@@ -38,7 +38,9 @@
 ;Pages
 
   ; !insertmacro MUI_PAGE_LICENSE "..."
-  !insertmacro MUI_PAGE_COMPONENTS
+  ; !insertmacro MUI_PAGE_COMPONENTS
+  ; commenting out COMPONENTS gives warnings; ignore them.
+  
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
   
