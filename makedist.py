@@ -310,6 +310,10 @@ def makezip(dir, unwrapped=False):
         topdir = os.path.join(*os.path.split(dir)[0:-1])
         subprocess.call('cd "%s"; rm -f "%s.zip"; zip "%s" -r "%s.zip" "%s"' % (topdir, zipfile, zipargs, zipfile, subdir),
                         shell=True)
+    if 'win32-x64' in zipfile:
+        print('Also creating nsis installer')
+        args = [ 'makensis', '-dVERSION='+product_version, 'resources/wininstaller.nsi' ]
+        subprocess.call(args)
 
 # Start work! First, read the version string out of package.json.
 
