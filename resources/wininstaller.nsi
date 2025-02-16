@@ -29,6 +29,9 @@
   ;Request application privileges for Windows Vista
   RequestExecutionLevel user
 
+  ;Used by STARTMENU
+  Var StartMenuFolder
+
 ;--------------------------------
 ;Interface Settings
 
@@ -42,6 +45,14 @@
   ; commenting out COMPONENTS gives warnings; ignore them.
   
   !insertmacro MUI_PAGE_DIRECTORY
+
+  !define MUI_STARTMENUPAGE_DEFAULTFOLDER "Lectrote"
+  !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
+  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Lectrote" 
+  !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
+  
+  !insertmacro MUI_PAGE_STARTMENU Application $StartMenuFolder
+
   !insertmacro MUI_PAGE_INSTFILES
 
 !define MUI_FINISHPAGE_TITLE "Installation complete"
@@ -74,6 +85,15 @@ Section "Lectrote" SecMain
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall Lectrote.exe"
+
+  !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+    
+    ;Create shortcuts
+    CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
+    CreateShortcut "$SMPROGRAMS\$StartMenuFolder\Lectrote.lnk" "$INSTDIR\Lectrote.exe"
+    CreateShortcut "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk" "$INSTDIR\Uninstall Lectrote.exe"
+  
+  !insertmacro MUI_STARTMENU_WRITE_END
 
 SectionEnd
 
@@ -113,6 +133,12 @@ Section "Uninstall"
 
   RMDir "$INSTDIR"
 
+  !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
+    
+  Delete "$SMPROGRAMS\$StartMenuFolder\Lectrote.lnk"
+  Delete "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk"
+  RMDir "$SMPROGRAMS\$StartMenuFolder"
+  
   DeleteRegKey /ifempty HKCU "Software\Lectrote"
 
 SectionEnd
