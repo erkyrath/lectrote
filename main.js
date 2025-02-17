@@ -1241,6 +1241,31 @@ function check_transcript_andthen(filename, onthen, oncatch)
         .catch(oncatch);
 }
 
+function check_autodelete_transcripts()
+{
+    console.log('###', prefs.traretain_for, prefs.traretain_count, prefs.traretain_daycount);
+    if (prefs.traretain_for == 'time' || prefs.traretain_for == 'count') {
+        /* This is similar to the get_transcript_info() work in
+           transcript.js, but we don't need to read the transcript
+           files. */
+        try {
+            var transcriptdir = path_mod.join(app.getPath('userData'), 'transcripts');
+            var ls = [];
+            for (var filename of fs.readdirSync(transcriptdir)) {
+                if (filename.endsWith('.glktra')) {
+                    var path = path_mod.join(transcriptdir, filename);
+                    var stat = fs.statSync(path);
+                    var modtime = stat.mtime.getTime();
+                    ls.push({ path:path, modtime:modtime });
+                }
+            }
+            ls.sort((f1, f2) => (f2.modtime - f1.modtime));
+            console.log('###', ls);
+        }
+        catch (ex) { }
+    }
+}
+
 function window_focus_update(win, arg)
 {
     /* The arg will be a game object, a trashow object, or null for a singleton window. */
@@ -1927,6 +1952,7 @@ app.on('before-quit', function() {
    closed or the user hit cmd-Q. 
 */
 app.on('will-quit', function() {
+    check_autodelete_transcripts();
     write_prefs_now();
 });
 
