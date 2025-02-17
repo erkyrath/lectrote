@@ -69,7 +69,7 @@ async function* stanza_reader(path)
                     var newlen = buflen + CHUNK;
                     buf = Buffer.concat([buf], newlen);
                 }
-                var res = await fhan.read(buf, buflen, CHUNK);
+                var res = await fhan.read(buf, buflen, CHUNK, buffilepos+buflen);
                 if (res.bytesRead == 0) {
                     await fhan.close();
                     fhan = null;
@@ -110,7 +110,7 @@ async function* stanza_reader(path)
                         var newlen = buflen + CHUNK;
                         buf = Buffer.concat([buf], newlen);
                     }
-                    var res = await fhan.read(buf, buflen, CHUNK);
+                    var res = await fhan.read(buf, buflen, CHUNK, buffilepos+buflen);
                     if (res.bytesRead == 0) {
                         await fhan.close();
                         fhan = null;
