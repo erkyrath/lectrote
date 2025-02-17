@@ -1243,7 +1243,6 @@ function check_transcript_andthen(filename, onthen, oncatch)
 
 function check_autodelete_transcripts()
 {
-    console.log('###', prefs.traretain_for, prefs.traretain_count, prefs.traretain_daycount);
     if (prefs.traretain_for == 'time' || prefs.traretain_for == 'count') {
         /* This is similar to the get_transcript_info() work in
            transcript.js, but we don't need to read the transcript
@@ -1270,7 +1269,9 @@ function check_autodelete_transcripts()
             else {
                 dells = ls.slice(prefs.traretain_count);
             }
-            console.log('###', dells.length, dells);
+            for (var obj of dells) {
+                fs.unlinkSync(obj.path);
+            }
         }
         catch (ex) { }
     }
