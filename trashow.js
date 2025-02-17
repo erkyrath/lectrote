@@ -7,6 +7,8 @@ const fonts = require('./fonts.js');
 const searchbar = require('./searchbar.js');
 const traread = require('./traread.js');
 
+/* Code for the (Display One) Transcript window. */
+
 var tra_filename = null;
 var tra_path = null;
 

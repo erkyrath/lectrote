@@ -3,6 +3,11 @@
 const fs = require('fs');
 const path_mod = require('path');
 
+/* This module is loaded in the game process (see apphook.js) to handle
+   transcript file generation.
+*/
+
+// These config variables are specific to the game playing in this window.
 var transcriptdir = null;
 var metadata = null;
 

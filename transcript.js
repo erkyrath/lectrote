@@ -6,6 +6,8 @@ const path_mod = require('path');
 
 const traread = require('./traread.js');
 
+/* Code for the Transcript Browser window. */
+
 var darklight_flag = false;
 
 var transcriptdir = null;

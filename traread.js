@@ -2,6 +2,10 @@
 
 const fsp = require('fs/promises');
 
+/* Transcript utility functions. These are used by both the main process
+   and the game render process.
+*/
+
 /* Read a file as a sequence of newline-separated JSON stanzas.
 
    A partial stanza at the end will be silently ignored.

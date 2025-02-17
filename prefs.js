@@ -4,6 +4,8 @@ const electron = require('electron');
 const fonts = require('./fonts.js');
 const formats = require('./formats.js');
 
+/* Code for the Preferences window. */
+
 const tablist = [ 'appear', 'terp' ];
 
 var darklight_flag = false;
