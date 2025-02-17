@@ -6,7 +6,7 @@ const formats = require('./formats.js');
 
 /* Code for the Preferences window. */
 
-const tablist = [ 'appear', 'terp' ];
+const tablist = [ 'appear', 'terp', 'tra' ];
 
 var darklight_flag = false;
 
@@ -114,16 +114,19 @@ function set_tab(val)
 {
     switch (val) {
     case 'appear':
-        $('body').removeClass('CurrentTabTerp');
         $('body').addClass('CurrentTabAppear');
+        $('body').removeClass('CurrentTabTerp');
+        $('body').removeClass('CurrentTabTra');
         break;
     case 'terp':
         $('body').removeClass('CurrentTabAppear');
         $('body').addClass('CurrentTabTerp');
+        $('body').removeClass('CurrentTabTra');
         break;
     default:
         $('body').removeClass('CurrentTabAppear');
         $('body').removeClass('CurrentTabTerp');
+        $('body').addClass('CurrentTabTra');
         break;
     }
 }

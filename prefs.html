@@ -56,10 +56,16 @@ body.DarkMode {
 .CurrentTabTerp #tabbutton-terp {
   background: #AAA;
 }
+.CurrentTabTra #tabbutton-tra {
+  background: #AAA;
+}
 .DarkMode.CurrentTabAppear #tabbutton-appear {
   background: #888;
 }
 .DarkMode.CurrentTabTerp #tabbutton-terp {
+  background: #888;
+}
+.DarkMode.CurrentTabTra #tabbutton-tra {
   background: #888;
 }
 
@@ -67,6 +73,9 @@ body.DarkMode {
   display: block;
 }
 .CurrentTabTerp #tabcontent-terp {
+  display: block;
+}
+.CurrentTabTra #tabcontent-tra {
   display: block;
 }
 
@@ -178,7 +187,9 @@ require('./prefs.js');
 
 <body>
 <div id="tabheader">
-<div id="tabbutton-appear" class="TabButton">Appearance</div><div id="tabbutton-terp" class="TabButton">Interpreters</div>
+<div id="tabbutton-appear" class="TabButton">Appearance</div>
+<div id="tabbutton-terp" class="TabButton">Interpreters</div>
+<div id="tabbutton-tra" class="TabButton">Transcripts</div>
 </div>
 <div id="content">
 <div id="tabcontent-appear" class="TabContent">
@@ -249,6 +260,12 @@ down a gully.
 </select>
 
 </div>
+
+</div>
+
+<div id="tabcontent-tra" class="TabContent">
+
+<h2>Transcripts</h2>
 
 </div>
 
