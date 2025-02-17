@@ -108,6 +108,17 @@ function setup_with_prefs(prefs, isbound)
         sel = $('#tabheader');
         sel.hide();
     }
+
+    sel = $('#retaintra-' + prefs.traretain);
+    if (sel.length) {
+        sel.prop('checked', true);
+    }
+    
+    sel = $('#retain-count');
+    sel.prop('value', prefs.traretain_count);
+    
+    sel = $('#retain-daycount');
+    sel.prop('value', prefs.traretain_daycount);
 }
 
 function set_tab(val)

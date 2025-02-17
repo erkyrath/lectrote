@@ -31,6 +31,9 @@ var prefs = {
     gamewin_zoomlevel: 0,
     trashowwin_width: 600,
     trashowwin_height: 530,
+    traretain: 'forever',
+    traretain_count: 30,
+    traretain_daycount: 30,
     glulx_terp: 'quixe'   // engine.id from formats.js
     // could also have zcode_terp, hugo_terp, ink-json_terp here. (I know, ink-json_terp is ugly, I should rename that.)
 };
