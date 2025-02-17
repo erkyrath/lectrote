@@ -1260,7 +1260,17 @@ function check_autodelete_transcripts()
                 }
             }
             ls.sort((f1, f2) => (f2.modtime - f1.modtime));
-            console.log('###', ls);
+
+            var dells;
+            if (prefs.traretain_for == 'time') {
+                var now = new Date();
+                var cutoff = now.getTime() - prefs.traretain_daycount * 24 * 60 * 60 * 1000;
+                dells = ls.filter(ff => (ff.modtime < cutoff));
+            }
+            else {
+                dells = ls.slice(prefs.traretain_count);
+            }
+            console.log('###', dells.length, dells);
         }
         catch (ex) { }
     }
