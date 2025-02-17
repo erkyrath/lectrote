@@ -17,6 +17,10 @@ const fsp = require('fs/promises');
    an exception. Bad formatting inside a stanza will silently end the
    parsing (after reading in the entire rest of the file). No, that's not
    ideal.
+
+   We add obj._stanzastart, obj._stanzaend fields to the returned stanzas.
+   These are file positions in the file, handy for reloading additions
+   later.
    
    This is an async generator (fancy!) You can use it in the following
    ways:
@@ -45,6 +49,8 @@ async function* stanza_reader(path)
     var buflen = 0; // amount of unconsumed text in buf
     
     var fhan = await fsp.open(path, "r");
+    var buffilepos = 0; // file position of buf
+    // buffilepos+pos will be our real file position
 
     try {
         while (true) {
@@ -74,6 +80,7 @@ async function* stanza_reader(path)
             
             // pos is now on the first non-whitespace; trim everything before tthat. (We should have nonzero text left.)
             buf = buf.subarray(pos);
+            buffilepos += pos;
             buflen -= pos;
 
             if (buflen == 0) {
@@ -86,6 +93,7 @@ async function* stanza_reader(path)
             }
 
             pos = 0;
+            var stanzastart = buffilepos;
             var obj = null;
             
             while (true) {
@@ -117,6 +125,8 @@ async function* stanza_reader(path)
                 var str = buf.toString('utf8', 0, pos);
                 try {
                     obj = JSON.parse(str);
+                    obj._stanzastart = stanzastart;
+                    obj._stanzaend = buffilepos+pos;
                     break;
                 }
                 catch (ex) {
@@ -131,6 +141,7 @@ async function* stanza_reader(path)
             
             // Trim buffer, yield, and continue
             buf = buf.subarray(pos);
+            buffilepos += pos;
             buflen -= pos;
             yield obj;
             // We return from here if the caller calls iter.return().
