@@ -231,7 +231,14 @@ function check_modtime() {
         var newtime = Math.floor(stat.mtime.getTime());
         if (newtime != tra_modtime) {
             tra_modtime = newtime;
-            console.log('### reread!');
+            var iter = traread.stanza_reader(tra_path, tra_endpos);
+            for await (var obj of iter) {
+                tra_endpos = obj._stanzaend;
+                add_stanza(obj);
+            }
+            
+            var frameel = $('#window');
+            frameel.scrollTop(frameel.get(0).scrollHeight);
         }
     }
 
