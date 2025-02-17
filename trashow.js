@@ -16,6 +16,7 @@ var tra_modtime = null;
 var tra_endpos = 0;
 
 var loading_visible = null;
+var checking_modtime = false;
 
 function load_transcript(arg)
 {
@@ -26,7 +27,7 @@ function load_transcript(arg)
 
     async function readall() {
         var stat = await fsp.stat(tra_path);
-        tra_modtime = stat.mtime.getTime();
+        tra_modtime = Math.floor(stat.mtime.getTime());
 
         var iter = traread.stanza_reader(tra_path);
         for await (var obj of iter) {
@@ -38,6 +39,7 @@ function load_transcript(arg)
     readall()
         .then(() => {
             hide_loading();
+            setInterval(check_modtime, 1000);
         })
         .catch((ex) => {
             glkote_error('Error reading transcript: ' + ex);
@@ -216,6 +218,31 @@ function hide_loading() {
     if (el) {
         el.style.display = 'none';  /* el.hide() */
     }
+}
+
+function check_modtime() {
+    if (checking_modtime)
+        return;
+
+    checking_modtime = true;
+
+    async function readmore() {
+        var stat = await fsp.stat(tra_path);
+        var newtime = Math.floor(stat.mtime.getTime());
+        if (newtime != tra_modtime) {
+            tra_modtime = newtime;
+            console.log('### reread!');
+        }
+    }
+
+    readmore()
+        .then(() => {
+            checking_modtime = false;
+        })
+        .catch((ex) => {
+            glkote_error('Error reading transcript: ' + ex);
+            checking_modtime = false;
+        });
 }
 
 function glkote_error(msg) {
