@@ -117,6 +117,11 @@ input[type=text] {
   font-size: 1.0em;
 }
 
+input[type=number].InlineField {
+  font-size: 1.0em;
+  width: 4em;
+}
+
 input[type=range] {
   width: 50%;
   -webkit-appearance: none;
@@ -274,11 +279,15 @@ down a gully.
 </div>
 <div>
 <input type="radio" name="retaintra" id="retaintra-count">
-<label for="retaintra-count">Last 30 transcripts</label>
+<label for="retaintra-count">Last
+  <input class="InlineField" id="retain-count" min="1" type="number">
+  transcripts</label>
 </div>
 <div>
 <input type="radio" name="retaintra" id="retaintra-time">
-<label for="retaintra-time">For 30 days</label>
+<label for="retaintra-time">For
+  <input class="InlineField" id="retain-daycount" min="1" type="number">
+  days</label>
 </div>
 </div>
 <div class="FormSection">
