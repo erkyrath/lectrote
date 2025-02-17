@@ -1,6 +1,7 @@
 'use strict';
 const electron = require('electron');
 const fs = require('fs');
+const fsp = require('fs/promises');
 const path_mod = require('path');
 
 const fonts = require('./fonts.js');
@@ -11,6 +12,8 @@ const traread = require('./traread.js');
 
 var tra_filename = null;
 var tra_path = null;
+var tra_modtime = null;
+var tra_endpos = 0;
 
 var loading_visible = null;
 
@@ -22,8 +25,12 @@ function load_transcript(arg)
     document.title = arg.title + ' - Transcript';
 
     async function readall() {
+        var stat = await fsp.stat(tra_path);
+        tra_modtime = stat.mtime.getTime();
+
         var iter = traread.stanza_reader(tra_path);
         for await (var obj of iter) {
+            tra_endpos = obj._stanzaend;
             add_stanza(obj);
         }
     }
