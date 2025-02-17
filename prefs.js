@@ -109,9 +109,11 @@ function setup_with_prefs(prefs, isbound)
         sel.hide();
     }
 
-    sel = $('#retaintra-' + prefs.traretain);
-    if (sel.length) {
-        sel.prop('checked', true);
+    for (var val of [ 'forever', 'count', 'time' ]) {
+        sel = $('#retaintra-'+val);
+        if (prefs.traretain_for == val) 
+            sel.prop('checked', true);
+        sel.on('change', { for:val }, evhan_retain_transcripts);
     }
     
     sel = $('#retain-count');
@@ -329,6 +331,11 @@ function evhan_glulx_terp()
     var sel = $('#sel-glulx-terp');
     var val = sel.val();
     electron.ipcRenderer.send('pref_glulx_terp', val);
+}
+
+function evhan_retain_transcripts(ev)
+{
+    electron.ipcRenderer.send('pref_traretain_for', ev.data.for);
 }
 
 /* Respond to messages from the app. */

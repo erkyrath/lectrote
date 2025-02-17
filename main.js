@@ -31,7 +31,7 @@ var prefs = {
     gamewin_zoomlevel: 0,
     trashowwin_width: 600,
     trashowwin_height: 530,
-    traretain: 'forever',
+    traretain_for: 'forever',
     traretain_count: 30,
     traretain_daycount: 30,
     glulx_terp: 'quixe'   // engine.id from formats.js
@@ -2051,6 +2051,11 @@ electron.ipcMain.on('pref_zoom_level', function(ev, arg) {
 
 electron.ipcMain.on('pref_glulx_terp', function(ev, arg) {
     prefs.glulx_terp = arg;
+    note_prefs_dirty();
+});
+
+electron.ipcMain.on('pref_traretain_for', function(ev, arg) {
+    prefs.traretain_for = arg;
     note_prefs_dirty();
 });
 
