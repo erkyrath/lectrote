@@ -2059,6 +2059,16 @@ electron.ipcMain.on('pref_traretain_for', function(ev, arg) {
     note_prefs_dirty();
 });
 
+electron.ipcMain.on('pref_traretain_count', function(ev, arg) {
+    prefs.traretain_count = arg;
+    note_prefs_dirty();
+});
+
+electron.ipcMain.on('pref_traretain_daycount', function(ev, arg) {
+    prefs.traretain_daycount = arg;
+    note_prefs_dirty();
+});
+
 electron.ipcMain.on('search_done', function(ev, arg) {
     var obj = game_trashow_for_webcontents(ev.sender);
     if (!obj)

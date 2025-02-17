@@ -118,9 +118,11 @@ function setup_with_prefs(prefs, isbound)
     
     sel = $('#retain-count');
     sel.prop('value', prefs.traretain_count);
+    sel.on('change', evhan_retain_count);
     
     sel = $('#retain-daycount');
     sel.prop('value', prefs.traretain_daycount);
+    sel.on('change', evhan_retain_daycount);
 }
 
 function set_tab(val)
@@ -336,6 +338,20 @@ function evhan_glulx_terp()
 function evhan_retain_transcripts(ev)
 {
     electron.ipcRenderer.send('pref_traretain_for', ev.data.for);
+}
+
+function evhan_retain_count()
+{
+    var sel = $('#retain-count');
+    var val = sel.prop('value');
+    electron.ipcRenderer.send('pref_traretain_count', 1*val);
+}
+
+function evhan_retain_daycount()
+{
+    var sel = $('#retain-daycount');
+    var val = sel.prop('value');
+    electron.ipcRenderer.send('pref_traretain_daycount', 1*val);
 }
 
 /* Respond to messages from the app. */
