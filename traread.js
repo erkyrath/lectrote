@@ -6,7 +6,10 @@ const fsp = require('fs/promises');
    and the game render process.
 */
 
-/* Read a file as a sequence of newline-separated JSON stanzas.
+/* Read a file as a sequence of newline-separated JSON stanzas. If the
+   startpos argument is provided, start reading the file at that point
+   (which must be the beginning of a stanza or whitespace between
+   stanzas).
 
    A partial stanza at the end will be silently ignored.
 
@@ -41,7 +44,7 @@ const fsp = require('fs/promises');
    that you can call iter.return(). (This cleans up the file handle;
    you don't want to leak that.)
  */
-async function* stanza_reader(path)
+async function* stanza_reader(path, startpos)
 {
     const CHUNK = 512;
     
@@ -49,7 +52,7 @@ async function* stanza_reader(path)
     var buflen = 0; // amount of unconsumed text in buf
     
     var fhan = await fsp.open(path, "r");
-    var buffilepos = 0; // file position of buf
+    var buffilepos = startpos || 0; // file position of buf
     // buffilepos+pos will be our real file position
 
     try {
