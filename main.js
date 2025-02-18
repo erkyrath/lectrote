@@ -83,6 +83,16 @@ function game_for_webcontents(webcontents)
     return undefined;
 }
 
+/* Return the game object for a given game-file path. */
+function game_for_path(path)
+{
+    for (var id in gamewins) {
+        var game = gamewins[id];
+        if (game.path == path)
+            return game;
+    }    
+}
+
 /* Return the trashow object for a given window. */
 function trashow_for_window(win)
 {
@@ -636,8 +646,14 @@ function launch_game(path)
         basehtml: engine.html,
         engineid: engine.id,
         title: null,
-        signature: null
+        signature: null,
+        disable_autosave: false, // disable autosave/autorestore entirely
+        suppress_autorestore: false, // skip autorestore once
     };
+
+    if (game_for_path(path)) {
+        game.disable_autosave = true;
+    }
 
     var winopts = {
         title: require('electron').app.getName(),
@@ -742,6 +758,9 @@ function launch_game(path)
             funcs.push({ key: 'set_clear_autosave', arg: true });
             game.suppress_autorestore = false;
         }
+        if (game.disable_autosave) {
+            funcs.push({ key: 'set_disable_autosave', arg: true });
+        }
         funcs.push({
             key: 'load_named_game',
             arg: {
@@ -815,9 +834,11 @@ function reset_game(game)
     var res = electron.dialog.showMessageBoxSync(game.win, winopts);
     if (res == 0) {
         var win = game.win;
-        /* Set a flag to inhibit autorestore (but not autosave). This
-           will be cleared when the page finishes loading. */
-        game.suppress_autorestore = true;
+        if (!game.disable_autosave) {
+            /* Set a flag to inhibit autorestore (but not autosave). This
+               will be cleared when the page finishes loading. */
+            game.suppress_autorestore = true;
+        }
         /* Load the game UI and go. */
         win.loadURL('file://' + __dirname + '/' + game.basehtml);
     }

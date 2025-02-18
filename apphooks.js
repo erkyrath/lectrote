@@ -81,6 +81,11 @@ function set_clear_autosave(val)
     game_options.clear_vm_autosave = val;
 }
 
+function set_disable_autosave(val)
+{
+    game_options.do_vm_autosave = (!val);
+}
+
 function display_cover_art(dat)
 {
     /* If the cover art pane is already up, remove it. */
@@ -243,6 +248,7 @@ function sequence(argls)
 const namespace = {
     load_named_game : load_named_game,
     set_clear_autosave : set_clear_autosave,
+    set_disable_autosave : set_disable_autosave,
     display_cover_art : display_cover_art,
     set_zoom_factor : set_zoom_factor,
     set_margin_level : set_margin_level,
