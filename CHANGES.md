@@ -5,6 +5,7 @@
 - If you open a game and its transcript at the same time, game updates will appear in the transcript window.
 - If you open the same game in two windows, they will have separate transcripts. Also, the second one will not try to use the autosave slot. (Two windows fighting over the same autosave is bad.)
 - The build process now produces a "Lectrote-X.Y.Z-WinInstall.exe" installer product (using makensis). This installs the win32-x64 version.
+- Bumped Electron to 33.4.1.
 
 ## 1.5.2 (Dec 2, 2024)
 
