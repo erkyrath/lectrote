@@ -1,5 +1,12 @@
 
-## 1.5.2 (Dec ###, 2024)
+## 1.5.3 (Feb 22, 2025)
+
+- Added a "Retain Transcripts" preference: "Forever", "Last N transcripts", "For N days". Defaults to "Forever", which was the previous behavior.
+- If you open a game and its transcript at the same time, game updates will appear in the transcript window.
+- If you open the same game in two windows, they will have separate transcripts. Also, the second one will not try to use the autosave slot. (Two windows fighting over the same autosave is bad.)
+- The build process now produces a "Lectrote-X.Y.Z-WinInstall.exe" installer product (using makensis). This installs the win32-x64 version.
+
+## 1.5.2 (Dec 2, 2024)
 
 - Fixed the Find menu options in game windows. They now also work in transcript windows.
 
