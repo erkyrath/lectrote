@@ -3,7 +3,7 @@
 
 ### The IF interpreter in an [Electron][] shell
 
-- Version 1.5.3
+- Version 1.5.4
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 - [Download the latest Lectrote app][releases]
 
