@@ -1,4 +1,9 @@
 
+## 1.5.4 (Jun ###, 2025)
+
+- Glk spec 0.7.6: the glk_image_draw_scaled_ext() call.
+- Bumped Electron to 34.5.7.
+
 ## 1.5.3 (Feb 22, 2025)
 
 - Added a "Retain Transcripts" preference: "Forever", "Last N transcripts", "For N days". Defaults to "Forever", which was the previous behavior.
