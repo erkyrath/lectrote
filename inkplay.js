@@ -4,6 +4,8 @@ const Story = require('./inkjs/ink.min.js').Story;
 
 /* The inkjs story object that will be loaded. */
 var story = null;
+/* Whether to use story.ToJson()/LoadJson() for save/load. */
+var newstylesave = undefined;
 /* Short string which will (hopefully) be unique per game. */
 var signature = null;
 /* Global tags. */
@@ -64,21 +66,25 @@ function load_run(optobj, buf)
             /* current version of inkjs */
             console.log('Game version', version, '; loading latest inkjs');
             story = new Story(json);
+            newstylesave = true;
         }
         else if (version >= 16) {
             console.log('Game version', version, '; loading inkjs 1.6.0');
             const OldStory = require('./inkjs/ink-160.min.js').Story;
             story = new OldStory(json);
+            newstylesave = false;
         }
         else if (version >= 15) {
             console.log('Game version', version, '; loading inkjs 1.4.6');
             const OldStory = require('./inkjs/ink-146.min.js').Story;
             story = new OldStory(json);
+            newstylesave = false;
         }
         else {
             console.log('Game version', version, '; loading inkjs 1.3.0');
             const OldStory = require('./inkjs/ink-130.min.js').Story;
             story = new OldStory(json);
+            newstylesave = false;
         }
     }
     catch (ex) {
@@ -201,8 +207,17 @@ function perform_autosave(clear)
         return;
     }
 
+    var saveval = undefined;
+    if (newstylesave)
+        saveval = story.state.ToJson();
+    else
+        saveval = story.state.jsonToken;
+    /* In the new style, saveval is a string. Old style it was a JS object.
+       So the new style snapshot will look double-encoded, but whatever,
+       it'll work. */
+    
     var snapshot = {
-        ink: story.state.jsonToken,
+        ink: saveval,
         turn: game_turn,
         scrollback: scrollback.slice(0),
         glkote: GlkOte.save_allstate()
@@ -217,7 +232,11 @@ function perform_autosave(clear)
 */
 function perform_autorestore(snapshot)
 {
-    story.state.jsonToken = snapshot.ink;
+    if (newstylesave)
+        story.state.LoadJson(snapshot.ink);
+    else
+        story.state.jsonToken = snapshot.ink;
+    
     game_turn = snapshot.turn;
 
     for (var ix=0; ix<snapshot.scrollback.length; ix++)
