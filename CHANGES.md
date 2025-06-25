@@ -1,5 +1,9 @@
 
-## 1.5.4 (Jun ###, 2025)
+## 1.5.5 (###)
+
+- Updated inkjs to 2.3.2.
+
+## 1.5.4 (Jun 4, 2025)
 
 - Glk spec 0.7.6: the glk_image_draw_scaled_ext() call.
 - Bumped Electron to 34.5.7.
