@@ -62,6 +62,7 @@ function load_run(optobj, buf)
         var version = parseInt(json["inkVersion"]);
         if (version >= 18) {
             /* current version of inkjs */
+            console.log('Game version', version, '; loading latest inkjs');
             story = new Story(json);
         }
         else if (version >= 16) {
