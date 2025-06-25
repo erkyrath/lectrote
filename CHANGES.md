@@ -1,6 +1,7 @@
 
 ## 1.5.5 (###)
 
+- Fixed an autosave bug for Ink games version 18 and up.
 - Updated inkjs to 2.3.2.
 
 ## 1.5.4 (Jun 4, 2025)
