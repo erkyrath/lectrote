@@ -18,7 +18,7 @@
      and for identifying files)
    - docicon: Windows document icon filename
    - identify: function which looks at the first 64 bytes of the file and
-     the file suffix and returns whether that file matches this format
+     the file suffix, and returns whether that file matches this format
    - engines: list of engines
 
    An engine entry contains:
