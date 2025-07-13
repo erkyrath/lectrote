@@ -57,9 +57,14 @@ function load_run(optobj, buf)
        inkVersionMinimumCompatible defined in inkjs.) */
     try {
         var str = buf.toString('utf8');
-        /* First we strip the BOM, if there is one. Dunno why JSON.parse
-           can't deal with a BOM, but okay. */
-        str = str.replace(/^\uFEFF/, '');
+        /* Strip off anything before or after the curly braces.
+           (Ink files are often found in JSONP format, prefixed with
+           "var storyContent =". Or there might be a BOM.) */
+        let startpos = str.indexOf('{');
+        let endpos = str.lastIndexOf('}');
+        if (startpos >= 0 && endpos >= 0) {
+            str = str.slice(startpos, endpos+1);
+        }
         var json = JSON.parse(str);
         var version = parseInt(json["inkVersion"]);
         if (version >= 18) {
