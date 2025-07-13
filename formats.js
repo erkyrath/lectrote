@@ -16,7 +16,7 @@
      messages)
    - extensions: list of file suffixes
    - docicon: Windows document icon filename
-   - identify: function which looks at the first 16 bytes of the file and
+   - identify: function which looks at the first 64 bytes of the file and
      returns whether that file matches this format
    - engines: list of engines
 

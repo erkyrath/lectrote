@@ -469,8 +469,8 @@ function invoke_app_hook(win, func, arg)
 function game_file_discriminate(path)
 {
     var fd = fs.openSync(path, 'r');
-    var buf = Buffer.alloc(16);
-    var len = fs.readSync(fd, buf, 0, 16, 0);
+    var buf = Buffer.alloc(64);
+    var len = fs.readSync(fd, buf, 0, 64, 0);
     fs.closeSync(fd);
 
     /* Try Blorbs first. */
