@@ -14,7 +14,8 @@
    - longname: long description of file type (used in Windows file dialogs)
    - name: one-word description of file type (used in loading error
      messages)
-   - extensions: list of file suffixes
+   - extensions: list of file suffixes (used both for filtering file dialogs
+     and for identifying files)
    - docicon: Windows document icon filename
    - identify: function which looks at the first 64 bytes of the file and
      the file suffix and returns whether that file matches this format
