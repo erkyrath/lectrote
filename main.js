@@ -484,19 +484,19 @@ function game_file_discriminate(path)
             return formats.formatmap.zcode;
     }
 
+    var pathsuffix = path_mod.extname(path).toLowerCase();
+    if (pathsuffix.startsWith('.'))
+        pathsuffix = pathsuffix.slice(1);
+
     /* Try the format identify functions. */
     for (let i = 0; i < formats.formatlist.length; i++) {
         var format = formats.formatlist[i];
-        if (format.identify && format.identify(buf)) {
+        if (format.identify && format.identify(buf, pathsuffix)) {
             return format;
         }
     }
 
     /* Fall back to checking file extensions. */
-    var pathsuffix = path_mod.extname(path).toLowerCase();
-    if (pathsuffix.startsWith('.'))
-        pathsuffix = pathsuffix.slice(1);
-
     for (let i = 0; i < formats.formatlist.length; i++) {
         var format = formats.formatlist[i];
         if ((!format.extensions) || (!format.engines))

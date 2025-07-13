@@ -102,7 +102,7 @@ const formatlist = [
         name: 'Glulx',
         extensions: ['ulx', 'gblorb', 'glb'],
         docicon: 'docicon-glulx.ico',
-        identify: buf => (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C),
+        identify: (buf, ext) => (buf[0] == 0x47 && buf[1] == 0x6C && buf[2] == 0x75 && buf[3] == 0x6C),
         engines: [
             {
                 id: 'quixe',
@@ -157,7 +157,7 @@ const formatlist = [
         name: 'Z-Code',
         extensions: ['z3', 'z4', 'z5', 'z8', 'zblorb', 'zlb'],
         docicon: 'docicon-zcode.ico',
-        identify: buf => (buf[0] >= 3 && buf[0] <= 8),
+        identify: (buf, ext) => (buf[0] >= 3 && buf[0] <= 8),
         engines: [
             {
                 id: 'zvm',
@@ -203,7 +203,7 @@ const formatlist = [
         name: 'Ink',
         extensions: [ 'json' ],
         docicon: 'docicon-json.ico',
-        identify: buf => {
+        identify: (buf, ext) => {
             /* Ink is a text (JSON) format, which is hard to check. We skip
                whitespace and non-ASCII characters and look for '{"ink'. */
             var checkascii = [ 0x7B, 0x22, 0x69, 0x6E, 0x6B ];
