@@ -17,7 +17,7 @@
    - extensions: list of file suffixes
    - docicon: Windows document icon filename
    - identify: function which looks at the first 64 bytes of the file and
-     returns whether that file matches this format
+     the file suffix and returns whether that file matches this format
    - engines: list of engines
 
    An engine entry contains:
@@ -201,19 +201,22 @@ const formatlist = [
         id: 'ink-json',
         longname: 'Ink JSON File',
         name: 'Ink',
-        extensions: [ 'json' ],
+        extensions: [ 'js', 'json' ],
         docicon: 'docicon-json.ico',
         identify: (buf, ext) => {
-            /* Ink is a text (JSON) format, which is hard to check. We skip
-               whitespace and non-ASCII characters and look for '{"ink'. */
+            /* Ink is a text (JSON) format, which is hard to check. (The
+               JSON might not even start at the beginning of the file.) 
+               We look for '{"ink' anywhere in the buffer. */
             var checkascii = [ 0x7B, 0x22, 0x69, 0x6E, 0x6B ];
             var pos = 0;
             for (var ix=0; ix<buf.length; ix++) {
                 var ch = buf[ix];
-                if (!(ch > 32 && ch < 127))
-                    continue;
-                if (ch != checkascii[pos]) 
-                    break;
+                if (ch != checkascii[pos]) {
+                    if (pos == 0)
+                        continue;
+                    else
+                        break;
+                }
                 pos++;
                 if (pos >= checkascii.length)
                     return true;
