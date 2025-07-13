@@ -499,11 +499,12 @@ function game_file_discriminate(path)
     /* Fall back to checking file extensions. */
     for (let i = 0; i < formats.formatlist.length; i++) {
         var format = formats.formatlist[i];
-        if ((!format.extensions) || (!format.engines))
+        if ((!format.extensions) || (!format.engines) || format.mustidentify)
             continue;
         for (var jx=0; jx<format.extensions.length; jx++) {
-            if (format.extensions[jx] == pathsuffix)
+            if (format.extensions[jx] == pathsuffix) {
                 return format;
+            }
         }
     }
 
