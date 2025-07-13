@@ -19,6 +19,8 @@
    - docicon: Windows document icon filename
    - identify: function which looks at the first 64 bytes of the file and
      the file suffix, and returns whether that file matches this format
+   - mustidentify: if true, don't rely on the extension alone; the identify
+     function must return true
    - engines: list of engines
 
    An engine entry contains:
@@ -204,6 +206,7 @@ const formatlist = [
         name: 'Ink',
         extensions: [ 'js', 'json' ],
         docicon: 'docicon-json.ico',
+        mustidentify: true,
         identify: (buf, ext) => {
             /* Ink is a text (JSON) format, which is hard to check. (The
                JSON might not even start at the beginning of the file.) 
