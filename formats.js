@@ -28,8 +28,8 @@
    - id: key
    - name: engine name (used in page titles)
    - html: HTML file used for the game page
-   - load: function which takes the loading args, the loaded file (as an
-     array), and an options object. The function must add any needed options
+   - load: function which takes the loading args, the loaded file (as a
+     Buffer), and an options object. The function must add any needed options
      to the options object, and then return the loaded file with any
      modifications needed for load_run().
    - get_signature: function which returns the signature of the loaded
