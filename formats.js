@@ -115,10 +115,7 @@ const formatlist = [
                     opts.vm = Quixe;
                     /* Further Glulx options are set up by gi_load.js. */
 
-                    /* Convert to a generic Array of byte values. */
-                    var arr = new Array(buf.length);
-                    for (var ix=0; ix<buf.length; ix++)
-                        arr[ix] = buf[ix];
+                    var arr = Uint8Array.from(buf);
                     return arr;
                 },
                 get_signature: () => Quixe.get_signature(),
