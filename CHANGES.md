@@ -1,7 +1,9 @@
 
-## 1.5.6 (###)
+## 1.5.6 (Oct 4, 2025)
 
 - Improved file-loading for the Quixe interpreter to avoid crashes on very large gblorb files.
+- Shinier icon for MacOS.
+- Bumped Electron to 36.9.3.
 
 ## 1.5.5 (Jul 13, 2025)
 
