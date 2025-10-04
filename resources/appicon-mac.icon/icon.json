@@ -1,0 +1,158 @@
+{
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.29747,0.60439,0.64207,1.00000",
+      "srgb:0.05614,0.49810,0.56060,1.00000"
+    ]
+  },
+  "groups" : [
+    {
+      "blend-mode" : "normal",
+      "blur-material" : null,
+      "layers" : [
+        {
+          "image-name" : "nut.png",
+          "name" : "nut"
+        }
+      ],
+      "name" : "Nut",
+      "position" : {
+        "scale" : 0.46,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 1
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    },
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "glass" : true,
+          "image-name-specializations" : [
+            {
+              "value" : "compass-2.png"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "compass-2-dark.png"
+            },
+            {
+              "appearance" : "tinted",
+              "value" : "compass-2-dark.png"
+            }
+          ],
+          "name" : "compass-2"
+        },
+        {
+          "image-name-specializations" : [
+            {
+              "value" : "compass-1.png"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "compass-1-dark.png"
+            },
+            {
+              "appearance" : "tinted",
+              "value" : "compass-1-dark.png"
+            }
+          ],
+          "name" : "compass-1"
+        }
+      ],
+      "lighting" : "individual",
+      "name" : "Compass",
+      "position" : {
+        "scale" : 0.46,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    },
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "fill" : "automatic",
+          "glass" : true,
+          "image-name" : "orbital.png",
+          "name" : "orbital"
+        }
+      ],
+      "name" : "Orbital",
+      "position" : {
+        "scale" : 0.46,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 1
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.25
+      }
+    },
+    {
+      "blend-mode" : "normal",
+      "blur-material" : null,
+      "layers" : [
+        {
+          "glass" : true,
+          "image-name-specializations" : [
+            {
+              "value" : "base-disc.png"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "base-disc-dark.png"
+            }
+          ],
+          "name" : "base-disc-dark"
+        }
+      ],
+      "name" : "Disc",
+      "position" : {
+        "scale" : 0.46,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 1
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}
